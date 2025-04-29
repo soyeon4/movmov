@@ -7,11 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MovMov</title>
 <link rel="icon" href="resources/images/common/favicon.ico">
-<link
-   href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
-   rel="stylesheet">
-<link rel="stylesheet"
-   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+	rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+	rel="stylesheet">
 <link rel="stylesheet" href="resources/style/common/main.css">
 </head>
 <%@ include file="pages/common/header.jsp"%>
@@ -54,7 +53,6 @@
          </div>
       </section>
 
-<<<<<<< HEAD
 		<section class="menu-section">
 			<button type="button">🎬 영화</button>
 			<button type="button">⚡ 매거진</button>
@@ -65,32 +63,7 @@
 			<button type="button">🔮 추천</button>
 		</section>
 	</main>
-	<!-- 영화 굿즈 베스트 섹션 -->
-	<section class="goods-section">
-		<h2>🎁 인기 영화 굿즈</h2>
-		<div class="goods-list">
-			<div class="goods-card">
-				<img src="https://via.placeholder.com/200x200" alt="굿즈 이미지">
-				<h4>쉬리 포스터</h4>
-				<p>₩10,000</p>
-			</div>
-			<div class="goods-card">
-				<img src="https://via.placeholder.com/200x200" alt="굿즈 이미지">
-				<h4>기생충 피규어</h4>
-				<p>₩25,000</p>
-			</div>
-			<!-- 추가 굿즈 항목들 -->
-		</div>
-	</section>
-=======
-      <section class="menu-section">
-         <button>🎬 영화</button>
-         <button>⚡ 매거진</button>
-         <button>🎁 Mov Commerce</button>
-         <button>📊 커뮤니티</button>
-         <button>🔮 추천</button>
-      </section>
-   </main>
+
    <!-- 영화 굿즈 베스트 섹션 -->
    <section class="goods-section">
       <h2>🎁 인기 영화 굿즈</h2>
@@ -108,7 +81,6 @@
          <!-- 추가 굿즈 항목들 -->
       </div>
    </section>
->>>>>>> origin/develop
 
    <!-- 커뮤니티 인기 글 섹션 -->
    <section class="community-section">

@@ -30,8 +30,12 @@
 	if (loginUser == null) {
 %>
 		<div class="client">
-	     	<a href="/movmov/pages/mypage/modal-login.jsp" class="btn-signin">로그인</a>
-	     	<a href="/movmov/pages/mypage/register-form.jsp" class="btn-signin">회원가입</a>
+	     	<a href="/movmov/pages/mypage/modal-login.jsp">
+	     		<button type="button" class="btn-signin">로그인</button>
+     		</a>
+	     	<a href="/movmov/pages/mypage/register-form.jsp">
+	     		<button type="button" class="btn-signin">회원가입</button>
+	     	</a>
 	    </div>
 	
 <%
@@ -39,9 +43,15 @@
 	} else {
 %>
 		<div class="client">
-		<button class="btn-cart">장바구니</button>
-		<a href="/movmov/pages/mypage/page.jsp" class="btn-signin"><%=loginUser.getNickname() %></a>
-		<a href="/movmov/pages/mypage/logout.jsp" class="btn-signin">로그아웃</a>
+		<a href="/movmov/pages/mypage/page.jsp">
+			<button type="button" class="btn-signin"><%=loginUser.getNickname() %></button>
+		</a>
+		<a href="">
+			<button type="button" class="btn-cart">장바구니</button>
+		</a>
+		<a href="/movmov/pages/mypage/logout.jsp">
+			<button type="button" class="btn-signin">로그아웃</button>
+		</a>
 		<img src="/movmov/resources/images/common/default-profile.png" id="profile-toggle"
 			alt="프로필">
 		<div class="profile-dropdown" id="profile-dropdown">
