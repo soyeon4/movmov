@@ -26,6 +26,11 @@
 	
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
+<<<<<<< HEAD
+		<mapper resource="mybatis/mappers/PostMapper.xml" />
+		<mapper resource="mybatis/mappers/CategoryMapper.xml" />
+=======
 		<mapper resource="mybatis/mappers/UserMapper.xml"/>
+>>>>>>> origin/develop
 	</mappers>
 </configuration>
