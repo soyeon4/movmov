@@ -1,0 +1,45 @@
+/* ===== 로그인 실패 전용 스타일 ===== */
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center; /* 가로 가운데 정렬 */
+  align-items: center;     /* 세로 가운데 정렬 */
+}
+
+.alert-box {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+.alert-icon {
+  font-size: 50px;
+  color: #dc3545; /* 부트스트랩 danger 빨강 */
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+p {
+  margin: 15px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.btn-login {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  font-size: 16px;
+}
