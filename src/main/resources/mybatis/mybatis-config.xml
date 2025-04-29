@@ -26,6 +26,7 @@
 	
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
-		
+		<mapper resource="mybatis/mappers/PostMapper.xml" />
+		<mapper resource="mybatis/mappers/CategoryMapper.xml" />
 	</mappers>
 </configuration>

@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>애플리케이션</title>
 <title>MovMov</title>
 <link rel="icon" href="resources/images/common/favicon.ico">
 <link
@@ -56,11 +55,13 @@
 		</section>
 
 		<section class="menu-section">
-			<button>🎬 영화</button>
-			<button>⚡ 매거진</button>
-			<button>🎁 Mov Commerce</button>
-			<button>📊 커뮤니티</button>
-			<button>🔮 추천</button>
+			<button type="button">🎬 영화</button>
+			<button type="button">⚡ 매거진</button>
+			<button type="button">🎁 Mov Commerce</button>
+			<a href="pages/community/community-main.jsp">
+				<button type="button">📊 커뮤니티</button>
+			</a>
+			<button type="button">🔮 추천</button>
 		</section>
 	</main>
 	<!-- 영화 굿즈 베스트 섹션 -->
