@@ -155,36 +155,34 @@
 		            .find(".input-tooltip");
 		        $currentTooltip.removeClass("show");
 		        
-		        // 스포일러가 선택되어 있다면 해제
-		        $(".tag-toggle.spoiler").removeClass("active");
-		        
 		        let selectedValue = $(this).attr(attributeName);
 		        $("#" + targetInputId).val(selectedValue);
 		    });
 		}
 		
-		// initial, on load
+		// '글쓰기'를 클릭했던 게시판을 하이라이트한다.
 		let boardType = <%=boardType %>;
 		if (boardType) {
 		    $(".board-label[board-type=" + boardType + "]").addClass("active");
 		};
 		
 		$(".board-label").click(function() {
-			  let boardType = $(this).attr("board-type");
-			  let headers = (boardType == "300" ? <%=movieHeadersJson %> : <%=freeHeadersJson %>);
+			let boardType = $(this).attr("board-type");
+			let headers = (boardType == "300" ? <%=movieHeadersJson %> : <%=freeHeadersJson %>);
+			// 스포일러가 선택되어 있다면 해제
+			$(".tag-toggle.spoiler").removeClass("active");
+			$("#post-headers").empty();
 
-			  $("#post-headers").empty();
-
-			  headers.forEach(function(header) {
-			    let button = $('<button>')
+			headers.forEach(function(header) {
+				let button = $('<button>')
 			      .addClass('tag-toggle header')
 			      .attr('type', 'button')
 			      .attr('data-value', header.id)
 			      .text(header.name);
 
 			    $("#post-headers").append(button);
-			  });
 			});
+		});
 		
 		handleToggleClick(".form-container", ".board-label", "board-type", "board-type-id");
 		handleToggleClick(".header-toggle-group", ".tag-toggle.spoiler", "data-value", "contains-spoiler");

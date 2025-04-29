@@ -12,17 +12,42 @@
 		(post_no
 		 , user_id
 	  	 , post_header
-	 	 , post_board
+	 	 , post_board_type
 	   	 , post_title
-	     , post_content)
+	     , post_content
+	     , post_is_spoiler)
 		values
 		(POST_NO_SEQ.NEXTVAL
 		 , #{user.id}
 		 , #{header.id}
 		 , #{boardType.id}
 		 , #{title}
-		 , #{content})
+		 , #{content}
+		 , #{isSpoiler})
 	</insert>
+	
+	<!--
+		Post getPostById(int postNo);
+	-->
+	<select id="getPostById" resultType="Post">
+		select
+			post_no
+		  , user_id
+		  , post_header
+		  , post_board_type
+		  , post_title
+		  , post_content
+		  , post_created_date
+		  , post_updated_date
+		  , post_view_count
+		  , post_upvote_count
+		  , post_is_spoiler
+		from
+			movmov_community_posts
+		where
+			post_no = #{postNo}
+	</select>
+	
 	
 </mapper>
  

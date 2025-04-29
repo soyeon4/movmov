@@ -10,6 +10,8 @@
 	*/
 	String boardType = request.getParameter("btype");
 
+	User loginedUser = (User) session.getAttribute("LOGIN_USER");
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -26,10 +28,21 @@
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet"
 	href="../../resources/style/community/community-forum.css">
+<link rel="stylesheet"
+	href="../../resources/style/mypage/modal-login.css">
 </head>
 <body>
 	<!-- 헤더 -->
 	<%@ include file="../common/header.jsp"%>
+	<!-- 로그인 모달 포함시키기 -->
+<%-- 	<%@ include file="../mypage/modal-login.jsp" %> --%>
+	<div id="loginmodaltest" class="modal-background" style="display: none">
+		<div class="modal-login">
+			<span class="close">&times;</span>
+			<p>You need to be logged in to write a post.</p>
+			<a href="/login"><button>Login</button></a>
+		</div>
+	</div>
 
 	<div class="boards-container">
 		<div class="board-header">
@@ -113,7 +126,29 @@
 	
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
-		
+		let isLoggedIn = false;
+		if (<%=loginedUser %> != null) {
+			isLoggedIn = true;
+		};
+	
+		$("#write-post").submit(function() {
+			if (!isLoggedIn) {
+				$("#loginmodaltest").fadeIn();
+				return false;
+			} else {
+				window.location.href = "/write-post";
+			}
+		});
+
+		$(".close").click(function() {
+			$("#loginmodaltest").fadeOut();
+		});
+
+		$(window).click(function(e) {
+			if ($(e.target).is("#loginmodaltest")) {
+				$("#loginmodaltest").fadeOut();
+			}
+		});
 	</script>
 
 </html>

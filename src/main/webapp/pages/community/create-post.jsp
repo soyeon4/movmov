@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.mapper.PostMapper"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.mapper.CategoryMapper"%>
@@ -29,9 +30,10 @@
 	
 	*/
 	
-	String loginedUserId = (String) session.getAttribute("LOGINED_USER_ID");
+	User loginUser = (User) session.getAttribute("LOGIN_USER");		// 세션에 유저 객체 저장됨
 	String title = request.getParameter("title");
 	String content = request.getParameter("content");
+	String spoiler = request.getParameter("spoiler");
 	int headerId = StringUtils.strToInt(request.getParameter("header"));
 	int boardTypeId = StringUtils.strToInt(request.getParameter("boardType"));
 	
@@ -42,6 +44,10 @@
 	Post post = new Post();
 	post.setHeader(header);
 	post.setBoardType(boardType);
+	post.setTitle(title);
+	post.setContent(content);
+	post.setIsSpoiler(spoiler);
+	post.setUser(loginUser);
 	
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	postMapper.insertPost(post);
