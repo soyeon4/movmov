@@ -22,5 +22,6 @@ public class Post {
 	private int viewCount;
 	private String isDeleted;
 	private String isReported;
+	private String isSpoiler;
 	
 }
