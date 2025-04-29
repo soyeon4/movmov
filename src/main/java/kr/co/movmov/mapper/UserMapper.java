@@ -17,5 +17,5 @@ public interface UserMapper {
    User getNickName(String nickname);
    
    void updateUserDelete(User user);
-   
+	
 }

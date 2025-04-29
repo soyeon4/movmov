@@ -13,15 +13,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("Movie")
 public class Movie {
-	private int no;
-	private String title;
-	private String director;
-	private String actor;
-	private String country;
-	private int length;
-	private String rating;
-	private String posterImagePath;
-	private String plot;
-	private int releaseYear;
-	private List<Genre> genres;
+
+   private int no;
+   private String title;
+   private String director;
+   private String actor;
+   private String country;
+   private int length;
+   private String rating;
+   private String posterImagePath;
+   private String plot;
+   private int releaseYear;
+   private List<Genre> genres;
+
 }

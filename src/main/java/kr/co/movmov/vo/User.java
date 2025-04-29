@@ -12,8 +12,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
-    
+public class User {    
+
    private String id;
    private String name;
     private String password;

@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("Genre")
 public class Genre {
-	private int no;
-	private String name;
+
+   private int no;
+   private String name;
+
 }
