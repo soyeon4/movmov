@@ -29,20 +29,28 @@
 <link rel="stylesheet"
 	href="../../resources/style/community/community-forum.css">
 <link rel="stylesheet"
-	href="../../resources/style/mypage/modal-login.css">
+	href="../../resources/style/community/modal-login-alert.css">
 </head>
 <body>
 	<!-- 헤더 -->
 	<%@ include file="../common/header.jsp"%>
-	<!-- 로그인 모달 포함시키기 -->
-<%-- 	<%@ include file="../mypage/modal-login.jsp" %> --%>
-	<div id="loginmodaltest" class="modal-background" style="display: none">
+	
+	<!-- 로그인 없이 글쓰기 시도를 했을 경우 모달 팝업 -->
+	<div id="loginmodaltest" class="modal-background">
 		<div class="modal-login">
 			<span class="close">&times;</span>
-			<p>You need to be logged in to write a post.</p>
-			<a href="/login"><button>Login</button></a>
+			<h2>게시글을 작성하기 위해서 로그인해야 합니다.</h2>
+			<a href="/login">
+				<button type="button"
+					class="btn-login-submit">로그인</button>
+			</a>
+			<div class="link-small">
+				<a href="register-form.jsp" class="link-small">계정이 없으신가요? <strong>회원가입</strong></a>
+			</div>
 		</div>
 	</div>
+	<!-- 로그인 모달 포함시키기 -->
+<%-- 	<%@ include file="../mypage/modal-login.jsp" %> --%>
 
 	<div class="boards-container">
 		<div class="board-header">
