@@ -29,5 +29,6 @@
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
 		<mapper resource="mybatis/mappers/CategoryMapper.xml" />
 		<mapper resource="mybatis/mappers/UserMapper.xml"/>
+		<mapper resource="mybatis/mappers/ShopItemMapper.xml"/>
 	</mappers>
 </configuration>
