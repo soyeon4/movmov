@@ -1,0 +1,86 @@
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .modal-background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex; /* 기본: flex로 설정, 필요 시 JS로 show/hide */
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-login {
+      background-color: #fff;
+      padding: 40px 30px;
+      border-radius: 16px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    .modal-login h2 {
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    .input-login {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #FF498D;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .btn-login-submit:hover {
+      background-color: #e53c7e;
+    }
+
+    .link-small {
+      font-size: 12px;
+      color: #666;
+      text-decoration: none;
+    }
+
+    .link-small:hover {
+      color: #FF498D;
+      text-decoration: underline;
+    }
+
+    .modal-divider {
+      margin: 20px 0;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .social-login-icons img {
+      width: 36px;
+      margin: 0 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .social-login-icons img:hover {
+      transform: scale(1.1);
+    }
+  </style>
