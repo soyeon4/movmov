@@ -188,7 +188,7 @@
 		handleToggleClick(".header-toggle-group", ".tag-toggle.spoiler", "data-value", "contains-spoiler");
 		handleToggleClick(".header-toggle-group", ".tag-toggle.header", "data-value", "header-select");
 		
-		let titleRegex = /^[a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{2,}$/
+		let titleRegex = /^[0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{2,}$/
 		let contentRegex = /^[\.0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{10,}$/
 		let titleCheckPassed = false;
 		let contentCheckPassed = false;

@@ -31,23 +31,45 @@
 	-->
 	<select id="getPostById" resultType="Post">
 		select
-			post_no
-		  , user_id
-		  , post_header
-		  , post_board_type
-		  , post_title
-		  , post_content
-		  , post_created_date
-		  , post_updated_date
-		  , post_view_count
-		  , post_upvote_count
-		  , post_is_spoiler
+			post_no						as no
+		  , user_id						as "user.id"
+		  , post_header					as "header.id"
+		  , post_board_type				as "boardType.id"
+		  , post_title					as title
+		  , post_content				as content
+		  , post_created_date			as createdDate
+		  , post_updated_date			as updatedDate
+		  , post_view_count				as viewCount
+		  , post_upvote_count			as upvoteCount
+		  , post_is_spoiler				as isSpoiler
 		from
 			movmov_community_posts
 		where
 			post_no = #{postNo}
 	</select>
 	
+	<!--
+		List<Post> getPostsByBoardId(int boardNo);
+	-->
+	<select id="getPostsByBoardId" resultType="Post">
+		select
+			post_no						as no
+		  , user_id						as "user.id"
+		  , post_header					as "header.id"
+		  , post_board_type				as "boardType.id"
+		  , post_title					as title
+		  , post_content				as content
+		  , post_created_date			as createdDate
+		  , post_updated_date			as updatedDate
+		  , post_view_count				as viewCount
+		  , post_upvote_count			as upvoteCount
+		  , post_is_spoiler				as isSpoiler
+		from
+			movmov_community_posts
+		where
+			post_board_type = #{boardNo}
+			and post_is_deleted = 'N'
+	</select>
 	
 </mapper>
  

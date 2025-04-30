@@ -11,7 +11,7 @@
 	String boardType = request.getParameter("btype");
 
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
-	String userId = null;
+	String userId = "";
 	if (loginedUser != null) {
 		userId = loginedUser.getId();
 	};
@@ -57,6 +57,15 @@
 		</div>
 
 		<table class="board-table">
+			<colgroup>
+				<col style="width: 10%">
+				<col style="width: 40%">
+				<col style="width: 15%">
+				<col style="width: 20%">
+				<col style="width: 5%">
+				<col style="width: 5%">
+				<col style="width: 5%">
+			</colgroup>
 			<thead>
 				<tr>
 					<th>번호</th>
@@ -72,30 +81,12 @@
 				<tr>
 					<td>101</td>
 					<td><span class="post-category">[후기]</span> <a
-						href="post-detail.html">전공의생활 2화 진짜 최고</a></td>
+						href="post-detail.html">전공의 생활 2화 진짜 최고</a></td>
 					<td>movielover</td>
 					<td>2025-04-21 14:32</td>
 					<td>132</td>
 					<td>4</td>
 					<td>25</td>
-				</tr>
-				<tr>
-					<td>100</td>
-					<td><span class="post-category">[질문]</span> 오늘 뭐 볼까요?</td>
-					<td>영화덕후</td>
-					<td>2025-04-20 11:05</td>
-					<td>98</td>
-					<td>2</td>
-					<td>7</td>
-				</tr>
-				<tr>
-					<td>99</td>
-					<td><span class="post-category">[스포일러]</span> 듄2 후기 (주의)</td>
-					<td>듄매니아</td>
-					<td>2025-04-19 17:22</td>
-					<td>261</td>
-					<td>6</td>
-					<td>30</td>
 				</tr>
 			</tbody>
 		</table>
@@ -120,15 +111,13 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
 		let isLoggedIn = false;
-		let userId = `<%=userId %>`;
-		if (userId != null) {
+		if (<%=loginedUser %> !== null) {
 			isLoggedIn = true;
-		};
+		}
 	
 		$("#write-post").submit(function() {
 			if (!isLoggedIn) {
 				$("#btn-header-login").trigger("click");
-				$("input[name=redirectUrl]").val("/movmov/pages/community/post-form.jsp?boardType=" + <%=boardType %>)
 				return false;
 			}
 			return true;
