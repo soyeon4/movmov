@@ -11,7 +11,7 @@
 	/*
 		요청 정보
 			- 요청 URL
-				/pages/community/post-form.jsp
+				/pages/community/post-form.jsp?boardType=xxx
 			- 요청 파라미터
 				name		value
 				--------------------

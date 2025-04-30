@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MovMov Community</title>
-<link rel="icon" href="resources/images/common/favicon.ico">
+<link rel="icon" href="../../resources/images/common/favicon.ico">
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">

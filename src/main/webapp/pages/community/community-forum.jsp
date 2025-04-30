@@ -11,6 +11,10 @@
 	String boardType = request.getParameter("btype");
 
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
+	String userId = null;
+	if (loginedUser != null) {
+		userId = loginedUser.getId();
+	};
 
 %>
 <!DOCTYPE html>
@@ -28,21 +32,10 @@
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet"
 	href="../../resources/style/community/community-forum.css">
-<link rel="stylesheet"
-	href="../../resources/style/mypage/modal-login.css">
 </head>
 <body>
 	<!-- 헤더 -->
 	<%@ include file="../common/header.jsp"%>
-	<!-- 로그인 모달 포함시키기 -->
-<%-- 	<%@ include file="../mypage/modal-login.jsp" %> --%>
-	<div id="loginmodaltest" class="modal-background" style="display: none">
-		<div class="modal-login">
-			<span class="close">&times;</span>
-			<p>You need to be logged in to write a post.</p>
-			<a href="/login"><button>Login</button></a>
-		</div>
-	</div>
 
 	<div class="boards-container">
 		<div class="board-header">
@@ -106,7 +99,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<form id="write-post" method="post" action="post-form.jsp">
+		<form id="write-post" method="get" action="post-form.jsp">
 			<input type="hidden" name="boardType" value="<%=boardType %>">
 			<button type="submit" class="write-btn">✍️ 글쓰기</button>
 		</form>
@@ -127,28 +120,20 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
 		let isLoggedIn = false;
-		if (<%=loginedUser %> != null) {
+		let userId = `<%=userId %>`;
+		if (userId != null) {
 			isLoggedIn = true;
 		};
 	
 		$("#write-post").submit(function() {
 			if (!isLoggedIn) {
-				$("#loginmodaltest").fadeIn();
+				$("#btn-header-login").trigger("click");
+				$("input[name=redirectUrl]").val("/movmov/pages/community/post-form.jsp?boardType=" + <%=boardType %>)
 				return false;
-			} else {
-				window.location.href = "/write-post";
 			}
+			return true;
 		});
 
-		$(".close").click(function() {
-			$("#loginmodaltest").fadeOut();
-		});
-
-		$(window).click(function(e) {
-			if ($(e.target).is("#loginmodaltest")) {
-				$("#loginmodaltest").fadeOut();
-			}
-		});
 	</script>
 
 </html>
