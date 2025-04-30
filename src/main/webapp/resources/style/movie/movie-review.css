@@ -74,7 +74,10 @@
 	.star-rating label:hover ~ label {
 	  color: #FF60A0;
 	}
-
+	.star-icon {
+  	color: #FF498D;  /* 원하는 색상으로 변경 가능 */
+  	font-size: 1.5rem; /* 크기 조절 */
+	}
     /* 평가 버튼 스타일 */
     .btn-primary {
 	    background-color: #FF498D; /* 핑크색 */

@@ -5,12 +5,49 @@
   
 <mapper namespace="kr.co.movmov.mapper.WishMovieMapper">
 	<!-- 
-		void insertWishMovie(String UserId, int movieNo);
+			void insertWishMovie(WishMovie wishMovie)
 	 -->
-	<insert id="insertWishMovie">
-		insert movmov_wish_movies
+	<insert id="insertWishMovie" parameterType="WishMovie">
+		insert into movmov_wish_movies
 		(wish_movie_no, wish_movie_created_date, movie_no, user_id)
 		values
-		(wish_movie_no_seq, sysdate, #{movieNo}, #{userId})
+		(wish_movie_no_seq.nextval, sysdate, #{movie.no}, #{user.id})
 	</insert>
+	<!-- 
+		void deleteWishMovie(int wishNo);
+	 -->
+	<delete id="deleteWishMovie">
+		delete movmov_wish_movies
+		where
+			wish_movie_no = #{wishNo}
+	</delete>
+	<!-- 
+			WishMovie getWishMovieByUserIdAndMovieNo(String userId, int movieNo);
+	 -->
+	<select id="getWishMovieByUserIdAndMovieNo" resultType="WishMovie">
+		select
+			wish_movie_no as no
+			, wish_movie_created_date as createdDate
+			, movie_no as "movie.no"
+			, user_id as "user.id"
+		from 
+			movmov_wish_movies
+		where
+			user_id = #{userId}
+			and movie_no = #{movieNo}
+	</select>
+	<!-- 
+			List<WishMovie> getWishMoviesbyUserId(String userId);
+	 -->
+	<select id="getWishMoviesbyUserId" resultType="WishMovie">
+		select
+			wish_movie_no as no
+			, wish_movie_created_date as createdDate
+			, movie_no as "movie.no"
+			, user_id as "user.id"
+		from 
+			movmov_wish_movies
+		where
+			user_id = #{userId}
+	</select>
 </mapper>

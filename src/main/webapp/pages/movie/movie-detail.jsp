@@ -1,3 +1,7 @@
+<%@page import="kr.co.movmov.vo.WishMovie"%>
+<%@page import="kr.co.movmov.mapper.WishMovieMapper"%>
+<%@page import="kr.co.movmov.vo.Review"%>
+<%@page import="kr.co.movmov.mapper.ReviewMapper"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.vo.Genre"%>
 <%@page import="java.util.List"%>
@@ -9,18 +13,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	User loginedUser = (User) session.getAttribute("LOGINED_USER");
 	
+	User user = (User) session.getAttribute("LOGIN_USER");
+	// 전달받은 영화번호	
 	int movieNo = StringUtils.strToInt(request.getParameter("movieNo"));
 	
 	MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
-
-	Movie movie = movieMapper.getMovieByNo(movieNo);
-	
 	MovieGenreMapMapper movieGenreMapMapper = MybatisUtils.getMapper(MovieGenreMapMapper.class);
+	ReviewMapper reviewMapper = MybatisUtils.getMapper(ReviewMapper.class);
+	WishMovieMapper wishMovieMapper = MybatisUtils.getMapper(WishMovieMapper.class);
+	
+	// 영화정보 받아오기
+	Movie movie = movieMapper.getMovieByNo(movieNo);
+
+	// 영화장르 받아오기
 	List<Genre> genres = movieGenreMapMapper.getGenresByMovieNo(movieNo);
 	
-
+	
+	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -68,16 +78,64 @@
           <h2>줄거리</h2>
           <p><%=movie.getPlot() %></p>
         </div>
+
 <%
-	// 로그인 시
-	//if (loginedUser != null) {
+	// 로그인 안됐을때
+	if (loginUser == null) {
+%>
+	<div class="mb-auto">
+          <!-- 별점과 한 줄 평 -->
+          <div class="mb-3">
+            <h3>내 별점: 로그인하세요</h3>
+            <p><strong>코멘트:</strong> 로그인하세요 </p>
+          </div>
+          <!-- 평가/보고싶어요 버튼 -->
+          <div class="action-buttons">
+            <form action="../mypage/modal-login.jsp" method="post" class="d-inline-block me-2">
+              <input type="hidden" name="movieId" value="1">
+              <button type="submit" class="btn btn-lg btn-primary">로그인하고 평가하기</button>
+            </form>
+            <form action="../mypage/modal-login.jsp" method="post" class="d-inline-block">
+              <input type="hidden" name="movieId" value="1">
+              <input type="hidden" name="userId" value="">
+              <button type="submit" class="btn btn-lg btn-outline-secondary">로그인하고 찜하기</button>
+            </form>
+          </div>
+        </div>
+<%
+	// 로그인했을때
+	} else {
+		// 리뷰가져오기
+		Review review = reviewMapper.getReviewByUserIdAndMovieNo(user.getId(), movieNo);
+		// 찜(현재 로그인 유저, 현재 영화)가져오기
+		WishMovie wishMovie = wishMovieMapper.getWishMovieByUserIdAndMovieNo(user.getId(), movieNo);
 %>
         <!-- 이 div에 mt-auto 추가해서 아래로 밀기 -->
         <div class="mb-auto">
           <!-- 별점과 한 줄 평 -->
           <div class="mb-3">
-            <h3>내 별점: ${userRating} ★</h3>
-            <p><strong>코멘트:</strong> <%=movie.getPlot() %></p>
+<%	
+		// 리뷰가 없으면
+		if (review == null) {
+%>			<h3>내 별점: </h3>
+			<p>아직 영화를 평가하지 않았습니다</p>
+<%		
+		// 리뷰가 있으면
+		} else {
+%>
+            <h3>내 별점:
+<%
+    		for (int i = 0; i < review.getStar(); i++) {
+%>
+    		<span class="star-icon">★</span>
+<%
+    		}
+%>
+			</h3>
+            <p><strong>내 코멘트:</strong> <%=review.getComment() %></p>
+<% 
+		}
+%>
           </div>
           <!-- 평가/보고싶어요 버튼 -->
           <div class="action-buttons">
@@ -85,22 +143,33 @@
               <input type="hidden" name="movieId" value="1">
               <button type="submit" class="btn btn-lg btn-primary">평가하기</button>
             </form>
-            <form action="/wishlist" method="post" class="d-inline-block">
-              <input type="hidden" name="movieId" value="1">
-              <input type="hidden" name="userId" value="">
+<%
+	// 사용자가 이 영화를 찜한 상태면
+	if (wishMovie != null) {
+%>
+            <form action="wish-delete.jsp" method="post" class="d-inline-block">
+              <input type="hidden" name="movieNo" value="<%=movieNo %>">
+              <input type="hidden" name="wishNo" value="<%=wishMovie.getNo() %>">
+              <button type="submit" class="btn btn-lg btn-outline-secondary">찜해제</button>
+            </form>
+<%
+	// 사용자가 이 영화를 찜하지 않았다면
+	} else {
+%>
+            <form action="wish-add.jsp" method="post" class="d-inline-block">
+              <input type="hidden" name="movieNo" value="<%=movieNo %>">
               <button type="submit" class="btn btn-lg btn-outline-secondary">찜하기</button>
             </form>
+<%
+	}
+%>
           </div>
         </div>
 <%
-	//}
+	}
 %>
       </div>
     </div>
-
-
-    
-
     <div class="row">
       <div class="col-lg-12">
         
@@ -115,20 +184,38 @@
         <!-- 코멘트 모음 -->
         <section class="content-section" id="comments">
           <h2>코멘트 모음</h2>
-          <div class="comment">
-            <p><strong>영화팬</strong> <small class="text-muted">2025-04-20</small></p>
-            <p>이 영화는 정말 혁신적이었어요. 액션과 스토리가 잘 결합되어 너무 좋았어요!</p>
+<%
+	List<Review> reviews = reviewMapper.getReviewsByMovieNo(movieNo);
+	if (reviews.isEmpty()) {
+%>
+		<div class="comment">
+            <p>아직 이 영화에 작성된 리뷰가 없습니다</p>
           </div>
+<%
+	} else {
+		for (Review review : reviews) {
+%>
           <div class="comment">
-            <p><strong>영화덕후</strong> <small class="text-muted">2025-04-21</small></p>
-            <p>처음 봤을 때 충격적이었고, 아직도 그 장면들이 기억에 남아요.</p>
+            <p><strong><%=review.getUser().getNickname() %> </strong> <small class="text-muted"><%=review.getUpdatedDate() %></small></p>
+<%
+    		for (int i = 0; i < review.getStar(); i++) {
+%>
+    		<span class="star-icon">★</span>
+<%
+    		}
+%>
+            <p><%=review.getComment() %></p>
           </div>
+<%
+		}
+	}
+%>
         </section>
       </div>
     </div>
   </div>
 
-  <%@ include file="../common/footer.jsp" %>>
+  <%@ include file="../common/footer.jsp" %>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

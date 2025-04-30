@@ -1,3 +1,5 @@
+<%@page import="kr.co.movmov.vo.Review"%>
+<%@page import="kr.co.movmov.mapper.ReviewMapper"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.vo.Genre"%>
 <%@page import="java.util.List"%>
@@ -8,14 +10,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
+	User user = (User) session.getAttribute("LOGIN_USER");
+	// 전달받은 영화번호	
 	int movieNo = StringUtils.strToInt(request.getParameter("movieNo"));
 	
 	MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
+	MovieGenreMapMapper movieGenreMapMapper = MybatisUtils.getMapper(MovieGenreMapMapper.class);
+	ReviewMapper reviewMapper = MybatisUtils.getMapper(ReviewMapper.class);
 	
+	// 영화정보 받아오기
 	Movie movie = movieMapper.getMovieByNo(movieNo);
 	
-	MovieGenreMapMapper movieGenreMapMapper = MybatisUtils.getMapper(MovieGenreMapMapper.class);
+	// 영화장르 받아오기
 	List<Genre> genres = movieGenreMapMapper.getGenresByMovieNo(movieNo);
+	
+	// 리뷰 불러오기
+	Review review = reviewMapper.getReviewByUserIdAndMovieNo(user.getId(), movieNo);
 
 	
 %>
@@ -66,48 +76,107 @@
           <p><%=movie.getPlot() %></p>
         </div>
     
-        <!-- 이 div에 mt-auto 추가해서 아래로 밀기 -->
-        <div class="mb-auto">
-          <!-- 별점과 한 줄 평 -->
-          <div class="mb-3">
-            <h3>내 별점: ${userRating} ★</h3>
-            <p><strong>코멘트:</strong> ${userReview}</p>
-          </div>
-          </div>
-          </div>
-	
+        
+	</div>
+	</div>
+	</div>
   <div class="container my-5">
-    <h1 class="mb-4">${movie.title} 평가하기</h1>
-    <form action="/submitRating" method="post">
-      <input type="hidden" name="movieId" value="${movie.id}">
-      
+    <h1 class="mb-4">평가하기</h1>
+<%
+	// 리뷰가 없었으면
+	if (review == null) {
+%>	    
+    <form action="review-add.jsp" method="post">
+<%
+	// 리뷰가 이미 존재하면
+	} else {
+%>
+    <form action="review-update.jsp" method="post">
+      <input type="hidden" name="reviewNo" value="<%=review.getNo() %>">
+<%
+	}
+%>
+      <input type="hidden" name="movieNo" value="<%=movie.getNo() %>">
+<%
+	// 리뷰가 없으면
+	if (review == null) {
+%>
       <!-- 별 평점 선택 -->
       <div class="mb-4">
         <label for="rating" class="form-label">평점</label>
         <div class="star-rating">
-		  <input type="radio" id="star5" name="rating" value="5">
+		  <input type="radio" id="star5" name="star" value="5">
 		  <label for="star5">★</label>
-		  <input type="radio" id="star4" name="rating" value="4">
+		  <input type="radio" id="star4" name="star" value="4">
 		  <label for="star4">★</label>
-		  <input type="radio" id="star3" name="rating" value="3">
+		  <input type="radio" id="star3" name="star" value="3">
 		  <label for="star3">★</label>
-		  <input type="radio" id="star2" name="rating" value="2">
+		  <input type="radio" id="star2" name="star" value="2">
 		  <label for="star2">★</label>
-		  <input type="radio" id="star1" name="rating" value="1">
+		  <input type="radio" id="star1" name="star" value="1">
 		  <label for="star1">★</label>
 		</div>
       </div>
-
+<%
+	// 리뷰가 있으면
+	} else {
+%>
+      <!-- 별 평점 선택 -->
+      <div class="mb-4">
+        <label for="rating" class="form-label">평점</label>
+        <div class="star-rating">
+		  <input type="radio" id="star5" name="star" value="5" <%= review.getStar() == 5 ? "checked" : "" %>>
+		  <label for="star5">★</label>
+		  <input type="radio" id="star4" name="star" value="4" <%= review.getStar() == 4 ? "checked" : "" %>>
+		  <label for="star4">★</label>
+		  <input type="radio" id="star3" name="star" value="3" <%= review.getStar() == 3 ? "checked" : "" %>>
+		  <label for="star3">★</label>
+		  <input type="radio" id="star2" name="star" value="2" <%= review.getStar() == 2 ? "checked" : "" %>>
+		  <label for="star2">★</label>
+		  <input type="radio" id="star1" name="star" value="1" <%= review.getStar() == 1 ? "checked" : "" %>>
+		  <label for="star1">★</label>
+		</div>
+      </div>
+<%
+	}
+%>
       <!-- 코멘트 입력 -->
       <div class="mb-4">
         <label for="comment" class="form-label">코멘트</label>
+<%
+	// 리뷰가 없었으면
+	if (review == null) {
+%>	  
         <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="영화에 대한 생각을 남겨주세요"></textarea>
+<%
+	} else {
+%>
+        <textarea class="form-control" id="comment" name="comment" rows="4"><%=review.getComment()%></textarea>
+<%
+	}
+%>
       </div>
+      <!-- 리뷰 공개 여부 -->
+      <div class="mb-4">
+		  <label class="form-label">리뷰 공개 여부</label>
+		  <div>
+		    <div class="form-check form-check-inline">
+		      <input class="form-check-input" type="radio" name="openStatus" id="public" value="Y" <%=(review == null || "Y".equals(review.getOpenStatus())) ? "checked" : "" %>>
+		      <label class="form-check-label" for="public">공개</label>
+		    </div>
+		    <div class="form-check form-check-inline">
+		      <input class="form-check-input" type="radio" name="openStatus" id="private" value="N" <%=(review != null && "N".equals(review.getOpenStatus())) ? "checked" : "" %>>
+		      <label class="form-check-label" for="private">비공개</label>
+		    </div>
+		  </div>
+		</div>
       
       <!-- 버튼 -->
-      <button action type="submit" class="btn btn-primary">제출</button>
-      <a href="detail.html" class="btn btn-secondary">취소</a>
+      <button type="submit" class="btn btn-primary">저장</button>
+      <a href="movie-detail.jsp?movieNo=<%=movie.getNo()%>" class="btn btn-secondary">취소</a>
     </form>
+  </div>
+  </div>
   </div>
 
   <!-- Bootstrap JS -->

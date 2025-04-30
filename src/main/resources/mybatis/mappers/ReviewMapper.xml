@@ -50,20 +50,42 @@
 	<!-- 
 		Review getReviewByUserIdAndMovieNo(String userId, int movieNo);
 	 -->
-	 <select id="getReviewByUserIdAndMovieNo" resultType="Review">
+	<select id="getReviewByUserIdAndMovieNo" resultType="Review">
 	 	select 
 			review_no as no
 			, review_star as star
-			, review_comment as comment
+			, review_comment as "comment"
 			, review_created_date as createdDate
 			, review_updated_date as updatedDate
 			, review_open_status as openStatus
-			, user_id as "writer.id"
+			, user_id as "user.id"
 			, movie_no as "movie.no"
 		from movmov_movie_reviews
 		where 
 			movie_no = #{movieNo}
 			and user_id = #{userId}
 		order by review_updated_date desc
-	 </select>
+	</select>
+	<!-- 
+		void insertReview(Review review);
+	 -->
+	 <insert id="insertReview" parameterType="Review">
+	 	insert into movmov_movie_reviews
+	 	(review_no, review_star, review_comment, review_created_date, review_updated_date, user_id, movie_no, review_open_status)
+	 	values
+	 	(review_no_seq.nextval, #{star}, #{comment}, sysdate, sysdate, #{user.id}, #{movie.no}, #{openStatus})
+	 </insert>
+	<!-- 
+		void updateReview(Review review);
+	 -->
+	 <update id="updateReview" parameterType="Review">
+	 	update movmov_movie_reviews
+	 	set
+	 		review_star = #{star}
+	 		, review_comment = #{comment}
+	 		, review_updated_date = sysdate
+	 		, review_open_status = #{openStatus}
+	 	where 
+	 		review_no = #{no}
+	 </update>
 </mapper>

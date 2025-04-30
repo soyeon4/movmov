@@ -113,11 +113,7 @@
 		for (Review review : reviews) {
 			starSum += review.getStar();
 		}
-		if (starSum != 0) {
-			starAvg = starSum/reviews.size();
-		} else {
-			starAvg = 0;
-		}
+		starAvg = (reviews.size() != 0) ? (double) starSum / reviews.size() : 0;
 %>
         <tr class="movie-row">
           <td><a href="movie-detail.jsp?movieNo=<%=movie.getNo() %>"><img src="../../resources/images/movie/<%=movie.getPosterImagePath() %>" alt="포스터" class="movie-poster"></a></td>

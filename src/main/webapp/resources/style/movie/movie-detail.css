@@ -34,6 +34,10 @@ nav ul li:hover {
   color: #FF498D;
   font-weight: 700;
 }
+.star-icon {
+  color: #FF498D;  /* 원하는 색상으로 변경 가능 */
+  font-size: 1.5rem; /* 크기 조절 */
+}
 .client {
   display: flex;
   justify-content: center;
