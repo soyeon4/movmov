@@ -12,10 +12,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
-    
-	private String id;
-	private String name;
+public class User {    
+
+   private String id;
+   private String name;
     private String password;
     private String nickname;
     private String email;

@@ -9,10 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Alias("Genre")
-public class Genre {
-
-   private int no;
-   private String name;
-
+@Alias("MovieGenreMap")
+public class MovieGenreMap {
+	private Movie movie;
+	private Genre genre;
 }

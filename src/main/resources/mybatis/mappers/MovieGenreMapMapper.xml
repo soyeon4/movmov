@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.movmov.mapper.MovieGenreMapMapper">
+	<!-- 
+		List<Genre> getGenresByMovieNo(int movieNo);
+	 -->
+	<select id="getGenresByMovieNo" resultType="Genre">
+		select 
+			genre.genre_no as no
+			, genre.genre_name as name
+		from
+			movmov_movie_genres genre
+		join movmov_movie_genre_map map 
+		on genre.genre_no = map.genre_no
+		where
+			map.movie_no = #{movieNo}
+		order by genre.genre_no
+	</select>
+	<!-- 
+		List<Movie> getMoviesByGenreNo(int genreNo);
+	 -->
+	<select id="getMoviesByGenreNo" resultType="Movie">
+		select 
+			movie.movie_no as no
+			, genre.genre_name as 
+		from
+			movmov_movie_genres genre
+		join movmov_movie_genre_map map 
+		on genre.genre_no = map.genre_no
+		where
+			map.movie_no = #{movieNo}
+		order by genre.genre_no
+	</select>
+	
+</mapper>

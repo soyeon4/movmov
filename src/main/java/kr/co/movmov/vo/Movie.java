@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Alias("Movie")
 public class Movie {
+
    private int no;
    private String title;
    private String director;
@@ -24,4 +25,5 @@ public class Movie {
    private String plot;
    private int releaseYear;
    private List<Genre> genres;
+
 }
