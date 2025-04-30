@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.movmov.mapper.ShopItemMapper">
+
+	<!--
+		ShopItem getShopItemById(int id);
+	-->
+	<select id="getShopItemById" resultType="ShopItem">
+		select
+			i.item_id as id, 
+			i.item_name as name,
+			i.item_component as component, 
+			i.item_description as description, 
+			i.item_price as price, 
+			i.item_discount_rate as discountRate, 
+			i.item_stock as stock, 
+			i.item_sold_out as soldOut, 
+			i.item_image_path as imagePath, 
+			i.item_created_date as createdDate,  
+			i.item_updated_date as updatedDate,  
+			c.category_no as "category.no", 
+			c.category_name as "category.name", 
+			s.seller_id as "seller.id", 
+			s.seller_name as "seller.name", 
+			i.item_has_option as hasOption, 
+			i.image_count as imageCount
+		from 
+			movmov_shop_items i, movmov_shop_item_categories c, movmov_shop_item_sellers s
+		where 
+			i.category_no = c.category_no
+			and i.seller_id = s.seller_id
+			and i.item_id = #{id}
+	</select>
+	
+	<!--
+		List<ShopItem> getShopItemByCategoryNo(int no);
+	-->
+	<select id="getShopItemByCategoryNo" resultType="ShopItem">
+		select
+			i.item_id as id, 
+			i.item_name as name,
+			i.item_component as component, 
+			i.item_description as description, 
+			i.item_price as price, 
+			i.item_discount_rate as discountRate, 
+			i.item_stock as stock, 
+			i.item_sold_out as soldOut, 
+			i.item_image_path as imagePath, 
+			i.item_created_date as createdDate,  
+			i.item_updated_date as updatedDate,  
+			c.category_no as "category.no", 
+			c.category_name as "category.name", 
+			s.seller_id as "seller.id", 
+			s.seller_name as "seller.name", 
+			i.item_has_option as hasOption, 
+			i.image_count as imageCount
+		from 
+			movmov_shop_items i, movmov_shop_item_categories c, movmov_shop_item_sellers s
+		where 
+			i.category_no = c.category_no
+			and i.seller_id = s.seller_id
+			and to_char(i.category_no) like #{no} || '%'
+	</select>
+	
+</mapper>
+ 

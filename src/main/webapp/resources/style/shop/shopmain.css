@@ -1,0 +1,110 @@
+.goods-section {
+	padding: 60px 0;
+	background-color: #fafafa;
+}
+
+.section-inner {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 60px;
+	box-sizing: border-box;
+}
+
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.section-header h2 {
+	font-size: 22px;
+	margin: 0;
+}
+
+.more-link {
+	font-size: 14px;
+	color: #999;
+	text-decoration: none;
+}
+
+.more-link:hover {
+	color: #FF498D;
+}
+
+.goods-list {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+	justify-content: center;
+}
+
+.goods-card {
+	background-color: #fff;
+	border: 1px solid #eee;
+	border-radius: 12px;
+	padding: 16px;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+}
+
+.goods-card img {
+	width: 100%;
+	border-radius: 8px;
+	transition: opacity 0.3s;
+}
+
+.goods-card h4 {
+	font-size: 16px;
+	margin: 12px 0 4px;
+}
+
+.goods-card p {
+	color: #FF498D;
+	font-weight: bold;
+}
+
+.image-wrapper {
+	position: relative;
+	cursor: pointer;
+}
+/* style/shopmain.css */
+
+/* 버튼 그룹 위치 및 초기 상태 숨김 */
+.hover-actions {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+/* 버튼 기본 상태는 투명 */
+.hover-actions button {
+	font-size: 12px;
+	padding: 6px 8px;
+	border-radius: 4px;
+	cursor: pointer;
+	opacity: 0;
+	transition: all 0.2s ease-in-out;
+}
+
+/* 찜 & 장바구니 버튼 기본 배경 */
+.hover-actions .wishlist, .hover-actions .cart {
+	background-color: #fff;
+	border: 1px solid #ccc;
+}
+
+/* 이미지 위에 마우스 올리면 버튼 나타나기 */
+.image-wrapper:hover .hover-actions button {
+	opacity: 1;
+}
+
+/* 버튼 hover 시 스타일 변경 */
+.hover-actions .wishlist:hover, .hover-actions .cart:hover {
+	background-color: #FFE6EC;
+	border: 1px solid #FF498D;
+	color: #1d1d1d;
+}
