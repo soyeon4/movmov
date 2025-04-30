@@ -6,8 +6,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>장바구니</title>
-<link rel="stylesheet" href="/semiproject/resources/style/common/main.css" />
-<link rel="stylesheet" href="/semiproject/resources/style/shop/cart.css" />
+<link rel="stylesheet" href="/movmov/resources/style/common/main.css" />
+<link rel="stylesheet" href="/movmov/resources/style/shop/cart.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
@@ -33,7 +33,7 @@
 					<input type="checkbox" />
 				</div>
 				<div style="display: flex; align-items: center; gap: 10px;">
-					<img src="/semiproject/resources/images/shop/CGV 영화관람권.jpg" alt="상품1"> <span>IMAX
+					<img src="/movmov/resources/images/shop/CGV 영화관람권.jpg" alt="상품1"> <span>IMAX
 						영화관람권</span>
 				</div>
 				<div>18,000원</div>
@@ -53,7 +53,7 @@
 					<input type="checkbox" />
 				</div>
 				<div style="display: flex; align-items: center; gap: 10px;">
-					<img src="/semiproject/resources/images/shop/CGV 영화관람권.jpg" alt="상품2">
+					<img src="/movmov/resources/images/shop/CGV 영화관람권.jpg" alt="상품2">
 					<span>라지콤보 (팝콘+음료)</span>
 				</div>
 				<div>17,000원</div>

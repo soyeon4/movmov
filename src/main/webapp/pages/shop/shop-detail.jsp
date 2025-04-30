@@ -25,8 +25,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>상품 상세 페이지</title>
-<link rel="stylesheet" href="/semiproject/resources/style/common/main.css" />
-<link rel="stylesheet" href="/semiproject/resources/style/shop/detail-shop.css" />
+<link rel="stylesheet" href="/movmov/resources/style/common/main.css" />
+<link rel="stylesheet" href="/movmov/resources/style/shop/detail-shop.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 <link
@@ -48,7 +48,7 @@
 		</section>
 		<div class="detail-container">
 			<div class="detail-image">
-				<img src="/semiproject/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" />
+				<img src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" />
 			</div>
 			<div class="detail-info">
 				<h1><%=item.getName() %></h1>

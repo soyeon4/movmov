@@ -28,8 +28,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>관람권 상품 목록 - MovMov 스토어</title>
-<link rel="stylesheet" href="/semiproject/resources/style/common/main.css">
-<link rel="stylesheet" href="/semiproject/resources/style/shop/list.css">
+<link rel="stylesheet" href="/movmov/resources/style/common/main.css">
+<link rel="stylesheet" href="/movmov/resources/style/shop/list.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -81,7 +81,7 @@
 					<div class="goods-card">
 						<div class="image-wrapper">
 							<a href="shop-detail.jsp?id=<%=item.getId() %>"> <img
-								src="/semiproject/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
+								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
 							<div class="hover-actions">
 								<button class="wishlist" onclick="handleWishlist()">❤️
 									찜</button>

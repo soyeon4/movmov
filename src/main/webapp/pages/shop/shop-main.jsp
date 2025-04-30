@@ -14,8 +14,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>MovMov 스토어</title>
-<link rel="stylesheet" href="/semiproject/resources/style/common/main.css" />
-<link rel="stylesheet" href="/semiproject/resources/style/shop/shopmain.css" />
+<link rel="stylesheet" href="/movmov/resources/style/common/main.css" />
+<link rel="stylesheet" href="/movmov/resources/style/shop/shopmain.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 <link
@@ -79,7 +79,7 @@
 					<div class="goods-card">
 						<div class="image-wrapper">
 							<a href="shop-detail.jsp?id=<%=item.getId() %>"><img
-								src="/semiproject/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
+								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
 							<div class="hover-actions">
 								<button class="wishlist" onclick="handleWishlist()">❤️
 									찜</button>
