@@ -26,6 +26,6 @@
 	
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
-		
+		<mapper resource="mybatis/mappers/ShopItemMapper.xml"/>
 	</mappers>
 </configuration>
