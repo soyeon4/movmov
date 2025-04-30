@@ -11,6 +11,10 @@
 	String boardType = request.getParameter("btype");
 
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
+	String userId = null;
+	if (loginedUser != null) {
+		userId = loginedUser.getId();
+	};
 
 %>
 <!DOCTYPE html>
@@ -28,29 +32,10 @@
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet"
 	href="../../resources/style/community/community-forum.css">
-<link rel="stylesheet"
-	href="../../resources/style/community/modal-login-alert.css">
 </head>
 <body>
 	<!-- 헤더 -->
 	<%@ include file="../common/header.jsp"%>
-	
-	<!-- 로그인 없이 글쓰기 시도를 했을 경우 모달 팝업 -->
-	<div id="loginmodaltest" class="modal-background">
-		<div class="modal-login">
-			<span class="close">&times;</span>
-			<h2>게시글을 작성하기 위해서 로그인해야 합니다.</h2>
-			<a href="/login">
-				<button type="button"
-					class="btn-login-submit">로그인</button>
-			</a>
-			<div class="link-small">
-				<a href="register-form.jsp" class="link-small">계정이 없으신가요? <strong>회원가입</strong></a>
-			</div>
-		</div>
-	</div>
-	<!-- 로그인 모달 포함시키기 -->
-<%-- 	<%@ include file="../mypage/modal-login.jsp" %> --%>
 
 	<div class="boards-container">
 		<div class="board-header">
@@ -114,7 +99,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<form id="write-post" method="post" action="post-form.jsp">
+		<form id="write-post" method="get" action="post-form.jsp">
 			<input type="hidden" name="boardType" value="<%=boardType %>">
 			<button type="submit" class="write-btn">✍️ 글쓰기</button>
 		</form>
@@ -135,28 +120,20 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
 		let isLoggedIn = false;
-		if (<%=loginedUser %> != null) {
+		let userId = `<%=userId %>`;
+		if (userId != null) {
 			isLoggedIn = true;
 		};
 	
 		$("#write-post").submit(function() {
 			if (!isLoggedIn) {
-				$("#loginmodaltest").fadeIn();
+				$("#btn-header-login").trigger("click");
+				$("input[name=redirectUrl]").val("/movmov/pages/community/post-form.jsp?boardType=" + <%=boardType %>)
 				return false;
-			} else {
-				window.location.href = "/write-post";
 			}
+			return true;
 		});
 
-		$(".close").click(function() {
-			$("#loginmodaltest").fadeOut();
-		});
-
-		$(window).click(function(e) {
-			if ($(e.target).is("#loginmodaltest")) {
-				$("#loginmodaltest").fadeOut();
-			}
-		});
 	</script>
 
 </html>

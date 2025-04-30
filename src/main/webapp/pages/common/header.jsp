@@ -11,6 +11,8 @@
 	User loginUser = (User) session.getAttribute("LOGIN_USER");
 	
 %>
+	<!-- 로그인 모달 포함  -->
+	<%@ include file="../mypage/modal-login.jsp" %>
 
 <header>
 	<div class="logo">
@@ -30,9 +32,8 @@
 	if (loginUser == null) {
 %>
 		<div class="client">
-	     	<a href="/movmov/pages/mypage/modal-login.jsp">
-	     		<button type="button" class="btn-signin">로그인</button>
-     		</a>
+	     	<button type="button" class="btn-signin"
+	     		id="btn-header-login">로그인</button>
 	     	<a href="/movmov/pages/mypage/register-form.jsp">
 	     		<button type="button" class="btn-signin">회원가입</button>
 	     	</a>
@@ -75,3 +76,20 @@
 	}
 %>
 </header>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript">
+		$("#btn-header-login").click(function() {
+			$("input[name=redirectUrl]").val("<%=request.getRequestURL() %>");
+			$(".modal-background").fadeIn();
+		});
+		$(".modal-close").click(function() {
+			$(".modal-background").fadeOut();
+		});
+
+		$(window).click(function(e) {
+			if ($(e.target).is(".modal-background")) {
+				$(".modal-background").fadeOut();
+			}
+		});
+	</script>
+	
