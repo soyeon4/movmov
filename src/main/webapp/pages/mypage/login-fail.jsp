@@ -9,7 +9,7 @@
   <title>로그인 실패 | MovMov</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/movmov/resources/style/login-fail.css">
+  <link rel="stylesheet" href="../../resources/style/mypage/login-fail.css">
   <script src="https://kit.fontawesome.com/your-own-kit-code.js" crossorigin="anonymous"></script>
 </head>
 

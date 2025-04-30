@@ -8,11 +8,15 @@
 
 <%
 		/* 요청 파라미터
-			id , password
+			id , password, redirectUrl (null 가능)
 		*/
 	String id = request.getParameter("id");
 	String password = request.getParameter("password");
-		
+	String redirectUrl = "../../index.jsp";
+	if (request.getParameter("redirectUrl") != null) {
+		redirectUrl = request.getParameter("redirectUrl");
+	}
+	
 	UserMapper userMapper = MybatisUtils.getMapper(UserMapper.class);
 	
 	User userAllData = userMapper.getIdByUser(id);
@@ -39,5 +43,5 @@
     }
 
 	session.setAttribute("LOGIN_USER", userAllData);
-	response.sendRedirect("/movmov/index.jsp");
+	response.sendRedirect(redirectUrl);
 %>

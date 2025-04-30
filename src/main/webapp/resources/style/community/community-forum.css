@@ -1,0 +1,119 @@
+.boards-container {
+	max-width: 1000px;
+	margin: 40px auto;
+	padding: 20px;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
+}
+
+.board-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.board-title {
+	font-size: 24px;
+	font-weight: bold;
+	color: #FF498D;
+}
+
+.search-bar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.search-bar input {
+	padding: 8px 12px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	font-size: 14px;
+	width: 200px;
+}
+
+.search-bar button {
+	padding: 8px 14px;
+	background-color: #FF498D;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.board-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.board-table thead {
+	background-color: #fce4ef;
+	color: #FF498D;
+	font-weight: bold;
+}
+
+.board-table th, .board-table td {
+	text-align: center;
+	padding: 12px;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+}
+
+.board-table tbody tr:hover {
+	background-color: #f9f9f9;
+	cursor: pointer;
+}
+
+.post-category {
+	display: inline-block;
+	font-size: 13px;
+	background-color: #ffe3ef;
+	color: #FF498D;
+	padding: 2px 6px;
+	border-radius: 6px;
+	margin-right: 5px;
+}
+
+.write-btn {
+	margin-top: 20px;
+	float: right;
+	background-color: #FF498D;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 8px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.write-btn:hover {
+	background-color: #e93d7c;
+}
+
+.pagination {
+	margin-top: 40px;
+	text-align: center;
+}
+
+.pagination button {
+	border: none;
+	background: none;
+	font-size: 14px;
+	padding: 8px 12px;
+	margin: 0 2px;
+	color: #666;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+.pagination button.active {
+	background-color: #FF498D;
+	color: white;
+}
+
+.pagination button:hover {
+	background-color: #ffd2e4;
+}
