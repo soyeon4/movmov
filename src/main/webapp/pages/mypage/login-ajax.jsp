@@ -11,10 +11,11 @@
 
 <%
 		/* 요청 파라미터
-			id , password
+			id , password, redirectUrl (null 가능)
 		*/
 	String id = request.getParameter("id");
 	String password = request.getParameter("password");
+	String redirectUrl = request.getParameter("redirectUrl");
 	
 	boolean success = false;
 	
@@ -23,29 +24,23 @@
 	User userAllData = userMapper.getIdByUser(id);
 
 	
+	// 로그인 실패 처리
 	if (userAllData == null) {
-		// 로그인 실패 처리
-		response.sendRedirect("login-fail.jsp?fail=id");
-		return;
+		redirectUrl = "/movmov/pages/mypage/login-fail.jsp?fail=id";
+	} else {
+		String secretPassword = DigestUtils.sha256Hex(password);
+		if (!secretPassword.equals(userAllData.getPassword())) {
+			redirectUrl = "/movmov/pages/mypage/login-fail.jsp?fail=password";
+		} else if ("Y".equals(userAllData.getIsDeleted())) {
+				redirectUrl = "/movmov/pages/mypage/login-fail.jsp?fail=isDeleted";
+		} else {
+   			success = true;
+   		}
 	}
-	
-	String secretPassword = DigestUtils.sha256Hex(password);
-	
-	
-	if (!secretPassword.equals(userAllData.getPassword())) {
-		response.sendRedirect("login-fail.jsp?fail=password");
-		return;
-	}
 
-
-    if ("Y".equals(userAllData.getIsDeleted())) {
-		response.sendRedirect("login-fail.jsp?fail=isDeleted");
-        return;
-    }
-
-    success = true;
     Map<String, Object> result = new HashMap<>();
     result.put("success", success);
+    result.put("redirectUrl", redirectUrl);
     
     Gson gson = new Gson();
     String jsonResponse = gson.toJson(result);
