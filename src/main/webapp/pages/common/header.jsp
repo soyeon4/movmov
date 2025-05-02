@@ -107,9 +107,13 @@
 	                    // 로그인 성공
 	                    if (window.location.pathname === "/login.jsp" || window.location.pathname === "/") {
 	                        window.location.href = "index.jsp";
+	                    } else if (response.redirectUrl != "null") {
+	                    	window.location.href = response.redirectUrl;
 	                    } else {
-	                        location.reload(); // 현재 페이지 리로드
+	                    	location.reload(); // 현재 페이지 리로드
 	                    }
+	                } else {
+	                	window.location.href = response.redirectUrl;
 	                }
 	            }
 	        });
