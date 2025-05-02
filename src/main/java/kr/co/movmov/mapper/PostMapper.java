@@ -25,5 +25,5 @@ public interface PostMapper {
 	 * @param boardNo 게시판 번호
 	 * @return 게시글 목록
 	 */
-	List<Post> getPostsByBoardId(int boardNo);
+	List<Post> getPostsByBoardId(int boardId);
 }

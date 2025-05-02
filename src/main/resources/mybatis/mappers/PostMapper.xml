@@ -49,27 +49,61 @@
 	</select>
 	
 	<!--
-		List<Post> getPostsByBoardId(int boardNo);
+		List<Post> getPostsByBoardId(int boardId);
 	-->
-	<select id="getPostsByBoardId" resultType="Post">
+	<select id="getPostsByBoardId" resultMap="PostResultMap">
 		select
-			post_no						as no
-		  , user_id						as "user.id"
-		  , post_header					as "header.id"
-		  , post_board_type				as "boardType.id"
-		  , post_title					as title
-		  , post_content				as content
-		  , post_created_date			as createdDate
-		  , post_updated_date			as updatedDate
-		  , post_view_count				as viewCount
-		  , post_upvote_count			as upvoteCount
-		  , post_is_spoiler				as isSpoiler
+			P.post_no
+		  , P.post_title
+		  , P.post_content
+		  , P.post_created_date
+		  , P.post_updated_date
+		  , P.post_view_count	
+		  , P.post_upvote_count
+		  , NVL(C.comment_count, 0)		as commentCount
+		  , P.post_is_spoiler
+		  , U.user_nickname				as user_nickname
+		  , HC.cat_id					as header_cat_id
+		  , HC.cat_name					as header_cat_name
+    	  , BC.cat_id					as board_cat_id
+    	  , BC.cat_name					as board_cat_name
 		from
-			movmov_community_posts
+			movmov_community_posts P
+				left join (select post_no, count(*) as comment_count
+    				from movmov_community_comments
+    				group by post_no) C on P.post_no = C.post_no
+				join movmov_content_categories HC on P.post_header = HC.cat_id
+				join movmov_content_categories BC on P.post_board_type = BC.cat_id
+				join movmov_users U on P.user_id = U.user_id
 		where
-			post_board_type = #{boardNo}
-			and post_is_deleted = 'N'
+			P.post_board_type = #{boardNo}
+			and P.post_is_deleted = 'N'
+		order by
+			P.post_no desc
 	</select>
+	
+	<resultMap type="Post" id="PostResultMap">
+		<id column="post_no" property="no"/>
+		<result column="post_title" property="title"/>
+		<result column="post_content" property="content"/>
+		<result column="post_created_date" property="createdDate"/>
+		<result column="post_updated_date" property="updatedDate"/>
+		<result column="post_view_count" property="viewCount"/>
+		<result column="post_upvote_count" property="upvoteCount"/>
+		<result column="post_is_spoiler" property="isSpoiler"/>
+		<association property="user" javaType="User">
+			<id column="user_id" property="id"/>
+			<result column="user_nickname" property="nickname"/>
+		</association>
+		<association property="header" javaType="Category">
+			<id column="header_cat_id" property="id"/>
+			<result column="header_cat_name" property="name"/>
+		</association>
+		<association property="boardType" javaType="Category">
+			<id column="board_cat_id" property="id"/>
+			<result column="board_cat_name" property="name"/>
+		</association>
+	</resultMap>
 	
 </mapper>
  

@@ -21,6 +21,7 @@ public class Post {
 	private Date updatedDate;
 	private int viewCount;
 	private int upvoteCount;
+	private int commentCount;
 	private String isDeleted;
 	private String isReported;
 	private String isSpoiler;
