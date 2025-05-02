@@ -105,7 +105,7 @@
 
     <section class="forums-container">
       <div class="forum">
-        <h2><a href="community-forum.jsp?btype=300">🎬 영화게시판</a></h2>
+        <h2><a href="community-forum.jsp?bid=300">🎬 영화게시판</a></h2>
         <div class="board-header">
           <span>번호</span>
           <span>제목</span>
@@ -139,7 +139,7 @@
       </div>
 
       <div class="forum">
-        <h2><a href="community-forum.jsp?btype=301">🎈 자유게시판</a></h2>
+        <h2><a href="community-forum.jsp?bid=301">🎈 자유게시판</a></h2>
         <div class="board-header">
           <span>번호</span>
           <span>제목</span>
