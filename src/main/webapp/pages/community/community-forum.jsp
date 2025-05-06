@@ -6,7 +6,7 @@
 	pageEncoding="UTF-8"%>
 <%
 	/*
-		/pages/community-forum?btype=xxx
+		/pages/community-forum?bid=xxx
 		
 		bid		300		영화게시판
 		bid		301		자유게시판
@@ -18,7 +18,7 @@
 	List<Post> boardPosts = postMapper.getPostsByBoardId(boardId);
 
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
-
+	boolean isLoggedIn = loginedUser != null;
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -89,7 +89,7 @@
 					<td>
 						<span class="tag-spoiler"><%=("Y".equals(post.getIsSpoiler()) ? "[스포일러]" : "") %></span>
 						<span class="tag-header"><%=post.getHeader().getName() %></span>
-						<a href="post-detail.html"><%=post.getTitle() %></a>
+						<a href="post-detail.jsp?pno=<%=post.getNo() %>"><%=post.getTitle() %></a>
 					</td>
 					<td><%=post.getUser().getNickname() %></td>
 					<td><%=StringUtils.simpleDate(post.getCreatedDate()) %></td>
@@ -122,10 +122,7 @@
 	
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
-		let isLoggedIn = false;
-		if (<%=loginedUser %> !== null) {
-			isLoggedIn = true;
-		}
+		let isLoggedIn = <%=isLoggedIn %>;
 	
 		$("#write-post").submit(function() {
 			if (!isLoggedIn) {

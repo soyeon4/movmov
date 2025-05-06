@@ -27,6 +27,7 @@
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
+		<mapper resource="mybatis/mappers/CommentMapper.xml" />
 		<mapper resource="mybatis/mappers/CategoryMapper.xml" />
 		<mapper resource="mybatis/mappers/UserMapper.xml"/>
 		<mapper resource="mybatis/mappers/MovieMapper.xml"/>

@@ -26,4 +26,18 @@ public interface PostMapper {
 	 * @return 게시글 목록
 	 */
 	List<Post> getPostsByBoardId(int boardId);
+	
+	/**
+	 * 게시글을 업데이트한다.
+	 * @param post 업데이트된 게시글
+	 */
+	void updatePost(Post post);
+	
+	/**
+	 * 게시글 작성 직후 해당 게시글 페이지로 갈 수 있도록
+	 * post_no_seq.currval을 반환한다.
+	 * @return 현재 게시글 시퀀스 값
+	 */
+	int getCurrentPostNo();
+	
 }
