@@ -51,8 +51,7 @@
 	
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	postMapper.insertPost(post);
+	int currentPostNo = postMapper.getCurrentPostNo();
 	
-	
-	
-
+	response.sendRedirect("post-detail.jsp?pno=" + currentPostNo);
 %>

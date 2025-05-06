@@ -65,7 +65,7 @@
 				<!-- 스포일러 여부 선택 -->
 				<div class="form-group">
 					<div class="tooltip-group">
-						<label for="contains-spoiler">스포일러</label>
+						<div class="field">스포일러</div>
 						<div class="input-tooltip" id="spoiler-tooltip">스포일러 여부는 필수 선택사항입니다.</div>
 					</div>
 					<input type="hidden" name="spoiler" id="contains-spoiler">
@@ -81,7 +81,7 @@
 				<!-- 🔖 말머리 선택 -->
 				<div class="form-group">
 					<div class="tooltip-group">
-						<label for="header">말머리</label>
+						<div class="field">말머리</div>
 						<div class="input-tooltip" id="header-tooltip">말머리는 필수 선택사항입니다.</div>
 					</div>
 					<input type="hidden" name="header" id="header-select">
@@ -114,9 +114,7 @@
 					</div>
 					<textarea name="content" placeholder="내용을 입력하세요"></textarea>
 				</div>
-
 				<button type="submit" class="submit-btn">등록하기</button>
-
 			</div>
 		</form>
 
