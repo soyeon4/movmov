@@ -98,3 +98,6 @@ hs_err_pid*
 replay_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,java
+
+#db connection properties, 개인 개발 환경에 맞게 수정요망
+src/main/resources/db.properties
