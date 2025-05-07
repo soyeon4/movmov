@@ -17,6 +17,8 @@ local.properties
 .classpath
 .project
 
+!/build/classes/mybatis/mybatis-config.xml"
+
 
 # External tool builders
 .externalToolBuilders/
