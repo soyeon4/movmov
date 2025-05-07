@@ -91,15 +91,13 @@
 %>
 			<div class="post-meta">
 				작성일:
-				<%=StringUtils.detailDate(post.getCreatedDate()) %>
-				<%=(updated ? "| 수정일: " + StringUtils.detailDate(post.getUpdatedDate()) : "") %>
+				<%=StringUtils.simpleDateTimeFormat(post.getCreatedDate()) %>
+				<%=(updated ? "| 수정일: " + StringUtils.simpleDateTimeFormat(post.getUpdatedDate()) : "") %>
 				| 조회수:
 				<%=post.getViewCount() %>
 			</div>
 			<hr class="divider">
-			<div class="post-content">
-				<%=post.getContent() %>
-			</div>
+			<div class="post-content"><%=post.getContent() %></div>
 			<hr class="divider">
 			<!-- ❤️ 추천 버튼 -->
 			<div class="recommend-button">
@@ -109,6 +107,8 @@
 			</div>
 		</div>
 		<div class="post-options">
+			<a href="">수정</a>
+			<a href="">삭제</a>
 			<a href="report-form.html" class="report-button">신고하기</a>
 		</div>
 
@@ -126,11 +126,20 @@
 					<span class="author-name"><%=comment.getUser().getNickname() %></span>
 					<div class="meta"><%=StringUtils.detailDate(comment.getCreatedDate()) %></div>
 				</div>
-				<div class="text"><%=comment.getContent() %></div>
+				<div class="content"><%=comment.getContent() %></div>
 			</div>
 <%
 	}
 %>
+			<div class="pagination">
+				<button>&laquo;</button>
+				<button class="active">1</button>
+				<button>2</button>
+				<button>3</button>
+				<button>4</button>
+				<button>5</button>
+				<button>&raquo;</button>
+			</div>
 			<div class="comment-form">
 				<h4>댓글 작성</h4>
 				<form action="create-comment.jsp" method="post">
