@@ -1,6 +1,7 @@
 package kr.co.movmov.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.co.movmov.vo.Post;
 
@@ -39,5 +40,12 @@ public interface PostMapper {
 	 * @return 현재 게시글 시퀀스 값
 	 */
 	int getCurrentPostNo();
+	
+	/**
+	 * 페이지네이션 고려한 게시글 목록 불러오기
+	 * @param condition 필터링 조건
+	 * @return 게시글 목록
+	 */
+	List<Post> getPosts(Map<String, Object> condition);
 	
 }
