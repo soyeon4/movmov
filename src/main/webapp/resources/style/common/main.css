@@ -58,7 +58,6 @@ nav ul li:hover a {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 200px;
 	position: relative;
 }
 
@@ -73,7 +72,6 @@ nav ul li:hover a {
 .btn-signin, .btn-signup, .btn-signout, .btn-cart {
 	border-radius: 12px;
 	font-size: 10px;
-	padding: 8px 16px;
 	border: none;
 	font-weight: 700;
 	background-color: #f0f0f0;
@@ -388,4 +386,88 @@ nav ul li:hover a {
 
 .footer-socials span:hover {
 	color: #FF498D;
+}
+
+/* login modal */
+.modal-background {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.5);
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+	justify-content: center;
+}
+
+.modal-login {
+	background-color: #fff;
+	padding: 40px 30px;
+	margin: 15% auto;
+	border-radius: 16px;
+	width: 400px;
+	max-width: 90%;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+	text-align: center;
+	position: relative;
+}
+
+.input-login {
+	width: 90%;
+	padding: 12px;
+	margin-bottom: 14px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	font-size: 14px;
+}
+select.input-login {
+	width: 96%;
+}
+
+.modal-login h2 {
+	margin-bottom: 20px;
+	font-size: 18px;
+}
+
+.link-small {
+	margin-top: 16px;
+}
+.link-small a {
+	margin-top: 16px;
+	font-size : 12px;
+	color: #666;
+	text-decoration: none;
+}
+
+.link-small a:hover {
+	color: #FF498D;
+	text-decoration: underline;
+}
+
+.modal-close {
+	position: absolute;
+	right: 16px;
+	top: 10px;
+	font-size: 24px;
+	cursor: pointer;
+}
+
+.btn-login-submit {
+	width: 100%;
+	padding: 12px;
+	background-color: #FF498D;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 15px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.btn-login-submit:hover {
+	background-color: #e53c7e;
 }

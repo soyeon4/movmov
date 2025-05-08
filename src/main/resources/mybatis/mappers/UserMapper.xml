@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.movmov.mapper.UserMapper">
+
+<!-- 	
+	void insertUser(User user);
+ -->
+	<insert id="insertUser" parameterType="User">
+		insert into
+		movmov_users
+		(user_id
+		, user_name
+		, user_password
+		, user_nickname
+		, user_email
+		, user_region
+		, user_point)
+		values
+		(#{id}, #{name}, #{password}, #{nickname}, #{email}, #{region}, #{point})
+	</insert>	
+	
+		
+		
+	<!-- 
+			User getIdByUser(String id);
+	 -->
+		<select id="getIdByUser" resultType="User">
+			select 
+				user_id				as id
+			,	user_name			as name
+			,	user_password		as password
+			,	user_nickname		as nickname
+			,	user_email			as email
+			,	user_region			as region	
+			,	user_created_date	as createDate
+			,	user_profile_image	as profileImage
+			,   user_point			as point
+			,	addr_id				as addrId
+			,	user_is_deleted		as isDeleted
+			,	user_created_date	as createdDate
+			from movmov_users
+			where user_id = #{id}
+		</select>
+		
+	<!-- 	
+		User getEmailByUser(String email);
+	 -->	
+	 		<select id="getEmailByUser" resultType="User">
+	 			select 
+				user_id				as id
+			,	user_name			as name
+			,	user_password		as password
+			,	user_nickname		as nickname
+			,	user_email			as email
+			,	user_region			as region	
+			,	user_created_date	as createDate
+			,	user_profile_image	as profileImage
+			,   user_point			as point
+			,	addr_id				as addrId
+			from movmov_users
+			where user_email= #{email}
+		</select>
+	 
+	 <!-- 
+	 	User getNickName(String nickname);
+	  -->
+	  		<select id="getNickName" resultType="User">
+					select 
+				user_id				as id
+			,	user_name			as name
+			,	user_password		as password
+			,	user_nickname		as nickname
+			,	user_email			as email
+			,	user_region			as region	
+			,	user_created_date	as createDate
+			,	user_profile_image	as profileImage
+			,   user_point			as point
+			,	addr_id				as addrId
+			from movmov_users
+			where user_nickname = #{nickname}
+		</select>
+		
+		
+		<!-- 
+			void updateUserDelete(String id);
+		 -->
+		 <update id="updateUserDelete" parameterType="User">
+		 	update movmov_users
+		 	set user_is_deleted = #{isDeleted}
+		 	where user_id = #{id}
+		 </update>
+</mapper>

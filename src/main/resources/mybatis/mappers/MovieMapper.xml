@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.movmov.mapper.MovieMapper">
+
+	<!-- 
+		int getTotalRows(Map<String, Object> condition);
+	 -->
+	<select id="getTotalRows" parameterType="map">
+		select 
+	 		count(*)
+	 	from
+	 		movmov_movies
+	 	<if test="genre != null">
+	 		where category_no = #{catNo}
+	 	</if>
+	</select>
+	<!-- 
+		List<Movie> getMovies(Map<String, Object> condition);
+	 -->
+	<select id="getMovies" resultType="Movie">
+		select 
+			movie_no as no
+			, movie_title as title
+			, movie_director as director
+			, movie_actor as actor
+			, movie_country as country
+			, movie_length as length
+			, movie_rating as rating
+			, movie_poster_image_path as posterImagePath
+			, movie_plot as plot
+			, movie_release_year as releaseYear
+		from
+			movmov_movies 
+		order by movie_no asc
+	</select>
+	<!-- 
+		Movie getMovieByNo(int no); 	
+	 -->
+	<select id="getMovieByNo">
+		select 
+			movie_no as no
+			, movie_title as title
+			, movie_director as director
+			, movie_actor as actor
+			, movie_country as country
+			, movie_length as length
+			, movie_rating as rating
+			, movie_poster_image_path as posterImagePath
+			, movie_plot as plot
+			, movie_release_year as releaseYear
+		from
+			movmov_movies 
+		where
+			movie_no = #{no}
+	</select>
+</mapper>
