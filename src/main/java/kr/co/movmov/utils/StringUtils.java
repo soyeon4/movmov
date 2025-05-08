@@ -9,6 +9,7 @@ public class StringUtils {
 	private static DecimalFormat decimalFormat = new DecimalFormat("##,###");
 	private static SimpleDateFormat detailDateFormat = new SimpleDateFormat("yyyy년 M월 d일 a h시 m분 s초");
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
 	/**
 	 * 값을 전달받아서, 해당 값이 null이면 defaultValue를 반환한다.
@@ -59,6 +60,18 @@ public class StringUtils {
 		return simpleDateFormat.format(date);
 	}
 	
+	/**
+	 * 날짜를 전달받아서
+	 * "2024-01-01 00:00" 형식의 문자열로 반환한다.
+	 * @param date 날짜
+	 * @return "2024-01-01 00:00" 형식의 문자열
+	 */
+	public static String simpleDateTimeFormat(Date date) {
+		if (date == null) {
+			return "";
+		}
+		return simpleDateTimeFormat.format(date);
+	}
 	
 	/**
 	 * 정수를 ,가 포함된 텍스트로 변환한다.

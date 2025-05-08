@@ -67,7 +67,7 @@ textarea::placeholder {
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
-  color: inherit;
+  color: grey;
 }
 
 .submit-btn {
@@ -168,7 +168,7 @@ border-color: #FF498D;
   align-items: center;
 }
 
-.tooltip-group label {
+.tooltip-group label, .tooltip-group .field {
 	font-weight: bold;
 	display: block;
 	margin-bottom: 6px;

@@ -1,14 +1,32 @@
+<%@page import="kr.co.movmov.vo.Comment"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.movmov.mapper.CommentMapper"%>
+<%@page import="java.util.Date"%>
+<%@page import="kr.co.movmov.vo.Post"%>
+<%@page import="kr.co.movmov.utils.StringUtils"%>
+<%@page import="kr.co.movmov.mapper.PostMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
 	/*
 		요청 URL
-			/pages/community/post-detail.jsp?bno=xxx
+			/pages/community/post-detail.jsp?pno=xxx
 		
 			name		value
 			----------------
-			bno			게시글 번호 post_id
+			pno			게시글 번호
 	*/
+
+	int postNo = StringUtils.strToInt(request.getParameter("pno"));
+	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
+	Post post = postMapper.getPostById(postNo);
+	post.setViewCount(post.getViewCount() + 1);
+	postMapper.updatePost(post);
+	post = postMapper.getPostById(postNo);
+	
+	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
+	List<Comment> postComments = commentMapper.getCommentsByPostNo(postNo);
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -30,69 +48,130 @@
 	<%@ include file="../common/header.jsp"%>
       
 	<div class="container">
-    
     <!-- 🔷 게시판 이름 -->
-    <div class="board-label">🎬 영화게시판</div>
-
+<%
+	if (post.getBoardType().getId() == 300) {
+%>
+    <div class="board-label">
+    	<a href="community-forum.jsp?bid=300">🎬 영화게시판</a>
+    </div>
+<%
+	} else {
+%>
+    <div class="board-label">
+    	<a href="community-forum.jsp?bid=301">🎈 자유게시판</a>
+    </div>
+<%
+	}
+%>
     <!-- 📌 상세 글 내용 -->
-    <div class="post-detail">
-        <div class="post-tag">[후기]</div> <!-- 말머리 -->
-          <h2>영화 후기 공유합니다 🎬</h2>
-          <div class="post-meta">작성자: movlover | 날짜: 2025.04.21 | 조회수: 234</div>
-          <div class="post-content">
-          오늘 본 영화 정말 재밌었어요! 캐릭터가 입체적이고, 연출도 최고였음. <br />
-          여러분은 어떻게 보셨나요?
-          </div>
-        <!-- ❤️ 추천 버튼 -->
-        <div class="recommend-button">
-          <button class="btn-recommend">
-            <img src="resources/favicon.ico" alt="추천" class="recommend-icon" />
-            추천 0
-          </button>
-        </div>
-      </div>
-      <div>
-        <a href="report-form.html" class="report-button">신고하기</a>
-      </div>
+		<div class="post-detail">
+			<!-- 말머리 -->
+			<div class="post-title">
+<%
+	if ("Y".equals(post.getIsSpoiler())) {
+%>
+				<span class="post-tag spoiler">스포일러</span>
+<%
+	}
+%>
+				<span class="post-tag header"><%=post.getHeader().getName() %></span>
+				<h2><%=post.getTitle() %></h2>
+			</div>
+			<div class="post-author">
+				<img class="author-img" alt="profile-pic"
+					src="../../resources/images/common/default-profile.png" />
+				<span><%=post.getUser().getNickname() %></span>
+			</div>
+<%
+	boolean updated = false;
+	if (post.getCreatedDate().compareTo(post.getUpdatedDate()) != 0) {
+		updated = true;
+	}
+%>
+			<div class="post-meta">
+				작성일:
+				<%=StringUtils.simpleDateTimeFormat(post.getCreatedDate()) %>
+				<%=(updated ? "| 수정일: " + StringUtils.simpleDateTimeFormat(post.getUpdatedDate()) : "") %>
+				| 조회수:
+				<%=post.getViewCount() %>
+			</div>
+			<hr class="divider">
+			<div class="post-content"><%=post.getContent() %></div>
+			<hr class="divider">
+			<!-- ❤️ 추천 버튼 -->
+			<div class="recommend-button">
+				<button class="btn-recommend">
+					<span class="recommend-icon">♡</span>추천 0
+				</button>
+			</div>
+		</div>
+		<div class="post-options">
+			<a href="">수정</a>
+			<a href="">삭제</a>
+			<a href="report-form.html" class="report-button">신고하기</a>
+		</div>
 
-    <!-- 💬 댓글 -->
-    <div class="comments-section">
-      <h3>💬 댓글 [1]</h3>
-      <div class="comment">
-        <div class="meta">filmfan · 2025.04.21 15:01</div>
-        <div class="text">저도 완전 공감합니다!! 마지막 장면 진짜 👍</div>
-      </div>
+		<!-- 💬 댓글 -->
+		<div class="comments-section">
+			<div class="comment-header">
+				<p>💬 댓글 [<%=post.getCommentCount() %>]</p>
+			</div>
+<%
+	for (Comment comment : postComments) {
+%>
+			<div class="comment-block">
+				<div class="comment-author">
+					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
+					<span class="author-name"><%=comment.getUser().getNickname() %></span>
+					<div class="meta"><%=StringUtils.detailDate(comment.getCreatedDate()) %></div>
+				</div>
+				<div class="content"><%=comment.getContent() %></div>
+			</div>
+<%
+	}
+%>
+			<div class="pagination">
+				<button>&laquo;</button>
+				<button class="active">1</button>
+				<button>2</button>
+				<button>3</button>
+				<button>4</button>
+				<button>5</button>
+				<button>&raquo;</button>
+			</div>
+			<div class="comment-form">
+				<h4>댓글 작성</h4>
+				<form action="create-comment.jsp" method="post">
+					<input type="hidden" name="postNo" value="<%=post.getNo() %>" />
+					<textarea name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
+					<button type="submit">등록</button>
+				</form>
+			</div>
+		</div>
 
-      <div class="comment-form">
-        <h4>댓글 작성</h4>
-        <form>
-          <textarea rows="4" placeholder="댓글을 입력하세요..."></textarea>
-          <br />
-          <button type="submit">등록</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- 📃 하단 관련 게시글 목록 -->
-    <div class="related-posts">
-      <h3>📋 영화게시판 다른 글</h3>
-      <div class="post-preview">
-        <div class="title">[잡담] 오늘 본 영화 공유해요</div>
-        <div class="author">cinemania</div>
-      </div>
-      <div class="post-preview">
-        <div class="title">[리뷰] 범죄도시3 개봉 후기</div>
-        <div class="author">영화왕</div>
-      </div>
-      <div class="post-preview">
-        <div class="title">[정보] 넷플릭스 신작 추천 목록</div>
-        <div class="author">스트리머</div>
-      </div>
-    </div>
-  </div>
+		<!-- 📃 하단 관련 게시글 목록 -->
+		<div class="related-posts">
+			<h3>📋 영화게시판 다른 글</h3>
+			<div class="post-preview">
+				<div class="title">[잡담] 오늘 본 영화 공유해요</div>
+				<div class="author">cinemania</div>
+			</div>
+			<div class="post-preview">
+				<div class="title">[리뷰] 범죄도시3 개봉 후기</div>
+				<div class="author">영화왕</div>
+			</div>
+			<div class="post-preview">
+				<div class="title">[정보] 넷플릭스 신작 추천 목록</div>
+				<div class="author">스트리머</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 	<!-- 푸터 -->
 	<%@ include file="../common/footer.jsp"%>
-
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript">
+	</script>
 </html>
