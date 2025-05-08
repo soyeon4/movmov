@@ -3,33 +3,42 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+	<properties resource="db.properties" />
 
 	<settings>
-		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
-	
+
 	<typeAliases>
-		<package name="kr.co.movmov.vo"/>
+		<package name="kr.co.movmov.vo" />
 	</typeAliases>
-	
+
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
-			<property name="driver" value="oracle.jdbc.OracleDriver"/>
-				<property name="url" value="jdbc:oracle:thin:@movmovdb_high?TNS_ADMIN=/Users/hyunbin/web-workspace/wallet"/>
-				<property name="username" value="admin"/>
-				<property name="password" value="Movmovzxcv1234"/>
+            <property name="driver" value="${driver}" />
+            <property name="url" value="${url}" />
+            <property name="username" value="${username}" />
+            <property name="password" value="${password}" />
+
 			</dataSource>
 		</environment>
 	</environments>
-	
+
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
+		<mapper resource="mybatis/mappers/CommentMapper.xml" />
 		<mapper resource="mybatis/mappers/CategoryMapper.xml" />
-		<mapper resource="mybatis/mappers/UserMapper.xml"/>
 		<mapper resource="mybatis/mappers/ShopItemMapper.xml"/>
 		<mapper resource="mybatis/mappers/ShopCartItemMapper.xml"/>
+		<mapper resource="mybatis/mappers/UserMapper.xml" />
+		<mapper resource="mybatis/mappers/MovieMapper.xml" />
+		<mapper resource="mybatis/mappers/GenreMapper.xml" />
+		<mapper resource="mybatis/mappers/MovieGenreMapMapper.xml" />
+		<mapper resource="mybatis/mappers/ReviewMapper.xml" />
+		<mapper resource="mybatis/mappers/WishMovieMapper.xml" />
+
 	</mappers>
 </configuration>

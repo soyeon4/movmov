@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MovMov Community</title>
-<link rel="icon" href="resources/images/common/favicon.ico">
+<link rel="icon" href="../../resources/images/common/favicon.ico">
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">
@@ -105,7 +108,7 @@
 
     <section class="forums-container">
       <div class="forum">
-        <h2><a href="community-forum.jsp?btype=300">🎬 영화게시판</a></h2>
+        <h2><a href="community-forum.jsp?bid=300">🎬 영화게시판</a></h2>
         <div class="board-header">
           <span>번호</span>
           <span>제목</span>
@@ -139,7 +142,7 @@
       </div>
 
       <div class="forum">
-        <h2><a href="community-forum.jsp?btype=301">🎈 자유게시판</a></h2>
+        <h2><a href="community-forum.jsp?bid=301">🎈 자유게시판</a></h2>
         <div class="board-header">
           <span>번호</span>
           <span>제목</span>

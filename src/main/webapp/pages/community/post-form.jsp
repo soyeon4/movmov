@@ -11,7 +11,7 @@
 	/*
 		요청 정보
 			- 요청 URL
-				/pages/community/post-form.jsp
+				/pages/community/post-form.jsp?boardType=xxx
 			- 요청 파라미터
 				name		value
 				--------------------
@@ -65,7 +65,7 @@
 				<!-- 스포일러 여부 선택 -->
 				<div class="form-group">
 					<div class="tooltip-group">
-						<label for="contains-spoiler">스포일러</label>
+						<div class="field">스포일러</div>
 						<div class="input-tooltip" id="spoiler-tooltip">스포일러 여부는 필수 선택사항입니다.</div>
 					</div>
 					<input type="hidden" name="spoiler" id="contains-spoiler">
@@ -81,7 +81,7 @@
 				<!-- 🔖 말머리 선택 -->
 				<div class="form-group">
 					<div class="tooltip-group">
-						<label for="header">말머리</label>
+						<div class="field">말머리</div>
 						<div class="input-tooltip" id="header-tooltip">말머리는 필수 선택사항입니다.</div>
 					</div>
 					<input type="hidden" name="header" id="header-select">
@@ -114,9 +114,7 @@
 					</div>
 					<textarea name="content" placeholder="내용을 입력하세요"></textarea>
 				</div>
-
 				<button type="submit" class="submit-btn">등록하기</button>
-
 			</div>
 		</form>
 
@@ -188,7 +186,7 @@
 		handleToggleClick(".header-toggle-group", ".tag-toggle.spoiler", "data-value", "contains-spoiler");
 		handleToggleClick(".header-toggle-group", ".tag-toggle.header", "data-value", "header-select");
 		
-		let titleRegex = /^[a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{2,}$/
+		let titleRegex = /^[0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{2,}$/
 		let contentRegex = /^[\.0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{10,}$/
 		let titleCheckPassed = false;
 		let contentCheckPassed = false;
