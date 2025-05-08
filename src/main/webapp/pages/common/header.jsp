@@ -22,7 +22,7 @@
 			<li><a href="/movmov/index.jsp">홈</a></li>
 			<li><a href="/movmov/pages/movie/movie-list.jsp">영화</a></li>
 			<li><a href="/movmov/pages/community/community-main.jsp">커뮤니티</a></li>
-			<li><a href="/movmov/pages/commerce/shopmain.jsp">Mov Commerce</a></li>
+			<li><a href="/movmov/pages/shop/shop-main.jsp">Mov Commerce</a></li>
 		</ul>
 	</nav>
 <%

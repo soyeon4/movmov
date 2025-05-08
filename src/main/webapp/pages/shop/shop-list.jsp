@@ -55,6 +55,9 @@
 	<%@ include file="/pages/common/header.jsp" %>
 
 	<main>
+	<!-- ✅ 상단 메뉴 추가 -->
+		<%@ include file="shop-nav.jsp" %>
+		
 		<section class="goods-section">
 			<div class="section-inner">
 <%
