@@ -25,5 +25,6 @@ public class Movie {
    private String plot;
    private int releaseYear;
    private List<Genre> genres;
-
+   private int reviewCnt;
+   private int wishCnt;
 }
