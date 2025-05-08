@@ -91,4 +91,5 @@
 	 	where 
 	 		review_no = #{no}
 	 </update>
+
 </mapper>

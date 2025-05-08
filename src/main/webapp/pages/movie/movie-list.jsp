@@ -59,7 +59,7 @@
 	int totalRows = movieMapper.getTotalRows(condition);
 	Pagination pagination = new Pagination(pageNo, totalRows, 10);
 	
-	
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -71,15 +71,15 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../resources/style/movie/movie-list.css">
   <link
-	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
-	rel="stylesheet">
+   href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+   rel="stylesheet">
   <link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="../../resources/style/common/main.css">
 </head>
 <body>
-	<%@ include file="../common/header.jsp" %>
-	<div class="search-container">
+   <%@ include file="../common/header.jsp" %>
+   <div class="search-container">
   <form action="movie-list.jsp" method="get" class="search-form">
     <div class="search-item">
       <label for="movie-title">영화제목</label>
@@ -94,11 +94,12 @@
       <select id="genre" name="genreNo">
         <option value="">장르 선택</option>
 <%
-	for (Genre genre : allGenres) {
+   for (Genre genre : allGenres) {
 %>
         <option value="<%=genre.getNo() %>" <%=genre.getNo() == StringUtils.strToInt(request.getParameter("genreNo"), 0) ? "selected" : "" %>><%=genre.getName() %></option>
+
 <%
-	}
+   }
 %>     
       </select>
     </div>
@@ -107,11 +108,11 @@
       <select id="release-year" name="year">
         <option value="">연도 선택</option>
 <%
-	for (int i = 2000; i<2025; i++) {
+   for (int i = 2000; i<2025; i++) {
 %>
         <option value="<%=i %>" <%=i == StringUtils.strToInt(request.getParameter("year"), 0) ? "selected" : "" %>><%=i %></option>
 <%
-	}
+   }
 %>
         <!-- 연도 옵션은 서버에서 동적으로 생성하거나 JavaScript로 추가할 수 있습니다 -->
       </select>
@@ -138,6 +139,7 @@
 			  <option value="청불" <%= "청불".equals(request.getParameter("rating")) ? "selected" : "" %>>청불</option>
 			</select>
 		</div>
+
     <button type="submit" class="btn-search">검색</button>
   </form>
 </div>
@@ -164,6 +166,7 @@
 	  <input type="hidden" name="page" value="1">
 	  
 	</form>
+
     <table class="table table-hover align-middle">
       <thead class="table-light">
         <tr >
@@ -179,17 +182,17 @@
       </thead>
       <tbody>
 <% 
-	for (Movie movie : movies) {
-		List<Review> reviews = reviewMapper.getReviewsByMovieNo(movie.getNo());
-		List<Genre> genres = movieGenreMapMapper.getGenresByMovieNo(movie.getNo());
-		
-		int starSum = 0;
-		double starAvg = 0;
-		
-		for (Review review : reviews) {
-			starSum += review.getStar();
-		}
-		starAvg = (reviews.size() != 0) ? (double) starSum / reviews.size() : 0;
+   for (Movie movie : movies) {
+      List<Review> reviews = reviewMapper.getReviewsByMovieNo(movie.getNo());
+      List<Genre> genres = movieGenreMapMapper.getGenresByMovieNo(movie.getNo());
+      
+      int starSum = 0;
+      double starAvg = 0;
+      
+      for (Review review : reviews) {
+         starSum += review.getStar();
+      }
+      starAvg = (reviews.size() != 0) ? (double) starSum / reviews.size() : 0;
 %>
         <tr class="movie-row">
           <td><a href="movie-detail.jsp?movieNo=<%=movie.getNo() %>"><img src="../../resources/images/movie/<%=movie.getPosterImagePath() %>" alt="포스터" class="movie-poster"></a></td>
@@ -197,11 +200,11 @@
           <td><%=movie.getReleaseYear() %> 년</td>
           <td>
           <%
-          		for (Genre genre : genres) {
-          %>	
-          		<%=genre.getName() %>
+                for (Genre genre : genres) {
+          %>   
+                <%=genre.getName() %>
           <%
-          			}
+                   }
           %> 
           </td>
           <td><%=movie.getDirector() %></td>
@@ -210,7 +213,7 @@
           <td><%=String.format("%.1f", starAvg) %>점</td>
         </tr>
 <%
-	}
+   }
 %>        
       </tbody>
     </table>
@@ -253,6 +256,6 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-	<%@ include file="../common/footer.jsp" %>
+   <%@ include file="../common/footer.jsp" %>
 </html>
     

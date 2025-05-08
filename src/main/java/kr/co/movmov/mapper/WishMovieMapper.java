@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import kr.co.movmov.vo.Movie;
 import kr.co.movmov.vo.WishMovie;
 
 public interface WishMovieMapper {
@@ -15,4 +16,6 @@ public interface WishMovieMapper {
 	WishMovie getWishMovieByUserIdAndMovieNo(@Param("userId") String userId, @Param("movieNo") int movieNo);
 	
 	List<WishMovie> getWishMoviesbyUserId(String userId);
+	
+
 }
