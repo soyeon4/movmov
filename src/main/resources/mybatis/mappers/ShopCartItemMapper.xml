@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.movmov.mapper.ShopCartItemMapper">
+
+	<!--
+		void deleteCartItemByUserId(String userId);
+	-->
+	<delete id="deleteCartItemByUserId">
+		delete from
+			movmov_shop_cart_items
+		where 
+			user_id = #{userId}
+	</delete>
+
+	<!--
+		void insertCartItemById(String userId, int itemNo);
+	-->
+	<insert id="insertCartItemById">
+		insert into movmov_shop_cart_items
+		(cart_item_no, user_id, item_id)
+		values
+		(cart_item_no_seq.nextval, #{userId}, #{itemNo})
+	</insert>
+
+	<!--
+		void deleteCartItemById(int cartNo);
+	-->
+	<delete id="deleteCartItemById" >
+		delete from 
+			movmov_shop_cart_items
+		where
+			cart_item_no = #{cartNo}
+	</delete>
+	
+	<resultMap type="ShopCartItem" id="ShopCartItemResultMap">
+		<id column="cart_item_no" property="no" />
+		<result column="item_quantity" property="quantity" />
+		<result column="item_created_date" property="createdDate" />
+		<result column="item_updated_date" property="updatedDate" />
+		
+		<association property="user" javaType="User">
+			<id column="user_id" property="id"/>
+			<result column="user_name" property="name"/>
+		</association>
+		
+		<association property="item" javaType="ShopItem">
+			<id column="item_id" property="id"/>
+			<result column="item_name" property="name"/>
+			<result column="item_price" property="price"/>
+			<result column="item_discount_rate" property="discountRate"/>
+			<result column="item_stock" property="stock"/>
+			<result column="item_sold_out" property="soldOut"/>
+			<result column="item_image_path" property="imagePath"/>
+			<result column="item_has_option" property="hasOption"/>
+		</association>
+		
+		<association property="option" javaType="ShopItemOption">
+			<id column="option_id" property="optionId"/>
+			<result column="option_name" property="optionName"/>
+			<result column="item_stock" property="stock"/>
+		</association>
+		
+	</resultMap>
+	<!-- 
+		List<ShopCartItem> getCartItemsByUserId(String userId);
+	-->
+	<select id="getCartItemsByUserId" resultMap="ShopCartItemResultMap">
+		select
+			c.cart_item_no,
+			c.item_quantity,
+			c.item_created_date,
+			c.item_updated_date,
+			
+			u.user_id,
+			u.user_name,
+			
+			o.option_id,
+			o.option_name,
+			o.item_stock,
+			
+			i.item_id,
+			i.item_name,
+			i.item_price,
+			i.item_discount_rate,
+			i.item_stock,
+			i.item_sold_out,
+			i.item_image_path,
+			i.item_has_option
+		from 
+			movmov_shop_cart_items c
+			join movmov_users u on c.user_id = u.user_id
+			join movmov_shop_items i on c.item_id = i.item_id
+			left join movmov_shop_item_options o on c.option_id = o.option_id
+		where 
+			u.user_id = #{userId}
+	</select>
+</mapper>
+ 

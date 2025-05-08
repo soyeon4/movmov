@@ -39,12 +39,9 @@
 	<%@ include file="/pages/common/header.jsp" %>
 
 	<main>
-		<section class="menu-section">
-			<button>🎟️ 관람권</button>
-			<button>🍿 스낵음료</button>
-			<button>🎁 굿즈</button>
-		</section>
-
+		<!-- ✅ 상단 메뉴 추가 -->
+		<%@ include file="shop-nav.jsp" %>
+		
 		<!-- 상품 카테고리 영역 -->
 <%
 	for (int i = 1; i <= 3; i++) {

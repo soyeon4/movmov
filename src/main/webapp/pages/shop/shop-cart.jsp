@@ -1,5 +1,24 @@
+<%@page import="kr.co.movmov.dto.CartDto"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.movmov.vo.ShopCartItem"%>
+<%@page import="kr.co.movmov.utils.StringUtils"%>
+<%@page import="kr.co.movmov.vo.ShopItem"%>
+<%@page import="kr.co.movmov.mapper.ShopCartItemMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	/*
+		요청 정보
+			요청 URL
+				/shop-cart.jsp
+			요청 파라미터
+				name	value
+				-----------------------
+				user	유저아이디
+				item	상품아이디
+			
+	*/
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,12 +33,19 @@
 </head>
 <body>
 	<%@ include file="/pages/common/header.jsp" %>
+<%
 
+	String userId = loginUser.getId();
+	ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
+	List<ShopCartItem> cartItems = cartItemMapper.getCartItemsByUserId(userId);
+	CartDto cartDto = new CartDto(cartItems);
+%>
 	<main>
 		<div class="cart-container">
+		<form id="form-cart-items" method="get" action="shop-delete.jsp">
 			<div class="cart-header">
 				<div>
-					<input type="checkbox" />
+					<input type="checkbox" id="checkbox-select-all" checked />
 				</div>
 				<div>상품명</div>
 				<div>판매금액</div>
@@ -27,60 +53,119 @@
 				<div>구매금액</div>
 				<div>삭제</div>
 			</div>
-
+<%
+	for (ShopCartItem cartItem : cartItems) {
+%>
 			<div class="cart-row">
+			
 				<div>
-					<input type="checkbox" />
+					<input type="checkbox" 
+					name="cno" 
+					value="<%=cartItem.getNo() %>" checked />
 				</div>
 				<div style="display: flex; align-items: center; gap: 10px;">
-					<img src="/movmov/resources/images/shop/CGV 영화관람권.jpg" alt="상품1"> <span>IMAX
-						영화관람권</span>
+					<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" alt="<%=cartItem.getItem().getImagePath() %>"> 
+					<span><%=cartItem.getItem().getName() %></span>
 				</div>
-				<div>18,000원</div>
+				<div><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %>원</div>
 				<div class="qty-box">
 					<button onclick="updateQty(this, -1)">-</button>
 					<input type="text" value="1" readonly />
 					<button onclick="updateQty(this, 1)">+</button>
 				</div>
-				<div>18,000원</div>
 				<div>
-					<i class="fa-solid fa-xmark cart-remove"></i>
+				<span><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></span>원
 				</div>
+				<div>
+					<a href="shop-cart-delete.jsp?cno=<%=cartItem.getNo() %>">
+						<i class="fa-solid fa-xmark cart-remove"></i>
+					</a>
+					
+				</div>
+				
 			</div>
+<%
+	}
+%>
+			
 
-			<div class="cart-row">
-				<div>
-					<input type="checkbox" />
-				</div>
-				<div style="display: flex; align-items: center; gap: 10px;">
-					<img src="/movmov/resources/images/shop/CGV 영화관람권.jpg" alt="상품2">
-					<span>라지콤보 (팝콘+음료)</span>
-				</div>
-				<div>17,000원</div>
-				<div class="qty-box">
-					<button onclick="updateQty(this, -1)">-</button>
-					<input type="text" value="1" readonly />
-					<button onclick="updateQty(this, 1)">+</button>
-				</div>
-				<div>17,000원</div>
-				<div>
-					<i class="fa-solid fa-xmark cart-remove"></i>
-				</div>
+			<div  class="cart-summary">
+				상품 금액: <span id="total-item-price"><%=StringUtils.commaWithNumber(cartDto.getTotalItemPrice()) %></span>원
 			</div>
-
+			<div  class="cart-summary">
+				배송비: <span id="delivery-fee"><%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %></span>원
+			</div>
 			<div class="cart-summary">
-				총 상품 금액: <span id="total-price">35,000</span>원
+				총 상품 금액: <span id="total-order-price"><%=StringUtils.commaWithNumber(cartDto.getTotalOrderPrice()) %></span>원
 			</div>
 
 			<div class="cart-actions">
-				<button onclick="moveToPurchase()">구매하기</button>
+				<button type="button" onclick="deleteSelectedCartItems()">선택 상품 삭제</button>
+				<button type="button" onclick="clearCart()">장바구니 비우기</button>
+				<button type="button" onclick="moveToPurchase()">구매하기</button>
 			</div>
+			</form>
 		</div>
 	</main>
 
 	<%@ include file="/pages/common/footer.jsp" %>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
 
-	<script>
+	<script type="text/javascript">
+		function deleteSelectedCartItems() {
+			$("#form-cart-items").trigger("submit");
+		}
+	
+		function clearCart() {
+			window.location.href = 'cart-clear.jsp'
+		}
+
+		// 전체 선택/해제 체크박스의 체크가 변경될 때 실행되는 이벤트 핸들러 등록
+		$("#checkbox-select-all").change(function() {
+			let checkStatus = $(this).prop("checked");
+			$(":checkbox[name=cno]").prop("checked", checkStatus);
+			newCalculation()
+		})
+		
+		// 장바구니 상품 체크가 변경됨에 따라 전체 선택/해제 체크박스 변경 이벤트 핸들러 등록
+		$(":checkbox[name=cno]").change(function(){
+
+			console.log($(":checkbox[name=cno]:checked"));
+			let checkboxLength = $(":checkbox[name=cno]").length;
+			let checkedCheckboxLength = $(":checkbox[name=cno]:checked").length;
+			$("#checkbox-select-all").prop("checked", checkboxLength == checkedCheckboxLength);
+			newCalculation();
+		});
+	
+		/*$(":checkbox[name=cno]:checked").closest(".cart-row")
+			.find("div:nth-child(5) span")
+			.each(function() {
+				console.log(this.textContent); // ✅ 이제 출력됨!
+			});*/
+			
+		function newCalculation() {
+				let deliveryFee = 0;
+				let totalItemPrice = 0;
+				let totalOrderPrice = 0;
+			$(":checkbox[name=cno]:checked")
+			.closest(".cart-row")
+			.find("div:nth-child(5) span")
+			.each(function() {
+				let itemPrice = parseInt($(this).text().replaceAll(",", ""));
+				totalItemPrice += itemPrice;
+			})
+			
+			if (totalItemPrice < 30000) {
+				deliveryFee = 3000;
+			}
+			
+			totalOrderPrice = totalItemPrice + deliveryFee;
+			$("#total-item-price").text(totalItemPrice);
+			$("#delivery-fee").text(deliveryFee);
+			$("#total-order-price").text(totalOrderPrice);
+			console.log(totalItemPrice);
+		}
+
 		function updateQty(btn, delta) {
 			const input = btn.parentElement.querySelector('input');
 			let qty = parseInt(input.value);
