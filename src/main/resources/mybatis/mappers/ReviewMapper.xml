@@ -11,15 +11,18 @@
 		select 
 			r.review_no as no
 			, r.review_star as star
-			, r.review_comment as comment
+			, r.review_comment as "comment"
 			, r.review_created_date as createdDate
 			, r.review_updated_date as updatedDate
 			, u.user_id as "user.id"
-			, review_open_status as openStatus
+			, r.review_open_status as openStatus
+			, r.movie_no as "movie.no"
 		from 
-			movmov_movie_reviews r, movmov_users u
+			movmov_movie_reviews r, movmov_users u, movmov_movies m
 		where 
-			user_id = #{userId}
+			u.user_id = #{userId}
+			and u.user_id = r.user_id
+			and r.movie_no = m.movie_no
 		order by updatedDate desc
 	</select>
 	

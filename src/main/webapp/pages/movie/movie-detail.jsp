@@ -15,6 +15,10 @@
 <%
 	
 	User user = (User) session.getAttribute("LOGIN_USER");
+	String userId = "";
+	if (user != null) {
+		userId = user.getId();
+	};
 	// 전달받은 영화번호	
 	int movieNo = StringUtils.strToInt(request.getParameter("movieNo"));
 	
@@ -91,22 +95,19 @@
           </div>
           <!-- 평가/보고싶어요 버튼 -->
           <div class="action-buttons">
-            <form action="../mypage/modal-login.jsp" method="post" class="d-inline-block me-2">
-              <input type="hidden" name="movieId" value="1">
+            <form id="test-form" action="../mypage/modal-login.jsp" method="post" class="d-inline-block me-2">
               <button type="submit" class="btn btn-lg btn-primary">로그인하고 평가하기</button>
             </form>
-            <form action="../mypage/modal-login.jsp" method="post" class="d-inline-block">
-              <input type="hidden" name="movieId" value="1">
-              <input type="hidden" name="userId" value="">
+            <form id="test-form2" action="../mypage/modal-login.jsp" method="post" class="d-inline-block">
               <button type="submit" class="btn btn-lg btn-outline-secondary">로그인하고 찜하기</button>
             </form>
           </div>
         </div>
 <%
-	// 로그인했을때
+	// 로그인 했을때
 	} else {
 		// 리뷰가져오기
-		Review review = reviewMapper.getReviewByUserIdAndMovieNo(user.getId(), movieNo);
+		Review myReview = reviewMapper.getReviewByUserIdAndMovieNo(user.getId(), movieNo);
 		// 찜(현재 로그인 유저, 현재 영화)가져오기
 		WishMovie wishMovie = wishMovieMapper.getWishMovieByUserIdAndMovieNo(user.getId(), movieNo);
 %>
@@ -115,26 +116,27 @@
           <!-- 별점과 한 줄 평 -->
           <div class="mb-3">
 <%	
-		// 리뷰가 없으면
-		if (review == null) {
+		// 로그인한 유저의 리뷰가 없으면
+		if (myReview == null) {
 %>			<h3>내 별점: </h3>
 			<p>아직 영화를 평가하지 않았습니다</p>
 <%		
-		// 리뷰가 있으면
+		// 로그인한 유저의 리뷰가 있으면
 		} else {
 %>
             <h3>내 별점:
 <%
-    		for (int i = 0; i < review.getStar(); i++) {
+    		for (int i = 0; i < myReview.getStar(); i++) {
 %>
     		<span class="star-icon">★</span>
 <%
     		}
 %>
 			</h3>
-            <p><strong>내 코멘트:</strong> <%=review.getComment() %></p>
+            <p><strong>내 코멘트:</strong> <%=myReview.getComment() %></p>
 <% 
 		}
+	
 %>
           </div>
           <!-- 평가/보고싶어요 버튼 -->
@@ -143,36 +145,21 @@
               <input type="hidden" name="movieId" value="1">
               <button type="submit" class="btn btn-lg btn-primary">평가하기</button>
             </form>
-<%
-	// 사용자가 이 영화를 찜한 상태면
-	if (wishMovie != null) {
-%>
-            <form action="wish-delete.jsp" method="post" class="d-inline-block">
-              <input type="hidden" name="movieNo" value="<%=movieNo %>">
-              <input type="hidden" name="wishNo" value="<%=wishMovie.getNo() %>">
-              <button type="submit" class="btn btn-lg btn-outline-secondary">찜해제</button>
-            </form>
-<%
-	// 사용자가 이 영화를 찜하지 않았다면
-	} else {
-%>
-            <form action="wish-add.jsp" method="post" class="d-inline-block">
-              <input type="hidden" name="movieNo" value="<%=movieNo %>">
-              <button type="submit" class="btn btn-lg btn-outline-secondary">찜하기</button>
-            </form>
+            <form id="wish-form" action="<%= wishMovie != null ? "wish-delete.jsp" : "wish-add.jsp" %>" method="post" class="d-inline-block">
+			  <input type="hidden" name="movieNo" value="<%= movieNo %>">
+			  <input type="hidden" name="wishNo" value="<%= wishMovie != null ? wishMovie.getNo() : 0 %>">
+			  <button type="submit" id="wish-button" class="btn btn-lg <%= wishMovie != null ? "btn btn-lg btn-primary" : "btn-no-hover" %>">
+			    <%= wishMovie != null ? "찜해제" : "찜하기" %>
+			  </button>
+			</form>
+		  </div>
+    	</div>
 <%
 	}
 %>
-          </div>
-        </div>
-<%
-	}
-%>
-      </div>
     </div>
     <div class="row">
       <div class="col-lg-12">
-        
         <!-- 출연/제작인원 -->
         <section class="content-section" id="cast-crew">
           <h2>제작 및 출연</h2>
@@ -209,15 +196,35 @@
 <%
 		}
 	}
+	
 %>
         </section>
       </div>
     </div>
+  </div>
   </div>
 
   <%@ include file="../common/footer.jsp" %>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script type="text/javascript">
+	  $("#test-form").submit(function() {
+	      if (<%=loginUser %> === null) {
+	         $("#btn-header-login").trigger("click");
+<%-- 	         $("input[name=redirectUrl]").val("/movmov/pages/movie/movie-detail.jsp?movieNo=<%=movie.getNo()%>"); --%>
+	         return false;
+	      }
+	   });
+	  $("#test-form2").submit(function() {
+	      if (<%=loginUser %> === null) {
+	         $("#btn-header-login").trigger("click");
+<%-- 	         $("input[name=redirectUrl]").val("/movmov/pages/movie/movie-detail.jsp?movieNo=<%=movie.getNo()%>"); --%>
+	         return false;
+	      }
+	   });
+  </script>
+  
 </body>
 </html>
