@@ -40,7 +40,7 @@
 <%
     }
 %>
-    <a href="/movmov/pages/mypage/modal-login.jsp" class="btn btn-primary btn-login">다시 로그인</a>
+    <a href="modal-login.jsp" class="btn btn-primary btn-login">다시 로그인</a>
   </div>
 
 </body>
