@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 public class KakaoAddrServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // ✅ 본인의 Kakao REST API Key 입력 (주의: "KakaoAK " 앞 공백 포함 필수)
     private static final String KAKAO_API_KEY = "KakaoAK 1fcd50b1638310f5958d168fdd4ebc97";
 
     @Override
