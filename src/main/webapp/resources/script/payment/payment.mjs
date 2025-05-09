@@ -67,6 +67,8 @@ const btnsDelete = document.querySelectorAll('.btn-delete');
 
 btnNewAddress.addEventListener('click', () => {
 	overlayEnterAddress.style.display = 'flex';
+	inputs = overlayEnterAddress.querySelectorAll('input');
+	inputs.forEach(input => { input.value = ''; });
 });
 
 btnsEdit.forEach(btn => {
@@ -85,13 +87,12 @@ function openEditAddressInfo(card) {
 	const detail = card.querySelector('.detail').textContent.trim() || '';
 	const number = card.querySelector('.post-number').textContent.trim() || '';
 
-	// ⚡ input 요소는 .value로 값을 넣어야 합니다
 	document.getElementById('recipient').value = name;
 	document.getElementById('phone').value = phone;
 	document.getElementById('title').value = comment;
 	document.getElementById('address').value = address;
 	document.getElementById('detail-address').value = detail;
-	document.getElementById('post-number-search').innerText = number;
+	document.getElementById('post-number-search').value = number;
 }
 
 
@@ -223,7 +224,7 @@ async function searchAddress() {
 
 				li.addEventListener('click', () => {
 					document.querySelector('#address-form input[name="address"]').value = road;
-					document.querySelector('#address-form input[name="detail"]').value = ''; 
+					document.querySelector('#address-form input[name="detail"]').value = '';
 					document.querySelector('#address-form input[name="zipcode"]').value = zone;
 
 					// 모달 닫기 (옵션)

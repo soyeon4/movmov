@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/movmov/resources/style/shop/cart.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-
+<link rel="icon" href="/movmov/resources/images/common/favicon.ico">
 </head>
 <body>
 	<%@ include file="/pages/common/header.jsp" %>
@@ -90,7 +90,7 @@
 		}
 		function moveToPurchase() {
 			if (confirm('결제 페이지로 이동하시겠습니까?')) {
-				window.location.href = 'payment.html'; // 결제 페이지
+				window.location.href = '../payment/payment.jsp'; // 결제 페이지
 			}
 		}
 	</script>

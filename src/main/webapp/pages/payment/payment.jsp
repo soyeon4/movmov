@@ -156,7 +156,7 @@
 								<div class="form-group">
 									<label for="recipient">받는 이</label><br>
 									<div class="input-with-button">
-										<input type="text" id="recipient" placeholder="이름 입력" />
+										<input type="text" id="recipient" placeholder="이름 입력" required />
 										<button type="button" class="btn-remove">✕</button>
 									</div>
 								</div>
