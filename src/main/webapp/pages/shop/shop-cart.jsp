@@ -175,7 +175,7 @@
 		}
 		function moveToPurchase() {
 			if (confirm('결제 페이지로 이동하시겠습니까?')) {
-				window.location.href = 'payment.html'; // 결제 페이지
+				window.location.href = '../payment/payment.jsp'; // 결제 페이지
 			}
 		}
 	</script>
