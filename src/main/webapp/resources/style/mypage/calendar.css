@@ -1,0 +1,63 @@
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.month-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.month-btn {
+  padding: 6px 12px;
+  background-color: #eee;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+
+.month-btn:hover {
+  background-color: #FF498D;
+  color: white;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.day {
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.date-box {
+  min-height: 100px;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.date-box.reviewed {
+  background-color: #fff0f5;
+  border: 1px solid #FF498D;
+}
+
+.review-snippet {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #555;
+}

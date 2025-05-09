@@ -40,6 +40,11 @@ body {
       color: #FF498D;
       font-weight: bold;
     }
+    .btn-outline-secondary.active {
+	    background-color: #FF498D;  /* 핑크색 */
+	    color: white;
+	    border-color: #FF498D;
+	  }
     .btn-primary {
       background-color: #FF498D; /* 핑크색 */
       border-color: #FF498D; /* 핑크색 테두리 */

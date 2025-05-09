@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.vo.Movie"%>
 <%@page import="kr.co.movmov.mapper.MovieMapper"%>
 <%@page import="kr.co.movmov.vo.WishMovie"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
@@ -17,8 +18,12 @@
 	wishMovie.setMovie(movieMapper.getMovieByNo(movieNo));
 	wishMovie.setUser(user);
 	
+	Movie movie = movieMapper.getMovieByNo(movieNo);
+	
 	// 찜 삽입
 	wishMovieMapper.insertWishMovie(wishMovie);
+	
+	movie.setWishCnt(movie.getWishCnt() + 1);
 	
 	response.sendRedirect("movie-detail.jsp?movieNo=" + movieNo);
 %>

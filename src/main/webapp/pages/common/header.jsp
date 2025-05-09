@@ -24,7 +24,7 @@
 			<li><a href="/movmov/index.jsp">홈</a></li>
 			<li><a href="/movmov/pages/movie/movie-list.jsp">영화</a></li>
 			<li><a href="/movmov/pages/community/community-main.jsp">커뮤니티</a></li>
-			<li><a href="/movmov/pages/commerce/shopmain.jsp">Mov Commerce</a></li>
+			<li><a href="/movmov/pages/shop/shop-main.jsp">Mov Commerce</a></li>
 		</ul>
 	</nav>
 <%
@@ -47,7 +47,7 @@
 		<a href="/movmov/pages/mypage/page.jsp">
 			<button type="button" class="btn-signin"><%=loginUser.getNickname() %></button>
 		</a>
-		<a href="">
+		<a href="/movmov/pages/shop/shop-cart.jsp">
 			<button type="button" class="btn-cart">장바구니</button>
 		</a>
 		<a href="/movmov/pages/mypage/logout.jsp">
