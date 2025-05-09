@@ -29,7 +29,7 @@
 <link rel="stylesheet" href="/movmov/resources/style/shop/cart.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-
+<link rel="icon" href="resources/images/common/favicon.ico">
 </head>
 <body>
 	<%@ include file="/pages/common/header.jsp" %>
