@@ -21,5 +21,6 @@ public class Comment {
 	private String isDeleted;
 	private String isReported;
 	private int parentCommentNo;
+	private int reportCount;
 	
 }

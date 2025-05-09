@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="kr.co.movmov.mapper.CommentMapper"%>
 <%@page import="kr.co.movmov.vo.Comment"%>
 <%@page import="kr.co.movmov.vo.User"%>
@@ -38,6 +39,9 @@
 	comment.setContent(content);
 	comment.setUser(loginUser);
 	comment.setParentCommentNo(parentCommentNo);
+	Date currentTime = new Date();
+	comment.setCreatedDate(currentTime);
+	comment.setUpdatedDate(currentTime);
 	
 	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
 	commentMapper.insertComment(comment);

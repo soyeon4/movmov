@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.mapper.PostMapper"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
@@ -48,6 +49,9 @@
 	post.setContent(content);
 	post.setIsSpoiler(spoiler);
 	post.setUser(loginUser);
+	Date currentTime = new Date();
+	post.setCreatedDate(currentTime);
+	post.setUpdatedDate(currentTime);
 	
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	postMapper.insertPost(post);

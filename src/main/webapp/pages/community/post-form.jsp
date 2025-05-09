@@ -117,23 +117,6 @@
 				<button type="submit" class="submit-btn">등록하기</button>
 			</div>
 		</form>
-
-		<!-- 📃 하단 관련 게시글 목록 -->
-		<div class="related-posts">
-			<h3>📋 영화게시판 다른 글</h3>
-			<div class="post-preview">
-				<div class="title">[후기] 전공의생활 2화</div>
-				<div class="author">무비러버</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[잡담] 오늘 뭐 봄?</div>
-				<div class="author">영화덕후</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[공지] 이번 주 굿즈 할인</div>
-				<div class="author">관리자</div>
-			</div>
-		</div>
 	</section>
 </body>
 
@@ -165,29 +148,31 @@
 		};
 		
 		$(".board-label").click(function() {
-			let boardType = $(this).attr("board-type");
-			let headers = (boardType == "300" ? <%=movieHeadersJson %> : <%=freeHeadersJson %>);
-			// 스포일러가 선택되어 있다면 해제
-			$(".tag-toggle.spoiler").removeClass("active");
-			$("#post-headers").empty();
-
-			headers.forEach(function(header) {
-				let button = $('<button>')
-			      .addClass('tag-toggle header')
-			      .attr('type', 'button')
-			      .attr('data-value', header.id)
-			      .text(header.name);
-
-			    $("#post-headers").append(button);
-			});
+			if (boardType != $(this).attr("board-type")) {
+				boardType = $(this).attr("board-type");
+				let headers = (boardType == "300" ? <%=movieHeadersJson %> : <%=freeHeadersJson %>);
+				// 스포일러가 선택되어 있다면 해제
+				$(".tag-toggle.spoiler").removeClass("active");
+				$("#post-headers").empty();
+	
+				headers.forEach(function(header) {
+					let button = $('<button>')
+				      .addClass('tag-toggle header')
+				      .attr('type', 'button')
+				      .attr('data-value', header.id)
+				      .text(header.name);
+	
+				    $("#post-headers").append(button);
+				});
+			}
 		});
 		
 		handleToggleClick(".form-container", ".board-label", "board-type", "board-type-id");
 		handleToggleClick(".header-toggle-group", ".tag-toggle.spoiler", "data-value", "contains-spoiler");
 		handleToggleClick(".header-toggle-group", ".tag-toggle.header", "data-value", "header-select");
 		
-		let titleRegex = /^[0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{2,}$/
-		let contentRegex = /^[\.0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{10,}$/
+		let titleRegex = /^[\s\S]{2,}$/u
+		let contentRegex = /^[\s\S]{10,}$/u
 		let titleCheckPassed = false;
 		let contentCheckPassed = false;
 		
@@ -247,6 +232,12 @@
 				$("#content-tooltip").removeClass("show")
 				contentCheckPassed = true;
 			};
+		});
+		
+		$("#form-create-post input[name=title]").on("keydown", function(e) {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+			}
 		});
 		
 	</script>

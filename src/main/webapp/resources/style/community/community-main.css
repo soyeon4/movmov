@@ -50,7 +50,7 @@
 .forum h2 {
     font-size: 20px;
     margin-top: 0px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     color: #000;
 }
 
@@ -75,18 +75,14 @@
         flex: 1 1 100%;
     }
 }
-.post-preview-board {
-    width: 100%;
-    font-size: 14px;
-    border-top: 2px solid #FF498D;
-    margin-top: 16px;
-}
 
 .board-header, .board-row {
     display: grid;
-    grid-template-columns: 10% 50% 20% 20%;
+    grid-template-columns: 10% 55% 20% 15%;
     padding: 6px;
     border-bottom: 1px solid #eee;
+    justify-items: center;
+    align-items: center;
 }
 
 .board-header {
@@ -95,7 +91,7 @@
     color: #FF498D;
 }
 
-.board-row span {
+.board-row {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -104,4 +100,34 @@
 .board-row:hover {
     background-color: #f9f9f9;
     cursor: pointer;
+}
+
+.board-row a {
+	display: contents;
+	text-decoration: none;
+	color: inherit;
+}
+
+.board-row .col-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 100%;
+}
+
+.col-title span {
+	margin-right: 2px;
+}
+
+span.header, span.spoiler, span.nickname {
+	font-size: smaller;
+}
+
+span.spoiler {
+	font-weight: bolder;
+	color: #FF498D;
+}
+
+span.header {
+	color: #de478d;
 }
