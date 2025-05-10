@@ -3,7 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	<properties resource="db.properties" />
 
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL" />
@@ -17,10 +16,9 @@
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
-            <property name="driver" value="${driver}" />
-            <property name="url" value="${url}" />
-            <property name="username" value="${username}" />
-            <property name="password" value="${password}" />
+            <property name="driver" value="oracle.jdbc.OracleDriver" />
+            <property name="username" value="admin" />
+            <property name="password" value="Movmovzxcv1234" />
 
 			</dataSource>
 		</environment>
@@ -40,6 +38,7 @@
 		<mapper resource="mybatis/mappers/ReviewMapper.xml" />
 		<mapper resource="mybatis/mappers/WishMovieMapper.xml" />
 		<mapper resource="mybatis/mappers/FaqMapper.xml" />
+		<mapper resource="mybatis/mappers/CsPostMapper.xml" />
 
 	</mappers>
 </configuration>

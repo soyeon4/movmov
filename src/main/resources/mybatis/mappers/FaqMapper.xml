@@ -8,9 +8,9 @@
   <!-- 전체 FAQ 조회 -->
   <select id="getFaqs" resultType="Faq">
     SELECT
-      c.cat_name AS "category.name",
-      f.faq_title AS title,
-      f.faq_content AS content
+      c.cat_name 		AS "category.name",
+      f.faq_title 		AS title,
+      f.faq_content 	AS content
     FROM
       movmov_cs_faq f,
       movmov_content_categories c
