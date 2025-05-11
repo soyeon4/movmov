@@ -86,12 +86,12 @@
 	white-space: pre-line;
 }
 
-.upvote-button {
+.recommend-button {
 	margin-top: 20px;
 	text-align: center;
 }
 
-.btn-upvote {
+.btn-recommend {
 	background-color: #FF498D;
 	color: #fff;
 	font-weight: bold;
@@ -106,17 +106,16 @@
 	transition: background-color 0.3s ease;
 }
 
-.btn-upvote:hover {
+.btn-recommend:hover {
 	background-color: #e93d7c;
 }
 
-.upvote-icon {
+.recommend-icon {
 	width: 20px;
 	height: 20px;
 }
 
 .post-options {
-	margin: 5px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -130,11 +129,18 @@
 }
 
 .report-button {
+	background-color: rgba(0, 0, 0, 0.05);
+	color: #888;
+	font-size: 12px;
+	padding: 10px 16px;
+	border-radius: 20px;
 	text-decoration: none;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .report-button:hover {
+	background-color: #f2f2f2;
 	color: #FF498D;
 	font-weight: bold;
 }
@@ -269,84 +275,3 @@ textarea::placeholder {
 	color: #999;
 }
 
-.related-posts .spoiler, .related-posts .header {
-	color: #FF498D;
-	margin-right: 2px;
-}
-
-.no-deco {
-	text-decoration: none;
-	color: inherit;
-}
-
-/* 로그인 요구 팝업 모달 */
-#login-warning-dialog {
-    width: 20%;
-    height: 20%;
-    min-width: 350px;
-    min-height: 200px;
-    padding: 1.5rem;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-#login-warning-dialog.fade {
-	opacity: 0;
-	visibility: hidden;
-	transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-#login-warning-dialog.fade.showing {
-	opacity: 1;
-	visibility: visible;
-}
-
-#login-warning-dialog form {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    align-items: center;
-}
-
-#login-warning-dialog p {
-	font-size: 1.1em;
-	flex: 1;
-}
-
-#login-warning-dialog menu {
-    display: flex;
-    margin-top: auto;
-    padding: 2px;
-    align-items: center;
-    gap: 5em;
-}
-
-#login-warning-dialog button {
-	padding: 12px 20px;
-	background-color: #FF498D;
-	color: white;
-	border: none;
-	border-radius: 8px;
-	font-weight: bold;
-	font-size: 15px;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-button#btn-close-warning {
-	background-color: lightgrey;
-	color: #3f3f3f;
-}
-
-button#btn-login-trigger:hover {
-	background-color: #e53c7e;
-}
-
-button#btn-close-warning:hover {
-	background-color: #959595;
-}

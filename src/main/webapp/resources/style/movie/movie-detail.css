@@ -91,16 +91,9 @@ nav ul li:hover {
   background-color: transparent;
   color: #FF498D;
 }
-.btn-primary:hover {
-  background-color: #FF498D !important;
-  border-color: #FF498D !important;
-  color: white !important;
-}
-
-.btn-no-hover:hover {
-  background-color: transparent;
-  border-color:#FF498D !importtant;
-  color: #FF498D;
+.btn-primary:hover, .btn-outline-secondary:hover {
+  background-color: #FF60A0;
+  border-color: #FF60A0;
 }
 .content-section {
   margin-bottom: 3rem;
