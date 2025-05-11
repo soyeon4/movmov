@@ -12,19 +12,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {    
+public class User {
 
-   private String id;
-   private String name;
-    private String password;
-    private String nickname;
-    private String email;
-    private Date createdDate;
-    private String region;
-    private String profileImage;
-    private int point;
-    private String isDeleted;
-    private String isProfilePublic;
-    private Address address;
+	private String id;
+	private String name;
+	private String password;
+	private String nickname;
+	private String email;
+	private Date createdDate;
+	private String region;
+	private String profileImage;
+	private int point;
+	private String isDeleted;
+	private String isProfilePublic;
+	private Address address;
 }
-

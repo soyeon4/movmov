@@ -1,4 +1,4 @@
-<%@page import="kr.co.movmov.vo.User"%>
+a<%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.mapper.UserMapper"%>
 <%@page import="org.apache.commons.codec.digest.DigestUtils"%>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.movmov.mapper.AddressMapper">
+<!-- C: CREATE
+	void insertAddress(Address address);
+ -->
+ 	<insert id="insertAddress" parameterType="Address">
+ 	
+ 	insert into
+ 	movmov_user_addresses
+ 	(
+ 			addr_id
+ 		,	addr_name
+ 		,	addr_road
+ 		,	addr_detail
+ 		,	user_id
+ 		,	receiver_number
+ 		,	receiver_name 
+ 	)
+ 	values
+ 	(#{id}, #{addr_name}, #{road}, #{detail}, #{user.id}, #{receiver_phone}, #{receiver_name})
+ 	
+ 	</insert>
+ 
+ <!-- R: RETRIEVE
+ 	Address getDefaultAddress(User user);
+  -->
+  
+ 	<select id="getDefaultAddress" parameterType="User" resultMap="addressMap">
+ 	
+ 	select 
+ 			ua.addr_id				as	id
+ 		,	ua.addr_name			as	addr_name
+ 		,	ua.addr_road			as	road
+ 		,	ua.addr_detail			as	detail
+ 		,	ua.user_id				as	"user.id"
+ 		,	ua.receiver_number		as	receiver_phone
+ 		,	ua.receiver_name 		as	receiver_name
+ 	
+ 	from
+ 		movmov_users u
+ 	
+ 	join
+ 		movmov_user_addresses ua
+ 		on u.addr_id = ua.addr_id and u.user_id = ua.user_id
+ 		
+ 	where
+ 		u.user_id = #{user.id}
+ 		
+ 	</select>
+ 	
+<!-- R: RETRIEVE
+	List<Address> getAllAddressOfUser(User user);
+ -->
+ 	<select id="getAllAddressOfUser" parameterType="User">
+ 	
+ 	select 
+ 			ua.addr_id				as	id
+ 		,	ua.addr_name			as	addr_name
+ 		,	ua.addr_road			as	road
+ 		,	ua.addr_detail			as	detail
+ 		,	ua.user_id				as	"user.id"
+ 		,	ua.receiver_number		as	receiver_phone
+ 		,	ua.receiver_name 		as	receiver_name
+ 	
+ 	from
+ 		movmov_users u
+ 	
+ 	where
+ 		u.user_id = #{user.id}
+ 	
+ 	</select>
+ 
+ <!-- U: UPDATE 
+ 	void updateAddressInfo(Address address);
+  -->
+  	<update id="updateAddressInfo" parameterType="Address">
+  	
+  	update 
+  		movmov_user_addresses
+  	
+  	set
+  		 	addr_name = #{addr_name}
+ 		,	addr_road = #{road}
+ 		,	addr_detail = #{detail}
+ 		,	user_id = #{user.id}
+ 		,	receiver_number = #{receiver_phone}
+ 		,	receiver_name  = #{receiver_name}
+  	
+  	where
+        addr_id = #{id}
+    
+  	</update>
+  
+ <!-- D: DELETE
+ 	void deleteAddress(Address address);
+  -->
+  	<delete id="deleteAddres" parameterType="Address">
+  	
+  		delete from 
+  			movmov_user_addresses
+  			
+    	where 
+    		addr_id = #{id}
+    
+  	</delete>
+</mapper>

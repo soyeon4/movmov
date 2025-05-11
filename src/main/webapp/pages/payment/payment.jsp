@@ -149,14 +149,14 @@
 
 					<div class="overlay" id="overlay-enter-address">
 						<div class="modal" id="modal-enter-address">
-							<form id="address-form">
+							<form id="address-form" action="/movmov/pages/payment/insert-address.jsp" method="post">
 								<h2>입력한 정보를 확인 후 저장해주세요</h2>
 
 								<!-- 받는 이 -->
 								<div class="form-group">
 									<label for="recipient">받는 이</label><br>
 									<div class="input-with-button">
-										<input type="text" id="recipient" placeholder="이름 입력" required />
+										<input type="text" name="receiver-name" id="recipient" placeholder="이름 입력" required />
 										<button type="button" class="btn-remove">✕</button>
 									</div>
 								</div>
@@ -165,7 +165,7 @@
 								<div class="form-group">
 									<label for="phone">연락처</label><br>
 									<div class="input-with-button">
-										<input type="text" id="phone" placeholder="010-0000-0000" />
+										<input type="text" name="receiver-phone" id="phone" placeholder="010-0000-0000" />
 										<button type="button" class="btn-remove">✕</button>
 									</div>
 								</div>
@@ -174,7 +174,7 @@
 								<div class="form-group">
 									<label for="title">배송지명 (선택)</label><br>
 									<div class="input-with-button">
-										<input type="text" id="title" placeholder="배송지 별명" />
+										<input type="text" name="explaination" id="title" placeholder="배송지 별명" />
 										<button type="button" class="btn-remove">✕</button>
 									</div>
 								</div>

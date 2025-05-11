@@ -15,4 +15,3 @@ public class Address {
 	private String receiver_phone;
 	private String receiver_name;
 }
-
