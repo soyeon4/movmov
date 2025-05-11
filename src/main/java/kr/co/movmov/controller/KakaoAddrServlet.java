@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 @WebServlet("/api/search-address")
 public class KakaoAddrServlet extends HttpServlet {
+	
     private static final long serialVersionUID = 1L;
     private static final String KAKAO_API_KEY = "KakaoAK 1fcd50b1638310f5958d168fdd4ebc97";
 
