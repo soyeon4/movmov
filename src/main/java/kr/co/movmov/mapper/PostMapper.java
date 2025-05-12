@@ -18,7 +18,7 @@ public interface PostMapper {
 	 * @param postNo 게시글 번호
 	 * @return 게시글 객체
 	 */
-	Post getPostById(int postNo);
+	Post getPostByNo(int postNo);
 	
 	/**
 	 * 게시판 고유번호를 전달받아서 게시글 목록을 가져온다.

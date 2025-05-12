@@ -23,7 +23,7 @@
 	int postNo = StringUtils.strToInt(request.getParameter("pno"));
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	postMapper.updatePostViewCount(postNo);
-	Post post = postMapper.getPostById(postNo);
+	Post post = postMapper.getPostByNo(postNo);
 	
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	boolean isLoggedIn = loginedUser != null;
@@ -59,8 +59,6 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet" href="../../resources/style/community/post-detail.css">
 </head>
@@ -143,7 +141,7 @@
 		<div class="post-options">
 			<a href="">수정</a>
 			<a href="">삭제</a>
-			<a href="report-form.html" class="report-button">신고하기</a>
+			<a href="report-form.jsp?pno=<%=post.getNo() %>" class="report-button">신고하기</a>
 		</div>
 
 		<!-- 💬 댓글 -->

@@ -24,7 +24,7 @@
 	Map<String, Object> condition = new HashMap<>();
 	condition.put("boardId", boardId);
 	int totalRows = postMapper.getTotalRows(condition);
-	int rows = 10;
+	int rows = 5;
 	Pagination pagination = new Pagination(pageNo, totalRows, rows);
 	int offset = pagination.getOffset();
 	condition.put("offset", offset);
