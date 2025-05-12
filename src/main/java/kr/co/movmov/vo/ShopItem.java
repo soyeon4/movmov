@@ -10,7 +10,7 @@ import lombok.Data;
 @Alias("ShopItem")
 public class ShopItem {
 	
-	private int id;
+	private int no;
 	private String name;
 	private String component;
 	private String description;
