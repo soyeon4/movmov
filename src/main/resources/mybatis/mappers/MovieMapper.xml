@@ -9,32 +9,100 @@
 		int getTotalRows(Map<String, Object> condition);
 	 -->
 	<select id="getTotalRows" parameterType="map">
-		select 
-	 		count(*)
-	 	from
-	 		movmov_movies
-	 	<if test="genre != null">
-	 		where category_no = #{catNo}
-	 	</if>
+		SELECT COUNT(DISTINCT m.movie_no)
+		FROM movmov_movies m
+		LEFT JOIN movmov_movie_genre_map mg ON m.movie_no = mg.movie_no
+		WHERE 1=1
+		<if test="title != null and title != ''">
+			AND m.movie_title LIKE '%' || #{title} || '%'
+		</if>
+		<if test="director != null and director != ''">
+			AND m.movie_director LIKE '%' || #{director} || '%'
+		</if>
+		<if test="rating != null and rating != ''">
+			AND m.movie_rating = #{rating}
+		</if>
+		<if test="genreNo != null">
+			AND mg.genre_no = #{genreNo}
+		</if>
+		<if test="year != null">
+			AND m.movie_release_year = #{year}
+		</if>
 	</select>
 	<!-- 
 		List<Movie> getMovies(Map<String, Object> condition);
 	 -->
-	<select id="getMovies" resultType="Movie">
+	<select id="getMovies" parameterType="map" resultType="Movie">
 		select 
-			movie_no as no
-			, movie_title as title
-			, movie_director as director
-			, movie_actor as actor
-			, movie_country as country
-			, movie_length as length
-			, movie_rating as rating
-			, movie_poster_image_path as posterImagePath
-			, movie_plot as plot
-			, movie_release_year as releaseYear
+			m.movie_no as no
+			, m.movie_title as title
+			, m.movie_director as director
+			, m.movie_actor as actor
+			, m.movie_country as country
+			, m.movie_length as length
+			, m.movie_rating as rating
+			, m.movie_poster_image_path as posterImagePath
+			, m.movie_plot as plot
+			, m.movie_release_year as releaseYear
+			, m.movie_review_cnt as reviewCnt
+			, m.movie_wish_cnt as wishCnt
+			, avg(r.review_star) as avgStar
 		from
-			movmov_movies 
-		order by movie_no asc
+			movmov_movies m
+		left join movmov_movie_reviews r on m.movie_no = r.movie_no
+		left join movmov_movie_genre_map mg on m.movie_no = mg.movie_no
+		where 1=1
+		<if test="title != null and title != ''">
+			and m.movie_title like '%' || #{title} || '%'
+		</if>
+		<if test="director != null and director != ''">
+			and m.movie_director like '%' || #{director} || '%'
+		</if>
+		<if test="rating != null and rating != ''">
+			and m.movie_rating = #{rating}
+		</if>
+		<if test="genreNo != null">
+			and mg.genre_no = #{genreNo}
+		</if>
+		<if test="year != null">
+			and m.movie_release_year = #{year}
+		</if>
+		group by
+			m.movie_no, m.movie_title, m.movie_director, m.movie_actor, m.movie_country,
+		    m.movie_length, m.movie_rating, m.movie_poster_image_path,
+		    m.movie_plot, m.movie_release_year, m.movie_review_cnt,
+		    m.movie_wish_cnt
+		<if test="star != null">
+			having avgStar >= #{star}
+		</if>
+		<choose>
+	 		<when test="sort == 'length-asc'">
+	 			order by movie_length asc
+	 		</when>
+	 		<when test="sort == 'length-desc'">
+	 			order by movie_length desc
+	 		</when>
+	 		<when test="sort == 'star-asc'">
+	 			order by avgStar asc
+	 		</when>
+	 		<when test="sort == 'star-desc'">
+	 			order by avgStar desc
+	 		</when>
+	 		<when test="sort == 'reviews'">
+	 			order by movie_review_cnt desc	 		
+	 		</when>
+	 		<when test="sort == 'year-asc'">
+	 			order by movie_release_year asc
+	 		</when>
+	 		<when test="sort == 'year-desc'">
+	 			order by movie_release_year desc
+	 		</when>
+	 		<otherwise>
+	 			order by m.movie_no asc
+	 		</otherwise>
+	 	</choose>
+	 	offset #{offset} rows
+		fetch next #{rows} rows only
 	</select>
 	<!-- 
 		Movie getMovieByNo(int no); 	

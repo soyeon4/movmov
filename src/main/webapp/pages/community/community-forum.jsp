@@ -1,3 +1,6 @@
+<%@page import="kr.co.movmov.utils.Pagination"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="kr.co.movmov.vo.Post"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.mapper.PostMapper"%>
@@ -7,18 +10,32 @@
 <%
 	/*
 		/pages/community-forum?bid=xxx
+		/pages/community-forum?bid=xxx&pg=xxx
 		
 		bid		300		영화게시판
 		bid		301		자유게시판
-		
-		1. 게시판 고유번호에 따라 해당 게시글 목록을 불러온다.
+		pg				페이지 번호
 	*/
 	int boardId = StringUtils.strToInt(request.getParameter("bid"), 300);
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
-	List<Post> boardPosts = postMapper.getPostsByBoardId(boardId);
+	int pageNo = StringUtils.strToInt(request.getParameter("pg"), 1);
+	
+	// 페이지네이션 처리
+	Map<String, Object> condition = new HashMap<>();
+	condition.put("boardId", boardId);
+	int totalRows = postMapper.getTotalRows(condition);
+	int rows = 10;
+	Pagination pagination = new Pagination(pageNo, totalRows, rows);
+	int offset = pagination.getOffset();
+	condition.put("offset", offset);
+	condition.put("rows", rows);
+	
+	List<Post> boardPosts = postMapper.getPosts(condition);
 
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	boolean isLoggedIn = loginedUser != null;
+	
+	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -84,15 +101,23 @@
 <%
 	for (Post post : boardPosts) {
 %>
-				<tr>
+				<tr onclick="window.location='post-detail.jsp?pno=<%=post.getNo() %>'">
 					<td><%=post.getNo() %></td>
 					<td>
 						<span class="tag-spoiler"><%=("Y".equals(post.getIsSpoiler()) ? "[스포일러]" : "") %></span>
 						<span class="tag-header"><%=post.getHeader().getName() %></span>
-						<a href="post-detail.jsp?pno=<%=post.getNo() %>"><%=post.getTitle() %></a>
+						<span><%=post.getTitle() %></span>
 					</td>
 					<td><%=post.getUser().getNickname() %></td>
-					<td><%=StringUtils.simpleDate(post.getCreatedDate()) %></td>
+<%
+	String displayDate = "";
+	if (StringUtils.isSameDay(post.getCreatedDate())) {
+		displayDate = StringUtils.simpleTimeFormat(post.getCreatedDate());
+	} else {
+		displayDate = StringUtils.simpleDate(post.getCreatedDate());
+	}
+%>
+					<td><%=displayDate %></td>
 					<td><%=post.getCommentCount() %></td>
 					<td><%=post.getViewCount() %></td>
 					<td><%=post.getUpvoteCount() %></td>
@@ -107,13 +132,18 @@
 			<button type="submit" class="write-btn">✍️ 글쓰기</button>
 		</form>
 		<div class="pagination">
-			<button>&laquo;</button>
-			<button class="active">1</button>
-			<button>2</button>
-			<button>3</button>
-			<button>4</button>
-			<button>5</button>
-			<button>&raquo;</button>
+			<button type="button" id="btn-page-first">&laquo;</button>
+<%
+	int blockFirst = Math.max(Math.min(pagination.getTotalPages() - 4, pageNo - 2), 1);
+	int blockLast = Math.min(Math.max(pagination.getPages(), pageNo + 2), pagination.getTotalPages());
+	for (int i = blockFirst; i < blockLast + 1; i++) {
+%>
+			<button type="button"
+				class="btn-page-no<%=(i == pageNo ? " active" : "") %>"><%=i %></button>
+<%
+	}
+%>
+			<button type="button" id="btn-page-last">&raquo;</button>
 		</div>
 	</div>
 </body>
@@ -131,6 +161,30 @@
 				return false;
 			}
 			return true;
+		});
+		
+		$("#btn-page-first").on("click", function() {
+			let params = $.param({
+				bid: <%=boardId %>,
+				pg: 1
+			});
+			window.location.href = window.location.pathname + '?' + params;
+		});
+		
+		$("#btn-page-last").on("click", function() {
+			let params = $.param({
+				bid: <%=boardId %>,
+				pg: <%=pagination.getTotalPages() %>
+			});
+			window.location.href = window.location.pathname + '?' + params;
+		});
+		
+		$(".btn-page-no").on("click", function() {
+			let params = $.param({
+				bid: <%=boardId %>,
+				pg: $(this).text()
+			});
+			window.location.href = window.location.pathname + '?' + params;
 		});
 
 	</script>

@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.utils.Pagination"%>
 <%@page import="kr.co.movmov.mapper.MovieGenreMapMapper"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
@@ -13,19 +14,52 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-   MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
-   List<Movie> movies = movieMapper.getMovies();
-   
-   ReviewMapper reviewMapper = MybatisUtils.getMapper(ReviewMapper.class);
-   
-   GenreMapper genreMapper = MybatisUtils.getMapper(GenreMapper.class);
-   List<Genre> allGenres = genreMapper.getAllGenres();
-   
-   MovieGenreMapMapper movieGenreMapMapper = MybatisUtils.getMapper(MovieGenreMapMapper.class);
-   
-   
-   //String loginedUserId = (String) session.getAttribute("LOGINED_USER_ID");
-   
+	// 페이지
+	int pageNo = StringUtils.strToInt(request.getParameter("page"), 1);
+
+	// 정렬조건
+	String sort = request.getParameter("sort");
+
+	// 검색조건
+	String title = request.getParameter("title");
+	String director = request.getParameter("director");
+	String rating = request.getParameter("rating");
+	int genreNo = StringUtils.strToInt(request.getParameter("genreNo"), 0);
+	int year = StringUtils.strToInt(request.getParameter("year"), 0);
+	int star = StringUtils.strToInt(request.getParameter("star"), 0);
+	
+	MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
+	ReviewMapper reviewMapper = MybatisUtils.getMapper(ReviewMapper.class);
+	GenreMapper genreMapper = MybatisUtils.getMapper(GenreMapper.class);
+	MovieGenreMapMapper movieGenreMapMapper = MybatisUtils.getMapper(MovieGenreMapMapper.class);
+
+	// 검색조건
+	Map<String, Object> condition = new HashMap<>();
+	
+	if (sort != null && !sort.isEmpty()) {
+		condition.put("sort", sort);
+	}
+	condition.put("title", title != null ? title : "");
+	condition.put("director", director != null ? director : "");
+	condition.put("rating", rating != null ? rating : "");
+	if (genreNo != 0) condition.put("genreNo", genreNo);
+	if (year != 0) condition.put("year", year);
+	if (star != 0) condition.put("star", star);
+	
+	condition.put("offset", (pageNo - 1) * 10);
+	condition.put("rows", 10);
+	
+	
+	List<Movie> movies = movieMapper.getMovies(condition);
+	
+	
+	List<Genre> allGenres = genreMapper.getAllGenres();
+	
+	// 페이지네이션 객체
+	int totalRows = movieMapper.getTotalRows(condition);
+	Pagination pagination = new Pagination(pageNo, totalRows, 10);
+	
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -42,6 +76,7 @@
   <link rel="stylesheet"
    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="../../resources/style/common/main.css">
+  <link rel="icon" href="resources/images/common/favicon.ico">
 </head>
 <body>
    <%@ include file="../common/header.jsp" %>
@@ -57,12 +92,13 @@
     </div>
     <div class="search-item">
       <label for="genre">장르</label>
-      <select id="genre" name="genre">
+      <select id="genre" name="genreNo">
         <option value="">장르 선택</option>
 <%
    for (Genre genre : allGenres) {
 %>
-        <option value="<%=genre.getNo() %>" <%=genre.getNo() == StringUtils.strToInt(request.getParameter("genre"), 0) ? "selected" : "" %>><%=genre.getName() %></option>
+        <option value="<%=genre.getNo() %>" <%=genre.getNo() == StringUtils.strToInt(request.getParameter("genreNo"), 0) ? "selected" : "" %>><%=genre.getName() %></option>
+
 <%
    }
 %>     
@@ -85,37 +121,53 @@
       <div class="search-item">
       <label for="director-name">평점</label>
       
-         <select name="star">
-           <option value="">평점 선택</option>
-           <option value="4" <%= "4".equals(request.getParameter("star")) ? "selected" : "" %>>4점 이상</option>
-           <option value="3" <%= "3".equals(request.getParameter("star")) ? "selected" : "" %>>3점 이상</option>
-           <option value="2" <%= "2".equals(request.getParameter("star")) ? "selected" : "" %>>2점 이상</option>
-           <option value="1" <%= "1".equals(request.getParameter("star")) ? "selected" : "" %>>1점 이상</option>
-         </select>
-      </div>
+	      <select name="star">
+			  <option value="">평점 선택</option>
+			  <option value="4" <%= "4".equals(request.getParameter("star")) ? "selected" : "" %>>4점 이상</option>
+			  <option value="3" <%= "3".equals(request.getParameter("star")) ? "selected" : "" %>>3점 이상</option>
+			  <option value="2" <%= "2".equals(request.getParameter("star")) ? "selected" : "" %>>2점 이상</option>
+			  <option value="1" <%= "1".equals(request.getParameter("star")) ? "selected" : "" %>>1점 이상</option>
+			</select>
+		</div>
       <div class="search-item">
       <label for="director-name">상영등급</label>
       
-         <select name="rating">
-           <option value="">상영등급 선택</option>
-           <option value="all" <%= "all".equals(request.getParameter("rating")) ? "selected" : "" %>>전체</option>
-           <option value="12" <%= "12".equals(request.getParameter("rating")) ? "selected" : "" %>>12세</option>
-           <option value="15" <%= "15".equals(request.getParameter("rating")) ? "selected" : "" %>>15세</option>
-           <option value="adult" <%= "adult".equals(request.getParameter("rating")) ? "selected" : "" %>>청불</option>
-         </select>
-      </div>
+	      <select name="rating">
+			  <option value="">상영등급 선택</option>
+			  <option value="전체" <%= "전체".equals(request.getParameter("rating")) ? "selected" : "" %>>전체</option>
+			  <option value="12세" <%= "12세".equals(request.getParameter("rating")) ? "selected" : "" %>>12세</option>
+			  <option value="15세" <%= "15세".equals(request.getParameter("rating")) ? "selected" : "" %>>15세</option>
+			  <option value="청불" <%= "청불".equals(request.getParameter("rating")) ? "selected" : "" %>>청불</option>
+			</select>
+		</div>
+
     <button type="submit" class="btn-search">검색</button>
   </form>
 </div>
   <div class="container">
     <h1 class="mb-4">영화 목록</h1>
-    <select class="form-select form-select-sm mb-3" name="sort" style="width: 140px;">
-     <option value="length" <%= "length".equals(request.getParameter("sort")) ? "selected" : "" %>>상영시간 순</option>
-     <option value="star" <%= "star".equals(request.getParameter("sort")) ? "selected" : "" %>>평점 순</option>
-     <option value="reviews" <%= "reviews".equals(request.getParameter("sort")) ? "selected" : "" %>>리뷰 많은 순</option>
-     <option value="year-asc" <%= "year-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 오름차 순</option>
-     <option value="year-desc" <%= "year-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 내림차 순</option>
-   </select>
+    <form id="sort-form" action="movie-list.jsp" method="get" onchange="document.getElementById('sort-form').submit();">
+    <select class="form-select form-select-sm mb-3" name="sort" style="width: 150px;">
+	  <option value="">정렬 기준</option>
+	  <option value="length-asc" <%= "length-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>상영시간 오름차순</option>
+	  <option value="length-desc" <%= "length-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>상영시간 내림차순</option>
+	  <option value="star-asc" <%= "star-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>평균평점 오름차순</option>
+	  <option value="star-desc" <%= "star-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>평균평점 내림차순</option>
+	  <option value="review-desc" <%= "review-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>리뷰 많은 순</option>
+	  <option value="wish-desc" <%= "wish-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>찜 많은 순</option>
+	  <option value="year-asc" <%= "year-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 오름차 순</option>
+	  <option value="year-desc" <%= "year-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 내림차 순</option>
+	</select>
+	  <input type="hidden" name="title" value="<%=request.getParameter("title") != null ? request.getParameter("title") : "" %>">
+	  <input type="hidden" name="director" value="<%=request.getParameter("director") != null ? request.getParameter("director") : "" %>">
+	  <input type="hidden" name="genreNo" value="<%=genreNo != 0 ? genreNo : "" %>">
+		<input type="hidden" name="year" value="<%=year != 0 ? year : "" %>">
+		<input type="hidden" name="star" value="<%=star != 0 ? star : "" %>">
+	  <input type="hidden" name="rating" value="<%=request.getParameter("rating") != null ? request.getParameter("rating") : "" %>">
+	  <input type="hidden" name="page" value="1">
+	  
+	</form>
+
     <table class="table table-hover align-middle">
       <thead class="table-light">
         <tr >
@@ -167,13 +219,38 @@
       </tbody>
     </table>
     <div class="d-flex justify-content-center mt-4">
-  <button class="btn btn-outline-secondary me-2">이전</button>
-  <button class="btn btn-outline-secondary me-2">1</button>
-  <button class="btn btn-outline-secondary me-2">2</button>
-  <button class="btn btn-outline-secondary me-2">3</button>
-  <button class="btn btn-outline-secondary me-2">4</button>
-  <button class="btn btn-outline-secondary me-2">5</button>
-  <button class="btn btn-outline-secondary me-2">다음</button>
+<%
+	//검색조건 및 정렬 파라미터 유지
+	String queryParams = "";
+		if (title != null) queryParams += "&title=" + title;
+		if (director != null) queryParams += "&director=" + director;
+		if (rating != null) queryParams += "&rating=" + rating;
+		if (genreNo != 0) queryParams += "&genreNo=" + genreNo;
+		if (year != 0) queryParams += "&year=" + year;
+		if (star != 0) queryParams += "&star=" + star;
+		if (sort != null) queryParams += "&sort=" + sort;
+	//이전 버튼
+	if (!pagination.isFirst()) {
+%>
+	  <a href="movie-list.jsp?page=<%=pagination.getPrevPage()%><%=queryParams%>" class="btn btn-outline-secondary me-2">이전</a>
+<%
+	}
+	
+	// 페이지 번호들
+	for (int i = pagination.getBeginPage(); i <= pagination.getEndPage(); i++) {
+%>
+	  <a href="movie-list.jsp?page=<%=i%><%=queryParams%>"
+	     class="btn btn-outline-secondary me-2 <%= i == pagination.getCurrentPage() ? "active" : "" %>"><%=i%></a>
+<%
+	}
+	
+	// 다음 버튼
+	if (!pagination.isLast()) {
+%>
+	  <a href="movie-list.jsp?page=<%=pagination.getNextPage()%><%=queryParams%>" class="btn btn-outline-secondary me-2">다음</a>
+<%
+	}
+%>
 </div>
   </div>
 

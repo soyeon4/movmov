@@ -1,3 +1,6 @@
+<%@page import="com.google.gson.Gson"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="kr.co.movmov.vo.Comment"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.mapper.CommentMapper"%>
@@ -19,14 +22,32 @@
 
 	int postNo = StringUtils.strToInt(request.getParameter("pno"));
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
+	postMapper.updatePostViewCount(postNo);
 	Post post = postMapper.getPostById(postNo);
-	post.setViewCount(post.getViewCount() + 1);
-	postMapper.updatePost(post);
-	post = postMapper.getPostById(postNo);
 	
+	User loginedUser = (User) session.getAttribute("LOGIN_USER");
+	boolean isLoggedIn = loginedUser != null;
+	String userId = "";
+	if (isLoggedIn) {
+		userId = loginedUser.getId();
+	}
+	
+	// 추천 목록 불러오기
+	List<String> upvoteIds = postMapper.getUpvoteIds(postNo);
+	Gson gson = new Gson();
+	String upvoteJson = gson.toJson(upvoteIds);
+	
+	// 댓글 불러오기
 	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
 	List<Comment> postComments = commentMapper.getCommentsByPostNo(postNo);
 
+	// 하단 게시글 목록
+	Map<String, Object> conditionRecent = new HashMap<>();
+	conditionRecent.put("boardId", post.getBoardType().getId());
+	conditionRecent.put("rows", 4);
+	
+	List<Post> recentPosts = postMapper.getPosts(conditionRecent);
+	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -44,9 +65,21 @@
 <link rel="stylesheet" href="../../resources/style/community/post-detail.css">
 </head>
 <body>
+	
 	<!-- 헤더 -->
 	<%@ include file="../common/header.jsp"%>
-      
+	
+	<!-- 로그인 요구 팝업 -->
+	<dialog id="login-warning-dialog" closedby="any">
+		<form method="dialog">
+			<p>게시글을 추천하려면 로그인해야 합니다.</p>
+			<menu>
+				<button type="button" id="btn-login-trigger">로그인</button>
+				<button type="button" id="btn-close-warning">돌아가기</button>
+			</menu>
+		</form>
+	</dialog>
+	
 	<div class="container">
     <!-- 🔷 게시판 이름 -->
 <%
@@ -100,9 +133,10 @@
 			<div class="post-content"><%=post.getContent() %></div>
 			<hr class="divider">
 			<!-- ❤️ 추천 버튼 -->
-			<div class="recommend-button">
-				<button class="btn-recommend">
-					<span class="recommend-icon">♡</span>추천 0
+			<div class="upvote-button">
+				<button type="button" class="btn-upvote">
+					<span class="upvote-icon"><%=(upvoteIds.contains(userId) ? "❤" : "♡" ) %></span>
+					<span>추천</span><span id="upvote-cnt"><%=post.getUpvoteCount() %></span>
 				</button>
 			</div>
 		</div>
@@ -143,7 +177,7 @@
 			<div class="comment-form">
 				<h4>댓글 작성</h4>
 				<form action="create-comment.jsp" method="post">
-					<input type="hidden" name="postNo" value="<%=post.getNo() %>" />
+					<input type="hidden" name="postNo" value="<%=postNo %>" />
 					<textarea name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
 					<button type="submit">등록</button>
 				</form>
@@ -152,19 +186,23 @@
 
 		<!-- 📃 하단 관련 게시글 목록 -->
 		<div class="related-posts">
-			<h3>📋 영화게시판 다른 글</h3>
-			<div class="post-preview">
-				<div class="title">[잡담] 오늘 본 영화 공유해요</div>
-				<div class="author">cinemania</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[리뷰] 범죄도시3 개봉 후기</div>
-				<div class="author">영화왕</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[정보] 넷플릭스 신작 추천 목록</div>
-				<div class="author">스트리머</div>
-			</div>
+			<h3>📋 <%=(post.getBoardType().getId() == 300 ? "영화" : "자유") %>게시판 다른 글</h3>
+<%
+	for (Post recentPost : recentPosts) {
+%>
+			<a href="post-detail.jsp?pno=<%=recentPost.getNo() %>" class="no-deco">
+				<div class="post-preview">
+					<div class="title">
+						<span class="spoiler"><%=("Y".equals(recentPost.getIsSpoiler()) ? "[스포일러]" : "") %></span>
+						<span class="header"><%=recentPost.getHeader().getName() %></span>
+						<span><%=recentPost.getTitle() %></span>
+					</div>
+					<div class="author"><%=recentPost.getUser().getNickname() %></div>
+				</div>
+			</a>
+<%
+	}
+%>
 		</div>
 	</div>
 </body>
@@ -173,5 +211,72 @@
 	<%@ include file="../common/footer.jsp"%>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
+		let isLoggedIn = <%=isLoggedIn %>;
+		let userId = "<%=userId %>";
+		let postUserId = "<%=post.getUser().getId() %>";
+		let upvoteIdList = JSON.parse('<%=upvoteJson %>');
+		
+		function fadeInDialog(dialog) {
+			dialog.classList.add("fade");
+			dialog.showModal();
+			requestAnimationFrame(() => {
+				dialog.classList.add("showing");
+			});
+		}
+
+		function fadeOutDialog(dialog) {
+			dialog.classList.remove("showing");
+			setTimeout(() => {
+				dialog.close();
+			}, 300);
+		}
+		
+		let loginWarningDialog = document.getElementById("login-warning-dialog");
+		
+		$(".btn-upvote").on("click", function(e) {
+			if (!isLoggedIn) {
+				fadeInDialog(loginWarningDialog);
+				return;
+			}
+			if (userId == postUserId) {
+				alert("본인의 게시글을 추천할 수 없습니다.");
+				// 본인 게시글 추천 눌렀을 때
+				return;
+			}
+			if (upvoteIdList.includes(userId)) {
+				alert("이미 추천한 게시글입니다.")
+				// 이미 추천한 게시글일 때
+				return;
+			}
+			$.ajax({
+				url: "add-upvote.jsp",
+				method: "POST",
+				data: {
+					postNo: "<%=postNo %>",
+					userId: userId
+				},
+				success: function(response) {
+					// 응답으로 업데이트된 추천 개수 받아옴
+					$("#upvote-cnt").text(response);
+					$(".upvote-icon").text("❤");
+					upvoteIdList.push(userId);
+				}
+			});
+		});
+		
+		$("#btn-close-warning").on("click", function() {
+			fadeOutDialog(loginWarningDialog);
+		});
+		
+		$("#btn-login-trigger").on("click", function() {
+			loginWarningDialog.close();
+			loginWarningDialog.classList.remove("showing");
+			$("#btn-header-login").trigger("click");
+		});
+		
+		loginWarningDialog.addEventListener("cancel", (e) => {
+			e.preventDefault();
+			fadeOutDialog(loginWarningDialog);
+		});
 	</script>
 </html>

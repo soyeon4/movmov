@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.vo.Movie"%>
 <%@page import="kr.co.movmov.mapper.MovieMapper"%>
 <%@page import="kr.co.movmov.vo.Review"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
@@ -24,8 +25,11 @@
 	review.setMovie(movieMapper.getMovieByNo(movieNo));
 	review.setOpenStatus(openStatus);
 	
+	Movie movie = movieMapper.getMovieByNo(movieNo);
 	// 리뷰 생성
 	reviewMapper.insertReview(review);
+	
+	movie.setReviewCnt(movie.getReviewCnt() + 1);
 	
 	response.sendRedirect("movie-detail.jsp?movieNo=" + movieNo);
 %>
