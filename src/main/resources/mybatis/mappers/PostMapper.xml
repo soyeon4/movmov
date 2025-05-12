@@ -8,51 +8,53 @@
 		void insertPost(Post post);
 	-->
 	<insert id="insertPost" parameterType="Post">
-		insert into movmov_community_posts
+		INSERT INTO movmov_community_posts
 		(post_no
 		 , user_id
 	  	 , post_header
 	 	 , post_board_type
 	   	 , post_title
 	     , post_content
-	     , post_is_spoiler)
-		values
+	     , post_is_spoiler
+	     , post_created_date
+	     , post_updated_date)
+		VALUES
 		(POST_NO_SEQ.NEXTVAL
 		 , #{user.id}
 		 , #{header.id}
 		 , #{boardType.id}
 		 , #{title}
 		 , #{content}
-		 , #{isSpoiler})
+		 , #{isSpoiler}
+		 , #{createdDate}
+		 , #{updatedDate}
+		 )
 	</insert>
 	
 	<!--
-		Post getPostById(int postNo);
+		Post getPostByNo(int postNo);
 	-->
-	<select id="getPostById" resultMap="PostResultMap">
+	<select id="getPostByNo" resultMap="PostResultMap">
 		select
 			P.post_no
 		  , P.post_title
 		  , P.post_content
+		  , P.user_id
 		  , P.post_created_date
 		  , P.post_updated_date
 		  , P.post_view_count	
 		  , P.post_upvote_count
+		  , P.post_comment_count
 		  , P.post_is_spoiler
-		  , NVL(C.comment_count, 0)		as commentCount
 		  , U.user_nickname				as user_nickname
 		  , HC.cat_id					as header_cat_id
 		  , HC.cat_name					as header_cat_name
     	  , BC.cat_id					as board_cat_id
     	  , BC.cat_name					as board_cat_name
-		from
-			movmov_community_posts P
-				left join (select post_no, count(*) as comment_count
-    				from movmov_community_comments
-    				group by post_no) C on P.post_no = C.post_no
-				join movmov_content_categories HC on P.post_header = HC.cat_id
-				join movmov_content_categories BC on P.post_board_type = BC.cat_id
-				join movmov_users U on P.user_id = U.user_id
+		from movmov_community_posts P
+			join movmov_content_categories HC on P.post_header = HC.cat_id
+			join movmov_content_categories BC on P.post_board_type = BC.cat_id
+			join movmov_users U on P.user_id = U.user_id
 		where
 			P.post_no = #{postNo}
 	</select>
@@ -65,28 +67,26 @@
 			P.post_no
 		  , P.post_title
 		  , P.post_content
+		  , P.user_id
 		  , P.post_created_date
 		  , P.post_updated_date
 		  , P.post_view_count	
 		  , P.post_upvote_count
+		  , P.post_comment_count
 		  , P.post_is_spoiler
-		  , NVL(C.comment_count, 0)		as commentCount
 		  , U.user_nickname				as user_nickname
 		  , HC.cat_id					as header_cat_id
 		  , HC.cat_name					as header_cat_name
     	  , BC.cat_id					as board_cat_id
     	  , BC.cat_name					as board_cat_name
-		from
-			movmov_community_posts P
-				left join (select post_no, count(*) as comment_count
-    				from movmov_community_comments
-    				group by post_no) C on P.post_no = C.post_no
-				join movmov_content_categories HC on P.post_header = HC.cat_id
-				join movmov_content_categories BC on P.post_board_type = BC.cat_id
-				join movmov_users U on P.user_id = U.user_id
+		from movmov_community_posts P
+			join movmov_content_categories HC on P.post_header = HC.cat_id
+			join movmov_content_categories BC on P.post_board_type = BC.cat_id
+			join movmov_users U on P.user_id = U.user_id
 		where
 			P.post_board_type = #{boardId}
-			and P.post_is_deleted = 'N'
+			AND P.post_is_deleted = 'N'
+			<![CDATA[AND P.post_report_count < 5]]>
 		order by
 			P.post_no desc
 	</select>
@@ -99,7 +99,7 @@
 		<result column="post_updated_date" property="updatedDate"/>
 		<result column="post_view_count" property="viewCount"/>
 		<result column="post_upvote_count" property="upvoteCount"/>
-		<result column="commentCount" property="commentCount" />
+		<result column="post_comment_count" property="commentCount" />
 		<result column="post_is_spoiler" property="isSpoiler"/>
 		<association property="user" javaType="User">
 			<id column="user_id" property="id"/>
@@ -121,8 +121,12 @@
 	<insert id="updatePost" parameterType="Post">
 		update movmov_community_posts
 		set
-			post_view_count = #{viewCount}
-		  , post_upvote_count = #{upvoteCount}
+			post_content = #{content}
+		  , post_updated_date = #{updatedDate}
+		  , post_is_spoiler = #{isSpoiler}
+		  , post_is_deleted = #{isDeleted}
+		  , post_is_reported = #{isReported}
+		  , post_report_count = #{reportCount}
 		where
 			post_no = #{no}
 	</insert>
@@ -136,12 +140,41 @@
 	</select>
 	
 	<!--
+		int getTotalRows(Map<String, Object> condition);
+		condition 값:
+			{boardId:게시판번호,
+				spoiler:스포일러유무,
+				header:말머리번호}
+				- boardId: 선택 (커뮤니티 메인에서 모두 조회한 후 페이지에서 분류)
+				- spoiler: 선택
+				- header: 선택
+	-->
+	<select id="getTotalRows">
+		SELECT
+			count(*)
+		FROM
+			movmov_community_posts
+		WHERE
+			post_is_deleted = 'N'
+			<![CDATA[AND post_report_count < 5]]>
+			<if test="boardId != null">
+				and post_board_type = #{boardId}
+			</if>
+			<if test="spoiler != null">
+				and post_is_spoiler = #{spoiler}
+			</if>
+			<if test="header != null">
+				and post_header = #{header}
+			</if>
+	</select>
+	
+	<!--
 		List<Post> getPosts(Map<String, Object> condition);
 		
 		condition 값:
 			{boardId:게시판번호,
 				spoiler:스포일러유무,
-				header:말머리,
+				header:말머리번호,
 				offset:오프셋값,
 				rows:행개수,
 				sort:정렬기준}
@@ -155,27 +188,25 @@
 			P.post_no
 		  , P.post_title
 		  , P.post_content
+		  , P.user_id
 		  , P.post_created_date
 		  , P.post_updated_date
 		  , P.post_view_count	
 		  , P.post_upvote_count
+		  , P.post_comment_count
 		  , P.post_is_spoiler
-		  , NVL(C.comment_count, 0)		as commentCount
 		  , U.user_nickname				as user_nickname
 		  , HC.cat_id					as header_cat_id
 		  , HC.cat_name					as header_cat_name
     	  , BC.cat_id					as board_cat_id
     	  , BC.cat_name					as board_cat_name
-		from
-			movmov_community_posts P
-				left join (select post_no, count(*) as comment_count
-    				from movmov_community_comments
-    				group by post_no) C on P.post_no = C.post_no
-				join movmov_content_categories HC on P.post_header = HC.cat_id
-				join movmov_content_categories BC on P.post_board_type = BC.cat_id
-				join movmov_users U on P.user_id = U.user_id
+		from movmov_community_posts P
+			join movmov_content_categories HC on P.post_header = HC.cat_id
+			join movmov_content_categories BC on P.post_board_type = BC.cat_id
+			join movmov_users U on P.user_id = U.user_id
 		where
 			P.post_is_deleted = 'N'
+			<![CDATA[AND P.post_report_count < 5]]>
 		<if test="boardId != null">
 			and P.post_board_type = #{boardId}
 		</if>
@@ -183,23 +214,105 @@
 			and P.post_is_spoiler = #{spoiler}
 		</if>
 		<if test="header != null">
-			and P.post_is_spoiler in #{header}
+			and P.post_header in #{header}
 		</if>
 		order by
 		<choose>
 			<when test="sort == 'newest'">
 				P.post_no desc
 			</when>
-			<when test="sort == 'oldest">
+			<when test="sort == 'oldest'">
 				P.post_no asc
+			</when>
+			<when test="sort == 'views'">
+				P.post_view_count desc
 			</when>
 			<otherwise>
 				P.post_no desc
 			</otherwise>
 		</choose>
-		offset #{offset} rows
+		<if test="offset != null">
+			offset #{offset} rows
+		</if>
 		fetch next #{rows} rows only
 	</select>
+	
+	<!--
+		List<String> getUpvoteIds(int postNo);
+	-->
+	<select id="getUpvoteIds">
+		SELECT user_id
+		FROM movmov_community_upvotes
+		WHERE post_no = #{postNo}
+	</select>
+	
+	<!--
+		void updatePostViewCount(int postNo);
+	-->
+	<update id="updatePostViewCount">
+		UPDATE movmov_community_posts
+		SET post_view_count = post_view_count + 1
+		WHERE post_no = #{postNo}
+	</update>
+	
+	<!--
+		void updatePostUpvoteCount(int postNo);
+	-->
+	<update id="updatePostUpvoteCount">
+		UPDATE movmov_community_posts P
+		SET post_upvote_count = (
+			SELECT COUNT(*)
+			FROM movmov_community_upvotes U
+			WHERE U.post_no = P.post_no
+		)
+		WHERE post_no = #{postNo}
+	</update>
+	
+	<!--
+		void insertUpvote(Map<String, Object> info);
+		info
+			postNo: (값/0) 게시글 아이디
+			commentNo (값/0) 댓글 아이디
+			userId (not null) 유저 아이디
+	-->
+	<insert id="insertUpvote" parameterType="map">
+		insert into movmov_community_upvotes
+		(post_no, comment_no, user_id)
+		values
+		(
+		<choose>
+			<when test="postNo != 0">
+				#{postNo}, null,
+			</when>
+			<when test="commentNo != 0">
+				null, #{commentNo},
+			</when>
+		</choose>
+		#{userId}
+		)
+	</insert>
+	
+	<!--
+		int getUpvoteCount(int postNo);
+	-->
+	<select id="getUpvoteCount">
+		SELECT post_upvote_count
+		FROM movmov_community_posts
+		WHERE post_no = #{postNo}
+	</select>
+	
+	<!--
+		void updatePostCommentCount(int postNo);
+	-->
+	<update id="updatePostCommentCount">
+		UPDATE movmov_community_posts P
+		SET post_comment_count = (
+			SELECT COUNT(*)
+			FROM movmov_community_comments C
+			WHERE C.post_no = P.post_no
+		)
+		WHERE post_no = #{postNo}
+	</update>
 	
 </mapper>
  
