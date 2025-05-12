@@ -32,9 +32,9 @@
 	</insert>
 	
 	<!--
-		Post getPostById(int postNo);
+		Post getPostByNo(int postNo);
 	-->
-	<select id="getPostById" resultMap="PostResultMap">
+	<select id="getPostByNo" resultMap="PostResultMap">
 		select
 			P.post_no
 		  , P.post_title
