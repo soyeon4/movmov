@@ -6,7 +6,8 @@
     pageEncoding="UTF-8"%>
 <%
 	int itemNo = StringUtils.strToInt(request.getParameter("ino"));
-
+	int optionNo = StringUtils.strToInt(request.getParameter("option"));
+	
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	if (loginedUser == null){
 		response.sendRedirect("../mypage/modal-login.jsp");
@@ -14,8 +15,13 @@
 	else {
 		String userId = loginedUser.getId();
 		ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
-		cartItemMapper.insertCartItemById(userId, itemNo);
+		
+		if (optionNo > 0) {
+			cartItemMapper.updateCartItemOption(userId, itemNo, optionNo);
+		}
+		
+		cartItemMapper.insertCartItem(userId, itemNo);
 	
-		response.sendRedirect("shop-detail.jsp?id=" + itemNo);
+		response.sendRedirect("shop-detail.jsp?no=" + itemNo);
 	}
 %>

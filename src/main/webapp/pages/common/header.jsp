@@ -46,7 +46,7 @@
 		<a href="/movmov/pages/mypage/page.jsp">
 			<button type="button" class="btn-signin"><%=loginUser.getNickname() %></button>
 		</a>
-		<a href="">
+		<a href="/movmov/pages/shop/shop-cart.jsp">
 			<button type="button" class="btn-cart">장바구니</button>
 		</a>
 		<a href="/movmov/pages/mypage/logout.jsp">

@@ -18,6 +18,8 @@
 				item	상품아이디
 			
 	*/
+	
+	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -34,7 +36,10 @@
 <body>
 	<%@ include file="/pages/common/header.jsp" %>
 <%
-
+	if (loginUser == null) {
+			response.sendRedirect("../mypage/modal-login.jsp");
+			return;
+	}
 	String userId = loginUser.getId();
 	ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
 	List<ShopCartItem> cartItems = cartItemMapper.getCartItemsByUserId(userId);
@@ -66,12 +71,21 @@
 				<div style="display: flex; align-items: center; gap: 10px;">
 					<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" alt="<%=cartItem.getItem().getImagePath() %>"> 
 					<span><%=cartItem.getItem().getName() %></span>
+					
+<%
+	if (cartItem.getOption() != null) {
+%>
+					<span> / 옵션 : <%=cartItem.getOption().getOptionName() %></span>
+<%	
+	}
+%>
+					
 				</div>
 				<div><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %>원</div>
 				<div class="qty-box">
-					<button onclick="updateQty(this, -1)">-</button>
+					<button type="button" onclick="updateQty(this, -1)">-</button>
 					<input type="text" value="1" readonly />
-					<button onclick="updateQty(this, 1)">+</button>
+					<button type="button" onclick="updateQty(this, 1)">+</button>
 				</div>
 				<div>
 				<span><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></span>원
@@ -117,7 +131,7 @@
 		}
 	
 		function clearCart() {
-			window.location.href = 'cart-clear.jsp'
+			window.location.href = 'shop-cart-clear.jsp'
 		}
 
 		// 전체 선택/해제 체크박스의 체크가 변경될 때 실행되는 이벤트 핸들러 등록

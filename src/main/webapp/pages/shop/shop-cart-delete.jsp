@@ -8,7 +8,7 @@
 
 	int cartNo = StringUtils.strToInt(request.getParameter("cno"));
 	ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
-	cartItemMapper.deleteCartItemById(cartNo);
+	cartItemMapper.deleteCartItemByCartNo(cartNo);
 	
 	response.sendRedirect("shop-cart.jsp");	// 이거하면 위에 실행되고 이 페이지로 이동하네 오케이
 
