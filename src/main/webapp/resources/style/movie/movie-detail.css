@@ -1,0 +1,210 @@
+body {
+  background-color: #f8f8f8;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #eaeaea;
+}
+.logo {
+  width: 5%;
+}
+.logo-img {
+  width: 100px;
+}
+nav ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-weight: 500;
+}
+nav ul li {
+  cursor: pointer;
+  font-size: 12px;
+}
+nav ul li:hover {
+  color: #FF498D;
+  font-weight: 700;
+}
+.star-icon {
+  color: #FF498D;  /* 원하는 색상으로 변경 가능 */
+  font-size: 1.5rem; /* 크기 조절 */
+}
+.client {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  position: relative;
+}
+.client img {
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  margin-left: 15px;
+  cursor: pointer;
+}
+.btn-signin, .btn-signup {
+  border-radius: 12px;
+  font-size: 10px;
+  padding: 8px 16px;
+  border: none;
+  font-weight: 700;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  width: 70px;
+  height: 30px;
+  margin-left: 5px;
+}
+.btn-signup {
+  background-color: #FF498D;
+  color: #f7f7f7;
+}
+
+.container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.btn-primary, .btn-outline-secondary {
+  background-color: #FF498D;
+  border-color: #FF498D;
+  color: white;
+}
+.btn-outline-secondary {
+  background-color: transparent;
+  color: #FF498D;
+}
+.btn-primary:hover {
+  background-color: #FF498D !important;
+  border-color: #FF498D !important;
+  color: white !important;
+}
+
+.btn-no-hover:hover {
+  background-color: transparent;
+  border-color:#FF498D !importtant;
+  color: #FF498D;
+}
+.content-section {
+  margin-bottom: 3rem;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+.content-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+.content-section ul {
+  list-style: none;
+  padding: 0;
+}
+.content-section ul li {
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+.comment {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+.comment:last-child {
+  border-bottom: none;
+}
+.comment p {
+  margin: 0;
+  color: #333;
+}
+.comment small {
+  color: #888;
+}
+.footer {
+  background-color: #111;
+  color: #ccc;
+  padding: 40px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 8px;
+}
+.footer-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #f5f5f5;
+  margin-bottom: 20px;
+}
+.rating-info {
+  font-size: 16px;
+  color: #ccc;
+}
+.rating-count {
+  color: #FF498D;
+  font-weight: bold;
+}
+.language-select select {
+  background-color: #222;
+  color: #fff;
+  padding: 6px 12px;
+  border: 1px solid #444;
+  border-radius: 6px;
+}
+.footer-links {
+  margin-bottom: 15px;
+  color: #999;
+}
+.footer-links a {
+  color: #ccc;
+  margin: 0 4px;
+  text-decoration: none;
+}
+.footer-links a strong {
+  color: #fff;
+}
+.footer-contact p,
+.footer-company p {
+  margin: 4px 0;
+  line-height: 1.5;
+  color: #aaa;
+}
+.footer-contact a {
+  color: #FF498D;
+  text-decoration: underline;
+}
+.footer-bottom {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #888;
+  font-size: 12px;
+}
+.footer-socials span {
+  margin-left: 10px;
+  font-size: 18px;
+  color: #bbb;
+  cursor: pointer;
+}
+.footer-socials span:hover {
+  color: #FF498D;
+}

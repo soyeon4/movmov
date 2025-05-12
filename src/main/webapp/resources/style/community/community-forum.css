@@ -1,5 +1,6 @@
 .boards-container {
-	max-width: 1000px;
+	max-width: 900px;
+	min-width: 800px;
 	margin: 40px auto;
 	padding: 20px;
 	background: #fff;
@@ -53,13 +54,31 @@
 	background-color: #fce4ef;
 	color: #FF498D;
 	font-weight: bold;
+	border-spacing: 0px;
 }
 
 .board-table th, .board-table td {
+	padding: 8px 0px;
 	text-align: center;
-	padding: 12px;
-	border-bottom: 1px solid #eee;
 	font-size: 14px;
+}
+
+.board-table th:first-child {
+	border-radius: 12px 0 0 12px;
+}
+.board-table th:last-child {
+	border-radius: 0 12px 12px 0;
+}
+
+.board-table td {
+	border-bottom: 1px solid #eee;
+}
+
+.board-table td:nth-child(2) {
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .board-table tbody tr:hover {
@@ -67,14 +86,15 @@
 	cursor: pointer;
 }
 
-.post-category {
+.tag-spoiler, .tag-header {
 	display: inline-block;
-	font-size: 13px;
-	background-color: #ffe3ef;
+	font-size: small;
 	color: #FF498D;
-	padding: 2px 6px;
-	border-radius: 6px;
-	margin-right: 5px;
+}
+
+.board-table a {
+	text-decoration: none;
+	color: inherit;
 }
 
 .write-btn {
