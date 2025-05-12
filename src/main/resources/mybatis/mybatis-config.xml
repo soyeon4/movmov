@@ -30,6 +30,7 @@
 	<mappers>
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
 		<mapper resource="mybatis/mappers/CommentMapper.xml" />
+		<mapper resource="mybatis/mappers/ReportMapper.xml" />
 		<mapper resource="mybatis/mappers/CategoryMapper.xml" />
 		<mapper resource="mybatis/mappers/ShopItemMapper.xml"/>
 		<mapper resource="mybatis/mappers/ShopCartItemMapper.xml"/>

@@ -46,6 +46,9 @@
 		  , P.post_upvote_count
 		  , P.post_comment_count
 		  , P.post_is_spoiler
+		  , P.post_is_deleted
+		  , P.post_is_reported
+		  , P.post_report_count
 		  , U.user_nickname				as user_nickname
 		  , HC.cat_id					as header_cat_id
 		  , HC.cat_name					as header_cat_name
@@ -101,6 +104,9 @@
 		<result column="post_upvote_count" property="upvoteCount"/>
 		<result column="post_comment_count" property="commentCount" />
 		<result column="post_is_spoiler" property="isSpoiler"/>
+		<result column="post_is_deleted" property="isDeleted"/>
+		<result column="post_is_reported" property="isReported"/>
+		<result column="post_report_count" property="reportCount"/>
 		<association property="user" javaType="User">
 			<id column="user_id" property="id"/>
 			<result column="user_nickname" property="nickname"/>
@@ -122,6 +128,8 @@
 		update movmov_community_posts
 		set
 			post_content = #{content}
+		  , post_header = #{header.id}
+		  , post_board_type = #{boardType.id}
 		  , post_updated_date = #{updatedDate}
 		  , post_is_spoiler = #{isSpoiler}
 		  , post_is_deleted = #{isDeleted}
@@ -310,6 +318,8 @@
 			SELECT COUNT(*)
 			FROM movmov_community_comments C
 			WHERE C.post_no = P.post_no
+			AND C.COMMENT_IS_DELETED = 'N'
+			<![CDATA[AND C.COMMENT_REPORT_COUNT < 5]]>
 		)
 		WHERE post_no = #{postNo}
 	</update>

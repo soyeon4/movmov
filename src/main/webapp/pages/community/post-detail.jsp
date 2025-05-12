@@ -43,7 +43,8 @@
 
 	// 하단 게시글 목록
 	Map<String, Object> conditionRecent = new HashMap<>();
-	conditionRecent.put("boardId", post.getBoardType().getId());
+	int boardId = post.getBoardType().getId();
+	conditionRecent.put("boardId", boardId);
 	conditionRecent.put("rows", 4);
 	
 	List<Post> recentPosts = postMapper.getPosts(conditionRecent);
@@ -70,7 +71,7 @@
 	<!-- 로그인 요구 팝업 -->
 	<dialog id="login-warning-dialog" closedby="any">
 		<form method="dialog">
-			<p>게시글을 추천하려면 로그인해야 합니다.</p>
+			<p>해당 기능을 사용하려면 로그인해야 합니다.</p>
 			<menu>
 				<button type="button" id="btn-login-trigger">로그인</button>
 				<button type="button" id="btn-close-warning">돌아가기</button>
@@ -139,16 +140,22 @@
 			</div>
 		</div>
 		<div class="post-options">
-			<a href="">수정</a>
+<%
+	if (post.getUser().getId().equals(userId)) {
+%>
+			<a href="post-form-edit.jsp?pno=<%=post.getNo() %>">수정</a>
 			<a href="">삭제</a>
-			<a href="report-form.jsp?pno=<%=post.getNo() %>" class="report-button">신고하기</a>
+<%
+	}
+%>
+			<a href="report-form.jsp?pno=<%=post.getNo() %>" class="report-button post">신고하기</a>
 		</div>
 
 		<!-- 💬 댓글 -->
+		<div class="comment-header">
+			<p>💬 댓글 [<%=post.getCommentCount() %>]</p>
+		</div>
 		<div class="comments-section">
-			<div class="comment-header">
-				<p>💬 댓글 [<%=post.getCommentCount() %>]</p>
-			</div>
 <%
 	for (Comment comment : postComments) {
 %>
@@ -156,9 +163,24 @@
 				<div class="comment-author">
 					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
 					<span class="author-name"><%=comment.getUser().getNickname() %></span>
-					<div class="meta"><%=StringUtils.detailDate(comment.getCreatedDate()) %></div>
+					<div class="meta">작성일: <%=StringUtils.simpleDateTimeFormat(comment.getCreatedDate()) %>
+					<%=(comment.getCreatedDate().compareTo(comment.getUpdatedDate()) != 0 ? 
+							"수정일: " + StringUtils.simpleDateTimeFormat(comment.getUpdatedDate()) : "" ) %></div>
 				</div>
 				<div class="content"><%=comment.getContent() %></div>
+				<div class="comment-options">
+<%
+		if (comment.getUser().getId().equals(userId)) {
+%>
+					<a href="">수정</a>
+					<a href="delete-comment.jsp?cno=<%=comment.getNo() %>" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+<%
+		}
+%>
+					<a href="report-form.jsp?cno=<%=comment.getNo() %>"
+						class="report-button comment"
+						data-user-id="<%=comment.getUser().getId() %>">신고하기</a>
+				</div>
 			</div>
 <%
 	}
@@ -184,7 +206,9 @@
 
 		<!-- 📃 하단 관련 게시글 목록 -->
 		<div class="related-posts">
-			<h3>📋 <%=(post.getBoardType().getId() == 300 ? "영화" : "자유") %>게시판 다른 글</h3>
+			<a class="no-deco" href="community-forum.jsp?bid=<%=boardId %>">
+				<h3>📋 <%=(boardId == 300 ? "영화" : "자유") %>게시판 다른 글</h3>
+			</a>
 <%
 	for (Post recentPost : recentPosts) {
 %>
@@ -260,6 +284,27 @@
 					upvoteIdList.push(userId);
 				}
 			});
+		});
+		
+		$(".report-button").on("click", function(e) {
+			if (!isLoggedIn) {
+				e.preventDefault();
+				fadeInDialog(loginWarningDialog);
+				return;
+			}
+			if ($(this).hasClass('post') && userId == postUserId) {
+				e.preventDefault();
+				alert("본인의 게시글을 신고할 수 없습니다.");
+				// 본인 게시글 신고 눌렀을 때
+				return;
+			}
+			if ($(this).hasClass('comment') && userId == $(this).attr("data-user-id")) {
+				e.preventDefault();
+				alert("본인의 댓글을 신고할 수 없습니다.");
+				// 본인 댓글 신고 눌렀을 때
+				return;
+			}
+			
 		});
 		
 		$("#btn-close-warning").on("click", function() {
