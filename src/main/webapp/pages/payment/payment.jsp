@@ -31,7 +31,6 @@
 	<%
 	}
 	
-	
 	%>
 
 	<main class="payment-wrapper">

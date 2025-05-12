@@ -9,9 +9,11 @@ import lombok.Setter;
 public class Address {
 
 	private int id;
-	private String name;
+	private String addressName;
 	private String road;
 	private String detail;
 	private User user;	
+	private String receiverPhone;
+	private String receiverName;
+	private String zipcode;
 }
-

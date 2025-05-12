@@ -16,10 +16,11 @@
 	String road = request.getParameter("address");
 	String addr_detail = request.getParameter("detail");
 	String zipcode = request.getParameter("zipcode");
-	int addr_id =  Integer.parseInt(zipcode);
-	
+	zipcode = zipcode.replaceAll("[^0-9]", "");
+		
 	//get Mybatis mapper
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
+	int addressID = addressMapper.countAddress();
 	
 	// validate values
 	if (zipcode == null || zipcode.length() != 5 || !zipcode.matches("\\d{5}")) {
@@ -59,14 +60,17 @@
 
 	//generate VO(Value Object) and set
 	Address address = new Address();
-	address.setId(addr_id);
-	address.setAddr_name(addr_explain);
+	address.setId(addressID);
+	address.setAddressName(addr_explain);
 	address.setRoad(road);
 	address.setDetail(addr_detail);
 	address.setUser(user);
-	address.setReceiver_name(receiver_name);
-	address.setReceiver_phone(receiver_phone);
+	address.setReceiverName(receiver_name);
+	address.setReceiverPhone(receiver_phone);
+	address.setZipcode(zipcode);
 	
 	//insert address
 	addressMapper.insertAddress(address);
+	response.sendRedirect("payment.jsp");
+	return;
 %>

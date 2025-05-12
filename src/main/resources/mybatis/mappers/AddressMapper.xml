@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.movmov.mapper.AddressMapper">
+	<!-- C:CREATE void insertAddress(Address address); -->
+	<insert id="insertAddress" parameterType="Address">
+		insert into
+		movmov_user_addresses
+		(
+			addr_id
+			, addr_name
+			, addr_road
+			, addr_detail
+			, user_id
+			, receiver_number
+			, receiver_name
+			, zipcode
+		)
+		values
+		(#{id}, #{addressName}, #{road}, #{detail}, #{user.id}, #{receiverPhone}, #{receiverName}, #{zipcode})
+	</insert>
+	
+	<!-- R:RETRIEVE int countAddress(); -->
+	<select id="countAddress">
+	
+		select 
+			count(*)
+			
+		from 
+			movmov_user_addresses
+			
+	</select>
+
+	<!-- R:RETRIEVE Address getDefaultAddress(User user); -->
+	<select id="getDefaultAddress" resultType="Address" parameterType="User">
+		select
+			a.addr_id 				as id
+			, a.addr_name 			as addressName
+			, a.addr_road 			as road
+			, a.addr_detail 		as detail
+			, u.user_id 			as "user.id"
+			, a.receiver_number 	as receiverPhone
+			, a.receiver_name 		as receiverName
+			, a.zipcode				as zipcode
+
+		from
+			movmov_users u
+			
+		join
+			movmov_user_addresses a
+		
+		on
+			u.addr_id = a.addr_id
+		
+		where
+			u.user_id = #{id}
+			
+	</select>
+	
+	<!-- R:RETRIEVE Address getAddressById(int id); -->
+	<select id="getAddressById" parameterType="int">
+	
+		select
+			addr_id				as id
+			, addr_name			as addressName
+			, addr_road			as road
+			, addr_detail		as detail
+			, user_id			as "user.id"
+			, receiver_number	as receiverPhone
+			, receiver_name		as receiverName
+			, zipcode			as zipcode
+			
+		from
+			movmov_user_addresses
+		
+		where
+			addr_id = #{id}
+	</select>
+
+	<!-- R:RETRIEVE List<Address> getAllAddressOfUser(User user); -->
+	<select id="getAllAddressOfUser" parameterType="User" resultType="Address">
+		select
+			addr_id				as id
+			, addr_name			as addressName
+			, addr_road			as road
+			, addr_detail		as detail
+			, user_id			as "user.id"
+			, receiver_number	as receiverPhone
+			, receiver_name		as receiverName
+			, zipcode			as zipcode
+			
+		from
+			movmov_user_addresses
+		
+		where
+			user_id = #{id}
+	</select>
+	
+</mapper>
