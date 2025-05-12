@@ -35,6 +35,10 @@ public interface CategoryMapper {
 	 */
 	List<Category> getAllBoardHeaders();
 	
-	
+	/**
+	 * 신고사유 목록을 담은 리스트를 반환한다.
+	 * @return 신고사유 리스트
+	 */
+	List<Category> getAllReportHeaders();
 	
 }
