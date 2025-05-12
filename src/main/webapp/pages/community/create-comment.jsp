@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.mapper.PostMapper"%>
 <%@page import="java.util.Date"%>
 <%@page import="kr.co.movmov.mapper.CommentMapper"%>
 <%@page import="kr.co.movmov.vo.Comment"%>
@@ -19,7 +20,7 @@
 				parentCommentNo		원댓글 번호
 				
 				
-		게시글 등록 절차
+		댓글 등록 절차
 		1. 요청 파라미터값을 조회한다.
 		2. Comment 객체를 생성해서 요청파라미터값(내용)을 담는다.
 		3. 로그인된 세션의 유저 아이디 정보를 Comment 객체의 User 객체에 담는다.
@@ -45,6 +46,9 @@
 	
 	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
 	commentMapper.insertComment(comment);
+	
+	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
+	postMapper.updatePostCommentCount(postNo);
 	
 	response.sendRedirect("post-detail.jsp?pno=" + postNo);
 
