@@ -12,4 +12,5 @@ public interface MovieMapper {
 	List<Movie> getMovies();
 	
 	Movie getMovieByNo(int no); 
+	
 }

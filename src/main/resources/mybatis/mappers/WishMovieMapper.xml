@@ -2,53 +2,62 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
 <mapper namespace="kr.co.movmov.mapper.WishMovieMapper">
-	<!-- 
-			void insertWishMovie(WishMovie wishMovie)
-	 -->
-	<insert id="insertWishMovie" parameterType="WishMovie">
-		insert into movmov_wish_movies
-		(wish_movie_no, wish_movie_created_date, movie_no, user_id)
-		values
-		(wish_movie_no_seq.nextval, sysdate, #{movie.no}, #{user.id})
-	</insert>
-	<!-- 
-		void deleteWishMovie(int wishNo);
-	 -->
-	<delete id="deleteWishMovie">
-		delete movmov_wish_movies
-		where
-			wish_movie_no = #{wishNo}
-	</delete>
-	<!-- 
-			WishMovie getWishMovieByUserIdAndMovieNo(String userId, int movieNo);
-	 -->
-	<select id="getWishMovieByUserIdAndMovieNo" resultType="WishMovie">
-		select
-			wish_movie_no as no
-			, wish_movie_created_date as createdDate
-			, movie_no as "movie.no"
-			, user_id as "user.id"
-		from 
-			movmov_wish_movies
-		where
-			user_id = #{userId}
-			and movie_no = #{movieNo}
-	</select>
-	<!-- 
-			List<WishMovie> getWishMoviesbyUserId(String userId);
-	 -->
-	<select id="getWishMoviesbyUserId" resultType="WishMovie">
-		select
-			wish_movie_no as no
-			, wish_movie_created_date as createdDate
-			, movie_no as "movie.no"
-			, user_id as "user.id"
-		from 
-			movmov_wish_movies
-		where
-			user_id = #{userId}
-	</select>
 	
+  <insert id="insertWishMovie" parameterType="WishMovie">
+    insert into movmov_wish_movies
+    (wish_movie_no, wish_movie_created_date, movie_no, user_id)
+    values
+    (wish_movie_no_seq.nextval, sysdate, #{movie.no}, #{user.id})
+  </insert>
+
+  <delete id="deleteWishMovie">
+    delete from movmov_wish_movies
+    where wish_movie_no = #{wishNo}
+  </delete>
+
+  <select id="getWishMovieByUserIdAndMovieNo" resultType="WishMovie">
+    select
+      wish_movie_no as no,
+      wish_movie_created_date as createdDate,
+      movie_no as "movie.no",
+      user_id as "user.id"
+    from movmov_wish_movies
+    where user_id = #{userId} and movie_no = #{movieNo}
+  </select>
+
+  <select id="getWishMoviesbyUserId" resultType="WishMovie">
+    select
+      wish_movie_no as no,
+      w.wish_movie_created_date as createdDate,
+      w.movie_no as "movie.no",
+      w.user_id as "user.id",
+      m.movie_title as "movie.title"
+    from movmov_wish_movies w
+    join movmov_movies m on w.movie_no = m.movie_no
+    where w.user_id = #{userId}
+  </select>
+
+	<select id="getWishMoviesbyUserIdPaging" parameterType="map" resultType="WishMovie">
+	  SELECT
+	    w.wish_movie_no             as no,
+	    w.wish_movie_created_date  as createdDate,
+	    w.movie_no                 as "movie.no",
+	    w.user_id                  as "user.id",
+	    m.movie_title              as "movie.title",
+	    m.movie_director           as "movie.director",
+	    m.movie_actor              as "movie.actor",
+	    m.movie_poster_image_path  as "movie.posterImagePath"
+	  FROM movmov_wish_movies w
+	  JOIN movmov_movies m ON w.movie_no = m.movie_no
+	  WHERE w.user_id = #{userId}
+	  ORDER BY w.wish_movie_no DESC
+	  OFFSET #{offset} ROWS
+	  FETCH NEXT #{limit} ROWS ONLY
+	</select>
+
+  <select id="getTotalWishMovieRowsByUserId" parameterType="string" resultType="int">
+    SELECT COUNT(*) FROM movmov_wish_movies WHERE user_id = #{userId}
+  </select>
+
 </mapper>

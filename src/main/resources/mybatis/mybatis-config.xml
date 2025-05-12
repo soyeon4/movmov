@@ -7,6 +7,7 @@
 
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL" />
+		   <setting name="logImpl" value="STDOUT_LOGGING"/>
 	</settings>
 
 	<typeAliases>
@@ -18,10 +19,10 @@
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
 
-				<property name="driver" value="oracle.jdbc.OracleDriver" />
-				<property name="url" value="jdbc:oracle:thin:@movmovdb_high?TNS_ADMIN=C:/JavaStudy/workspace/wallet" />
-				<property name="username" value="admin" />
-				<property name="password" value="Movmovzxcv1234" />
+				<property name="driver" value="${driver}" />
+           	 	<property name="url" value="${url}" />
+            	<property name="username" value="${username}" />
+            	<property name="password" value="${password}" />
 
 			</dataSource>
 		</environment>
