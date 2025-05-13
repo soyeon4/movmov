@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Alias("Category")
 public class Category {
-	private int catId;
+	private int id;
 	private String name;
 	private String type;
 }
