@@ -60,7 +60,7 @@
 %>
 			</div>
 <%
-
+	}
 %>
 			<div class="content-contents">
 			

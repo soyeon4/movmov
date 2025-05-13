@@ -216,6 +216,9 @@
 		<if test="header != null">
 			and P.post_header in #{header}
 		</if>
+		<if test="userId != null">
+		and P.user_id = #{userId}
+		</if>
 		order by
 		<choose>
 			<when test="sort == 'newest'">
@@ -313,6 +316,38 @@
 		)
 		WHERE post_no = #{postNo}
 	</update>
+	
+	<select id="getRecentPostsByUserId" resultMap="PostResultMap">
+		SELECT 
+		    p.POST_NO               AS post_no,
+		    p.POST_TITLE            AS post_title,
+		    p.POST_CONTENT          AS post_content,
+		    p.POST_CREATED_DATE     AS post_created_date,
+		    p.POST_UPDATED_DATE     AS post_updated_date,
+		    p.POST_VIEW_COUNT       AS post_view_count,
+		    p.POST_COMMENT_COUNT    AS post_comment_count,
+		    p.POST_UPVOTE_COUNT     AS post_upvote_count,         
+		    p.POST_IS_SPOILER       AS post_is_spoiler,           
+		    p.USER_ID               AS user_id,
+		    U.USER_NICKNAME         AS user_nickname,
+		    HC.CAT_ID               AS header_cat_id,
+		    HC.CAT_NAME             AS header_cat_name,
+		    BC.CAT_ID               AS board_cat_id,
+		    BC.CAT_NAME             AS board_cat_name
+		FROM movmov_community_posts P
+			JOIN movmov_content_categories HC ON P.post_header = HC.cat_id
+			JOIN movmov_content_categories BC ON P.post_board_type = BC.cat_id
+			JOIN movmov_users U ON P.user_id = U.user_id
+		WHERE p.user_id = #{id}
+		ORDER BY p.post_created_date DESC
+		FETCH FIRST 10 ROWS ONLY
+	</select>
+	
+	<select id="getTotalPostRowsByUserId" parameterType="string" resultType="int">
+    	SELECT COUNT(*)
+    	FROM movmov_community_posts
+    	WHERE user_id = #{userId}
+   </select>
 	
 </mapper>
  
