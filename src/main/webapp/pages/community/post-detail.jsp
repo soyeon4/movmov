@@ -42,12 +42,8 @@
 	List<Comment> postComments = commentMapper.getCommentsByPostNo(postNo);
 
 	// 하단 게시글 목록
-	Map<String, Object> conditionRecent = new HashMap<>();
 	int boardId = post.getBoardType().getId();
-	conditionRecent.put("boardId", boardId);
-	conditionRecent.put("rows", 4);
-	
-	List<Post> recentPosts = postMapper.getPosts(conditionRecent);
+	List<Post> recentPosts = postMapper.getRecentPostsByBoardId(boardId);
 	
 %>
 <!DOCTYPE html>
