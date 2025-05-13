@@ -1,0 +1,148 @@
+@charset "UTF-8";
+
+:root {
+  --point-color: #FF498D;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background: #fff;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 30px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  color: #333;
+  font-weight: 500;
+}
+
+.tab.active {
+  border-bottom: 3px solid var(--point-color);
+  color: var(--point-color);
+  font-weight: bold;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.faq-categories {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.faq-categories button {
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.faq-categories button.active {
+  background: var(--point-color);
+  color: #fff;
+  border-color: var(--point-color);
+}
+
+.faq-list {
+  list-style: none;
+  padding: 0;
+  border-top: 1px solid #ddd;
+}
+
+/* FAQ 항목 */
+.faq-item {
+  border-bottom: 1px solid #eee;
+  padding: 15px;
+  cursor: pointer;
+  background: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.faq-item:hover {
+  background: #fef4f7;
+}
+
+.faq-item span {
+  font-size: 14px;
+  color: var(--point-color);
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+/* FAQ 답변 (아코디언용 최적화) */
+.faq-answer {
+  display: none;
+  overflow: hidden;
+  margin-top: 10px;
+  padding: 12px 15px;
+  background: #f9f9f9;
+  font-size: 14px;
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+
+/* Pagination */
+.pagination {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: #fef4f7;
+  border-color: var(--point-color);
+  color: var(--point-color);
+}
+
+.pagination a.active {
+  background: var(--point-color);
+  color: #fff;
+  border-color: var(--point-color);
+  border-radius: 5px;  
+  padding: 8px 15px;  
+}
