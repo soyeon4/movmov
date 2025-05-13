@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.movmov.mapper.ReportMapper">
+	<!--
+		void insertReport(Report report);
+	-->
+	<insert id="insertReport">
+		INSERT INTO
+			movmov_community_reports
+		(report_no
+		, report_cat
+		, report_detail
+		, user_id
+		, report_type
+		, report_content_no
+		)
+		VALUES
+		(REPORT_NO_SEQ.NEXTVAL
+		, #{category.id}
+		, #{details}
+		, #{user.id}
+		, #{type}
+		, #{contentNo}
+		)
+	</insert>
+</mapper>
+ 

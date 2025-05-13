@@ -1,0 +1,95 @@
+.qna-container {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.qna-write-wrap {
+  margin: 10px 0 20px;
+}
+
+.qna-write-btn {
+  background-color: #000;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.qna-guide-text {
+  font-size: 14px;
+  color: #666;
+  margin: 8px 0 24px;
+}
+
+.qna-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 14px;
+  
+}
+
+.qna-filters label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qna-list {
+  border-top: 1px solid #ccc;
+}
+
+.qna-item {
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.qna-title {
+  font-weight: bold;
+}
+
+.qna-meta {
+  font-size: 13px;
+  color: #777;
+  margin-top: 6px;
+}
+
+.qna-answer {
+  display: none;
+  background-color: #f9f9f9;
+  padding: 14px;
+  margin-top: 10px;
+  border-left: 4px solid #000;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+  gap: 6px;
+}
+
+.pagination a {
+  padding: 6px 12px;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #333;
+  font-size: 14px;
+}
+
+.pagination a.active {
+  background-color: #000;
+  color: #fff;
+}
+
+.lock-icon {
+  color: #999;
+  margin-right: 4px;
+}

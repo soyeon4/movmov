@@ -115,26 +115,22 @@
 	height: 20px;
 }
 
-.post-options {
+.post-options, .comment-options {
 	margin: 5px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.post-options a {
+.post-options a, .comment-options a {
     text-decoration: none;
     margin: 0 4px;
     color: grey;
     font-size: smaller;
-}
-
-.report-button {
-	text-decoration: none;
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.report-button:hover {
+.post-options a:hover, .comment-options a:hover {
 	color: #FF498D;
 	font-weight: bold;
 }
@@ -145,7 +141,7 @@
 }
 
 .comment-block {
-    padding: 10px 20px 20px 20px;
+    padding: 10px 20px 4px 20px;
     border: 1px solid #eee;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -157,10 +153,6 @@
     align-items: center;
 }
 
-.comment-author .author-name {
-	
-}
-
 .comment-block .meta {
     margin-left: auto;
     font-size: 14px;
@@ -170,11 +162,11 @@
 .comment-block .content {
 	font-size: 15px;
 	white-space: pre-line;
-	padding: 
+	padding: 6px 10px 0 10px;
 }
 
 .comment-form textarea {
-	width: 100%;
+	width: 96%;
 	padding: 12px;
 	border-radius: 8px;
 	border: 1px solid #ccc;
@@ -280,7 +272,7 @@ textarea::placeholder {
 }
 
 /* 로그인 요구 팝업 모달 */
-#login-warning-dialog {
+dialog {
     width: 20%;
     height: 20%;
     min-width: 350px;
@@ -295,30 +287,30 @@ dialog::backdrop {
   background: rgba(0, 0, 0, 0.5);
 }
 
-#login-warning-dialog.fade {
+dialog.fade {
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-#login-warning-dialog.fade.showing {
+dialog.fade.showing {
 	opacity: 1;
 	visibility: visible;
 }
 
-#login-warning-dialog form {
+dialog form {
     display: flex;
     flex-direction: column;
     height: 100%;
     align-items: center;
 }
 
-#login-warning-dialog p {
+dialog p {
 	font-size: 1.1em;
 	flex: 1;
 }
 
-#login-warning-dialog menu {
+dialog menu {
     display: flex;
     margin-top: auto;
     padding: 2px;
@@ -326,7 +318,7 @@ dialog::backdrop {
     gap: 5em;
 }
 
-#login-warning-dialog button {
+dialog button {
 	padding: 12px 20px;
 	background-color: #FF498D;
 	color: white;

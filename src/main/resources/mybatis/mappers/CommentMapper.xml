@@ -31,6 +31,7 @@
 	
 	<resultMap type="Comment" id="CommentResultMap">
 		<id column="comment_no" property="no" />
+		<result column="post_no" property="postNo" />
 		<result column="comment_content" property="content" />
 		<result column="comment_created_date" property="createdDate" />
 		<result column="comment_updated_date" property="updatedDate" />
@@ -89,7 +90,7 @@
 		  , C.comment_is_deleted
 		  , C.comment_is_reported
 		  , C.comment_report_count
-		  , C.user_id			as "user.id"
+		  , C.user_id			as user_id
 		  , U.user_nickname		as user_nickname
 		from movmov_community_comments C, movmov_users U
 		where
@@ -98,7 +99,7 @@
 			AND C.comment_is_deleted = 'N'
 			<![CDATA[AND C.comment_report_count < 5]]>
 		order by
-			C.comment_created_date asc
+			C.comment_created_date desc
 	</select>
 	
 	<!--
@@ -115,6 +116,66 @@
 		 WHERE
 		 	comment_no = #{no}
 	</update>
+	
+	<!--
+		int getTotalRows(Map<String, Object> condition);
+			condition: {
+				postNo: 게시글 번호,
+				topLevel: 원댓글 여부 (Y / N)
+			}
+	-->
+	<select id="getTotalRows" parameterType="map">
+		SELECT COUNT(*)
+		FROM MOVMOV_COMMUNITY_COMMENTS
+		WHERE
+			POST_NO = #{postNo}
+			AND comment_is_deleted = 'N'
+			<![CDATA[AND comment_report_count < 5]]>
+		<if test="topLevel != null and topLevel.equals('Y')">
+			AND COMMENT_PARENT_NO IS NULL
+		</if>
+	</select>
+	
+	<!--
+		List<Comment> getCommentsByCondition(Map<String, Object> condition);
+			condition: {
+				postNo: 게시글 번호,
+				topLevel: 원댓글 여부 (Y / N),
+				offset:오프셋값,
+				rows:행개수
+				}
+	-->
+	<select id="getCommentsByCondition" parameterType="map" resultMap="CommentResultMap">
+		SELECT
+			C.comment_no
+		  , C.post_no
+		  , C.comment_content
+		  , C.comment_created_date
+		  , C.comment_updated_date
+		  , C.comment_parent_no
+		  , C.comment_is_deleted
+		  , C.comment_is_reported
+		  , C.comment_report_count
+		  , C.user_id			as user_id
+		  , U.user_nickname		as user_nickname
+		FROM movmov_community_comments C, movmov_users U
+		WHERE
+			C.post_no = #{postNo}
+			AND C.user_id = U.user_id
+			AND C.comment_is_deleted = 'N'
+			<![CDATA[AND C.comment_report_count < 5]]>
+			<if test="topLevel != null and topLevel.equals('Y')">
+				AND C.comment_parent_no is null
+			</if>
+		ORDER BY
+			C.comment_created_date desc
+		<if test="offset != null">
+			OFFSET #{offset} rows
+		</if>
+		<if test="rows != null">
+			FETCH NEXT #{rows} rows only
+		</if>
+	</select>
 
 </mapper>
  

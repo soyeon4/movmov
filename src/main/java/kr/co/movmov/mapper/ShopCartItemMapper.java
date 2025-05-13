@@ -5,21 +5,30 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import kr.co.movmov.vo.ShopCartItem;
+import kr.co.movmov.vo.ShopItemOption;
 
 public interface ShopCartItemMapper {
 	
+	void updateCartItemOption(@Param("userId") String userId, 
+							@Param("itemNo") int itemNo, 
+							@Param("optionNo") int optionNo);
+	
 	/**
-	 * 
+	 * 사용자 아이디와 상품 아이디를 전달받아 장바구니에 추가
 	 * @param itemNo
 	 */
-	void insertCartItemById(@Param("userId") String userId,@Param("itemNo") int itemNo);
+	void insertCartItem(@Param("userId") String userId, @Param("itemNo") int itemNo);
 	
 	/**
 	 * 장바구니 번호로 장바구니에서 상품 삭제
 	 * @param itemNo
 	 */
-	void deleteCartItemById(int cartNo);
+	void deleteCartItemByCartNo(int cartNo);
 
+	/**
+	 * 해당 사용자의 장바구니 비우기
+	 * @param userId
+	 */
 	void deleteCartItemByUserId(String userId);
 	
 	/**

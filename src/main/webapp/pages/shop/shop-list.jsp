@@ -36,18 +36,6 @@ List<ShopItem> items = itemMapper.getShopItemByCategoryNo(catNo);
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="icon" href="resources/images/common/favicon.ico">
-<script>
-	function handleWishlist() {
-		if (confirm('찜한 상품으로 이동하시겠습니까?')) {
-			window.location.href = 'wishlist.html';
-		}
-	}
-	function handleCart() {
-		if (confirm('장바구니로 이동하시겠습니까?')) {
-			window.location.href = 'cart.html';
-		}
-	}
-</script>
 </head>
 <body>
 	<!-- 네비게이션 바 -->
@@ -82,9 +70,9 @@ List<ShopItem> items = itemMapper.getShopItemByCategoryNo(catNo);
 					%>
 					<div class="goods-card">
 						<div class="image-wrapper">
-							<a href="shop-detail.jsp?id=<%=item.getId()%>"> <img
-								src="/movmov/resources/images/shop/<%=item.getImagePath()%>"
-								alt="<%=item.getImagePath()%>" /></a>
+							<a href="shop-detail.jsp?no=<%=item.getNo() %>"> <img
+								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
+
 							<div class="hover-actions">
 								<button class="wishlist" onclick="handleWishlist()">❤️
 									찜</button>
@@ -104,6 +92,18 @@ List<ShopItem> items = itemMapper.getShopItemByCategoryNo(catNo);
 	</main>
 
 	<!-- 푸터 -->
-	<%@ include file="/pages/common/footer.jsp"%>
+	<%@ include file="/pages/common/footer.jsp" %>
+	<script type="text/javascript">
+	function handleWishlist() {
+		if (confirm('찜한 상품으로 이동하시겠습니까?')) {
+			window.location.href = 'wishlist.html';
+		}
+	}
+	function handleCart() {
+		if (confirm('장바구니로 이동하시겠습니까?')) {
+			window.location.href = 'cart.html';
+		}
+	}
+	</script>
 </body>
 </html>

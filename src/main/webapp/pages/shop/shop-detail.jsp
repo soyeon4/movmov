@@ -1,3 +1,5 @@
+<%@page import="kr.co.movmov.vo.ShopItemOption"%>
+<%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.vo.ShopItem"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.mapper.ShopItemMapper"%>
@@ -14,9 +16,10 @@
 				------------------
 				id		상품 코드
 	*/
-	int itemNo = StringUtils.strToInt(request.getParameter("id"));
+	int itemNo = StringUtils.strToInt(request.getParameter("no"));
 	ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
-	ShopItem item = itemMapper.getShopItemById(itemNo);
+	ShopItem item = itemMapper.getShopItemByItemNo(itemNo);
+	List<ShopItemOption> options = itemMapper.getOptionsByItemNo(itemNo);
 	
 %>
 <!DOCTYPE html>
@@ -40,24 +43,47 @@
 	<main>
 		<!-- ✅ 상단 메뉴 추가 -->
 		<%@ include file="shop-nav.jsp" %>
-		
 		<div class="detail-container">
 			<div class="detail-image">
 				<img src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" />
 			</div>
-			<div class="detail-info">
+				<div class="detail-info">
+				
 				<h1><%=item.getName() %></h1>
 				<div class="price"><%=StringUtils.commaWithNumber(item.getPrice()) %>원</div>
 				<div class="meta">상품구성: <%=item.getComponent() %></div>
 				<div class="meta">유효기간: 구매일로부터 24개월 이내</div>
+				
+				<form id="itemForm" method="post">
+    			<input type="hidden" name="ino" value="<%=item.getNo()%>" />
+    			
+				<div class="meta">
+				
+<%
+	if (options != null && !options.isEmpty()) {
+%>
+					<label for="option">옵션 선택</label> 
+					<select id="option" name="option">
+<%
+		for (ShopItemOption option : options) {
+%>
+						<option value="<%=option.getOptionNo()%>"><%=option.getOptionName()%></option>
+<%
+		}
+	}
+%>
+					</select>
+
+				</div>
+				
 				<div class="meta">
 					상품교환: <a href="#">사용가능 <%=item.getSeller().getName() %> 보기</a>
 				</div>
 
 				<div class="quantity-control">
-					<button onclick="decreaseQty()">-</button>
+					<button type="button" onclick="decreaseQty()">-</button>
 					<input type="text" id="qty" value="1" readonly />
-					<button onclick="increaseQty()">+</button>
+					<button type="button" onclick="increaseQty()">+</button>
 				</div>
 
 				<div class="total-price">
@@ -65,14 +91,18 @@
 				</div>
 
 				<div class="detail-actions">
-					<button onclick="handleWishlist()">찜하기</button>
-					<button onclick="moveToCart()">
+					<button type="button" onclick="handleWishlist()">찜하기</button>
+					<button type="button" onclick="moveToCart()">
 						<i class="fa-solid fa-cart-shopping"> 장바구니</i> 
 					</button>
-					<button onclick="moveToPurchase()">구매하기</button>
+					<button type="button" onclick="moveToPurchase()">구매하기</button>
 				</div>
+				
+				
+				</form>
 			</div>
 		</div>
+		
 
 		<div class="detail-description">
 			<strong>[이용안내]</strong><br /> <%=item.getDescription() %>
@@ -82,48 +112,57 @@
 	<!-- footer -->
 	<%@ include file="/pages/common/footer.jsp" %>
 
-	<script>
-		let unitPrice = 13000;
-		let qty = 1;
-		const qtyInput = document.getElementById('qty');
-		const totalPrice = document.getElementById('total');
+	<script type="text/javascript">
+//		let unitPrice = 13000;
+//		let qty = 1;
+//		const qtyInput = document.getElementById('qty');
+//		const totalPrice = document.getElementById('total');
 
 		function updateTotal() {
-			totalPrice.textContent = (qty * unitPrice).toLocaleString();
+//			totalPrice.textContent = (qty * unitPrice).toLocaleString();
 		}
 
 		function increaseQty() {
-			qty++;
-			qtyInput.value = qty;
-			updateTotal();
+//			qty++;
+//			qtyInput.value = qty;
+//			updateTotal();
 		}
 
 		function decreaseQty() {
-			if (qty > 1) {
-				qty--;
-				qtyInput.value = qty;
-				updateTotal();
-			}
+//			if (qty > 1) {
+//				qty--;
+//				qtyInput.value = qty;
+//				updateTotal();
+//			}
 		}
 
 		function handleWishlist() {
-			if (confirm('찜한 상품으로 이동하시겠습니까?')) {
-				window.location.href = 'wishlist.html';
-			}
+//			if (confirm('찜한 상품으로 이동하시겠습니까?')) {
+//				window.location.href = 'wishlist.html';
+//			}
 		}
 		function moveToCart() {
-			window.location.href = 'shop-cart-insert.jsp?ino=<%=item.getId() %>';
-		
+			const form = document.getElementById("itemForm");
+			const optionSelect = document.getElementById("option");
+			
+			let url = "shop-cart-insert.jsp?ino=" + form.ino.value; 
+			
+			if (optionSelect) {
+			    url += "&option=" + optionSelect.value;
+			} else {
+			    url += "&option=0"; // 옵션이 없으면 0으로
+			}
+			window.location.href = url;
+			
 			if (confirm('장바구니로 이동하시겠습니까?')) {
 				window.location.href = 'shop-cart.jsp';
-				
 			}
 			
 		}
 		function moveToPurchase() {
-			if (confirm('결제 페이지로 이동하시겠습니까?')) {
-				window.location.href = 'payment.html'; // 결제 페이지
-			}
+//			if (confirm('결제 페이지로 이동하시겠습니까?')) {
+//				window.location.href = 'payment.html'; // 결제 페이지
+//			}
 		}
 	</script>
 </body>

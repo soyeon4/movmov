@@ -5,12 +5,28 @@
  
 <mapper namespace="kr.co.movmov.mapper.ShopItemMapper">
 
+
 	<!--
-		ShopItem getShopItemById(int id);
+		List<ShopItemOption> getOptionsByItemNo(int itemNo);
 	-->
-	<select id="getShopItemById" resultType="ShopItem">
+	<select id="getOptionsByItemNo">
 		select
-			i.item_id as id, 
+			option_no as optionNo, 
+			option_name as optionName, 
+			item_stock as stock, 
+			item_no as itemNo
+		from 
+			movmov_shop_item_options
+		where 
+			item_no = #{itemNo}
+	</select>
+
+	<!--
+		ShopItem getShopItemByItemNo(int itemNo);
+	-->
+	<select id="getShopItemByItemNo" resultType="ShopItem">
+		select
+			i.item_no as no, 
 			i.item_name as name,
 			i.item_component as component, 
 			i.item_description as description, 
@@ -32,15 +48,15 @@
 		where 
 			i.category_no = c.category_no
 			and i.seller_id = s.seller_id
-			and i.item_id = #{id}
+			and i.item_no = #{itemNo}
 	</select>
 	
 	<!--
-		List<ShopItem> getShopItemByCategoryNo(int no);
+		List<ShopItem> getShopItemByCategoryNo(int categoryNo);
 	-->
 	<select id="getShopItemByCategoryNo" resultType="ShopItem">
 		select
-			i.item_id as id, 
+			i.item_no as no, 
 			i.item_name as name,
 			i.item_price as price, 
 			i.item_discount_rate as discountRate, 
@@ -57,7 +73,7 @@
 		where 
 			i.category_no = c.category_no
 <!--		and i.seller_id = s.seller_id -->
-			and to_char(i.category_no) like #{no} || '%'
+			and to_char(i.category_no) like #{categoryNo} || '%'
 	</select>
 	
 </mapper>
