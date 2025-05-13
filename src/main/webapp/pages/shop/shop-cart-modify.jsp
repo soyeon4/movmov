@@ -1,8 +1,8 @@
 <%@page import="kr.co.movmov.vo.ShopCartItem"%>
-<%@page import="kr.co.movmov.vo.User"%>
-<%@page import="kr.co.movmov.utils.StringUtils"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.mapper.ShopCartItemMapper"%>
+<%@page import="kr.co.movmov.vo.User"%>
+<%@page import="kr.co.movmov.utils.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -18,21 +18,9 @@
 		String userId = loginedUser.getId();
 		ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
 		ShopCartItem item = cartItemMapper.getCartItem(userId, itemNo, optionNo);
-		if (item != null) {
-			int qty = item.getQuantity() + quantity;
-			cartItemMapper.updateCartItemQuantity(userId, itemNo, qty);
-		} else {
-			cartItemMapper.insertCartItem(userId, itemNo);
-			
-			if (optionNo > 0) {
-				cartItemMapper.updateCartItemOption(userId, itemNo, optionNo);
-			}
-			
-			if (quantity > 1) {
-				cartItemMapper.updateCartItemQuantity(userId, itemNo, quantity);
-			}
-		}
 		
-		response.sendRedirect("shop-detail.jsp?no=" + itemNo);
+		cartItemMapper.updateCartItemQuantity(userId, itemNo, quantity);
+		
+		response.sendRedirect("shop-cart.jsp");
 	}
 %>
