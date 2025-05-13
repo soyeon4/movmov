@@ -187,6 +187,7 @@
 		$("#btn-page-first").on("click", function() {
 			let params = $.param({
 				bid: <%=boardId %>,
+				searchFilter: "<%=searchFilter %>",
 				pg: 1
 			});
 			window.location.href = window.location.pathname + '?' + params;
@@ -195,6 +196,7 @@
 		$("#btn-page-last").on("click", function() {
 			let params = $.param({
 				bid: <%=boardId %>,
+				searchFilter: "<%=searchFilter %>",
 				pg: <%=pagination.getTotalPages() %>
 			});
 			window.location.href = window.location.pathname + '?' + params;
@@ -203,6 +205,7 @@
 		$(".btn-page-no").on("click", function() {
 			let params = $.param({
 				bid: <%=boardId %>,
+				searchFilter: "<%=searchFilter %>",
 				pg: $(this).text()
 			});
 			window.location.href = window.location.pathname + '?' + params;

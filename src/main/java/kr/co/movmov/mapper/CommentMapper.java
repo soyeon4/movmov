@@ -40,4 +40,11 @@ public interface CommentMapper {
 	 */
 	int getTotalRows(Map<String, Object> condition);
 	
+	/**
+	 * 조건에 맞는 댓글 목록을 반환한다.
+	 * @param condition 조건 목록
+	 * @return 댓글 리스트
+	 */
+	List<Comment> getCommentsByCondition(Map<String, Object> condition);
+	
 }
