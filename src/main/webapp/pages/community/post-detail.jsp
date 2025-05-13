@@ -144,7 +144,8 @@
 	if (post.getUser().getId().equals(userId)) {
 %>
 			<a href="post-form-edit.jsp?pno=<%=post.getNo() %>">수정</a>
-			<a href="">삭제</a>
+			<a href="delete-post.jsp?pno=<%=post.getNo() %>"
+				onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
 <%
 	}
 %>
@@ -159,7 +160,7 @@
 <%
 	for (Comment comment : postComments) {
 %>
-			<div class="comment-block">
+			<div class="comment-block" data-comment-no="<%=comment.getNo() %>">
 				<div class="comment-author">
 					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
 					<span class="author-name"><%=comment.getUser().getNickname() %></span>
@@ -172,7 +173,7 @@
 <%
 		if (comment.getUser().getId().equals(userId)) {
 %>
-					<a href="">수정</a>
+					<a href="#" class="edit-comment">수정</a>
 					<a href="delete-comment.jsp?cno=<%=comment.getNo() %>" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
 <%
 		}
@@ -194,12 +195,22 @@
 				<button>5</button>
 				<button>&raquo;</button>
 			</div>
-			<div class="comment-form">
+			<div class="comment-form create">
 				<h4>댓글 작성</h4>
-				<form action="create-comment.jsp" method="post">
+<%
+	if (isLoggedIn) {
+%>
+				<div class="comment-author">
+					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
+					<span class="author-name"><%=loginedUser.getNickname() %></span>
+				</div>
+<%
+	}
+%>
+				<form action="create-comment.jsp" method="post" id="create-comment">
 					<input type="hidden" name="postNo" value="<%=postNo %>" />
 					<textarea name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
-					<button type="submit">등록</button>
+					<button type="submit" class="btn-create-comment">등록</button>
 				</form>
 			</div>
 		</div>
@@ -282,31 +293,135 @@
 					$("#upvote-cnt").text(response);
 					$(".upvote-icon").text("❤");
 					upvoteIdList.push(userId);
-				}
+				},
+			    error: function () {
+			    	alert("추천에 실패하였습니다.");
+			    }
 			});
 		});
 		
-		$(".report-button").on("click", function(e) {
+		$(".btn-create-comment").on("click", function(e) {
 			if (!isLoggedIn) {
 				e.preventDefault();
 				fadeInDialog(loginWarningDialog);
 				return;
 			}
-			if ($(this).hasClass('post') && userId == postUserId) {
+			if ($(this).prev('textarea').val() == "") {
 				e.preventDefault();
+				alert("댓글 내용을 입력해주세요.");
+				return;
+			}
+		});
+		
+		$(".report-button").on("click", function(e) {
+			e.preventDefault();
+			let href = $(this).attr("href");
+			if (!isLoggedIn) {
+				fadeInDialog(loginWarningDialog);
+				return;
+			}
+			if ($(this).hasClass("post") && userId == postUserId) {
 				alert("본인의 게시글을 신고할 수 없습니다.");
 				// 본인 게시글 신고 눌렀을 때
 				return;
 			}
-			if ($(this).hasClass('comment') && userId == $(this).attr("data-user-id")) {
-				e.preventDefault();
+			if ($(this).hasClass("comment") && userId == $(this).attr("data-user-id")) {
 				alert("본인의 댓글을 신고할 수 없습니다.");
 				// 본인 댓글 신고 눌렀을 때
 				return;
 			}
-			
+			window.location.href = href;
 		});
 		
+		const originalCommentBlock = {};
+		
+		$(".comments-section").on("click", ".edit-comment", function(e) {
+			e.preventDefault();
+			
+			let commentBlock = $(this).closest(".comment-block");
+			let commentNo = commentBlock.data("comment-no");
+			let commentContent = commentBlock.find(".content").text();
+			let userNickname = commentBlock.find(".author-name").text();
+
+			originalCommentBlock[commentNo] = commentBlock.clone();
+
+			let editFormHtml = `
+				<div class="comment-block" data-comment-no="\${commentNo}">
+					<div class="comment-form edit" data-comment-no="\${commentNo}">
+						<h4 style="margin: 3px;">댓글 수정</h4>
+						<div class="comment-author">
+							<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
+							<span class="author-name">\${userNickname}</span>
+						</div>
+						<form action="edit-comment.jsp" method="post">
+							<textarea name="content" rows="4">\${commentContent}</textarea>
+							<button type="submit">수정</button>
+							<button type="button" class="cancel-edit">취소</button>
+						</form>
+					</div>
+				</div>
+			`;
+			
+			commentBlock.replaceWith(editFormHtml);
+		});
+
+		$(".comments-section").on("click", ".cancel-edit", function() {
+			let commentBlock = $(this).closest(".comment-block");
+			let commentNo = commentBlock.data("comment-no");
+
+			// 원래 댓글 정보 저장
+			let originalBlock = originalCommentBlock[commentNo];
+			if (originalBlock) {
+				commentBlock.replaceWith(originalBlock);
+				delete originalCommentBlock[commentNo];
+			} else {
+				// 저장 실패 시 페이지 리로드
+			    location.reload();
+			}
+		});
+			
+		// 수정한 댓글 ajax로 전송
+		$(".comments-section").on("submit", ".comment-form.edit", function(e) {
+			e.preventDefault();
+			
+			let commentBlock = $(this).closest(".comment-block");
+			let commentNo = commentBlock.data("comment-no");
+			let newContent = commentBlock.find("textarea").val();
+
+			$.ajax({
+				url: "/movmov/pages/community/edit-comment.jsp",
+			    method: "POST",
+			    data: {
+			    	"cno": commentNo,
+			    	"content": newContent
+			    },
+			    datatype: "json",
+			    success: function(response) {
+			    	let updatedBlock = `
+			    		<div class="comment-block" data-comment-no="\${response.cno}">
+							<div class="comment-author">
+								<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
+								<span class="author-name">\${response.userNickname}</span>
+								<div class="meta">작성일: \${response.createdDate} | 수정일: \${response.updatedDate}</div>
+							</div>
+							<div class="content">\${response.content}</div>
+							<div class="comment-options">
+								<a href="#" class="edit-comment">수정</a>
+								<a href="delete-comment.jsp?cno=\${response.cno}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+								<a href="report-form.jsp?cno=\${response.cno}"
+									class="report-button comment"
+									data-user-id="\${response.userId}">신고하기</a>
+							</div>
+						</div>
+					`;
+					commentBlock.replaceWith(updatedBlock);
+				},
+			    error: function () {
+			    	alert("댓글 수정에 실패했습니다.");
+			    }
+			});
+		});
+
 		$("#btn-close-warning").on("click", function() {
 			fadeOutDialog(loginWarningDialog);
 		});
