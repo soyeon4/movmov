@@ -2,8 +2,6 @@ package kr.co.movmov.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import kr.co.movmov.vo.Category;
 
 public interface CategoryMapper {

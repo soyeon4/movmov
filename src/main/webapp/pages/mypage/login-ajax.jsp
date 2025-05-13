@@ -5,10 +5,9 @@
 <%@page import="kr.co.movmov.mapper.UserMapper"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="org.apache.commons.codec.digest.DigestUtils"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-
 <%
 		/* 요청 파라미터
 			id , password, redirectUrl (null 가능)

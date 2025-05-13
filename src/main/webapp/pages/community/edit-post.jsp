@@ -14,7 +14,7 @@
 	/*
 		요청 정보
 			- 요청 URL
-				/pages/community/edit-form.jsp
+				/pages/community/edit-post.jsp
 			- 요청 파라미터
 				name		value
 				--------------------

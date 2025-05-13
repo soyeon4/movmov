@@ -166,7 +166,7 @@
 }
 
 .comment-form textarea {
-	width: 100%;
+	width: 96%;
 	padding: 12px;
 	border-radius: 8px;
 	border: 1px solid #ccc;
@@ -272,7 +272,7 @@ textarea::placeholder {
 }
 
 /* 로그인 요구 팝업 모달 */
-#login-warning-dialog {
+dialog {
     width: 20%;
     height: 20%;
     min-width: 350px;
@@ -287,30 +287,30 @@ dialog::backdrop {
   background: rgba(0, 0, 0, 0.5);
 }
 
-#login-warning-dialog.fade {
+dialog.fade {
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-#login-warning-dialog.fade.showing {
+dialog.fade.showing {
 	opacity: 1;
 	visibility: visible;
 }
 
-#login-warning-dialog form {
+dialog form {
     display: flex;
     flex-direction: column;
     height: 100%;
     align-items: center;
 }
 
-#login-warning-dialog p {
+dialog p {
 	font-size: 1.1em;
 	flex: 1;
 }
 
-#login-warning-dialog menu {
+dialog menu {
     display: flex;
     margin-top: auto;
     padding: 2px;
@@ -318,7 +318,7 @@ dialog::backdrop {
     gap: 5em;
 }
 
-#login-warning-dialog button {
+dialog button {
 	padding: 12px 20px;
 	background-color: #FF498D;
 	color: white;
