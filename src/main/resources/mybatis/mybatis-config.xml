@@ -41,6 +41,9 @@
 		<mapper resource="mybatis/mappers/MovieGenreMapMapper.xml" />
 		<mapper resource="mybatis/mappers/ReviewMapper.xml" />
 		<mapper resource="mybatis/mappers/WishMovieMapper.xml" />
+		<mapper resource="mybatis/mappers/CsInquiryMapper.xml" />
+		<mapper resource="mybatis/mappers/CsPostMapper.xml" />
+		<mapper resource="mybatis/mappers/FaqMapper.xml" />
 
 	</mappers>
 </configuration>
