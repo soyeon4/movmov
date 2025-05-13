@@ -61,6 +61,8 @@
 		 	order by m.movie_title desc
 		 </when>
 	    </choose>
+	    OFFSET #{offset} ROWS
+		FETCH NEXT #{limit} ROWS ONLY
    </select> 
    
    <!-- 
@@ -128,4 +130,15 @@
        where 
           review_no = #{no}
     </update>
+    
+    <!-- 
+    	getTotalReviewRowsByUserId
+     -->
+    <select id="getTotalReviewRowsByUserId" parameterType="String" resultType="int">
+    	select count(*)
+    	from movmov_movie_reviews
+    	where user_id = #{userId}
+    </select>
+    
+
 </mapper>

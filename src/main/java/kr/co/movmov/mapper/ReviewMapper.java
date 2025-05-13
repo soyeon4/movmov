@@ -20,4 +20,8 @@ public interface ReviewMapper {
 	void insertReview(Review review);
 	
 	void updateReview(Review review);
+	
+	int getTotalReviewRowsByUserId(String userId);
+	
+
 }

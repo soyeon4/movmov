@@ -94,5 +94,7 @@ public interface PostMapper {
 	 */
 	int getUpvoteCount(int postNo);
 	
+	List<Post> getRecentPostsByUserId(String userId);
 	
+	int getTotalPostRowsByUserId(String userId);
 }
