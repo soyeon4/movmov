@@ -50,7 +50,7 @@
 				<div class="detail-info">
 				
 				<h1><%=item.getName() %></h1>
-				<div class="price"><%=StringUtils.commaWithNumber(item.getPrice()) %>원</div>
+				<div class="price"><span id="itemPrice"><%=StringUtils.commaWithNumber(item.getPrice()) %></span>원</div>
 				<div class="meta">상품구성: <%=item.getComponent() %></div>
 				<div class="meta">유효기간: 구매일로부터 24개월 이내</div>
 				
@@ -84,10 +84,11 @@
 					<button type="button" onclick="decreaseQty()">-</button>
 					<input type="text" id="qty" value="1" readonly />
 					<button type="button" onclick="increaseQty()">+</button>
+					<input type="hidden" name="qty" id="qty-hidden" value="1" />
 				</div>
 
 				<div class="total-price">
-					총 구매금액 <span id="total">13,000</span>원
+					총 구매금액 <span id="total"><%=StringUtils.commaWithNumber(item.getPrice()) %></span>원
 				</div>
 
 				<div class="detail-actions">
@@ -113,27 +114,29 @@
 	<%@ include file="/pages/common/footer.jsp" %>
 
 	<script type="text/javascript">
-//		let unitPrice = 13000;
-//		let qty = 1;
-//		const qtyInput = document.getElementById('qty');
-//		const totalPrice = document.getElementById('total');
+		const itemPrice = document.getElementById('itemPrice');	// itemPrice라는 이름의 값을 가져옴, 상수로 저장
+		let unitPrice = parseInt(itemPrice.textContent.replaceAll(',', '')); // 숫자로 변환
+		let qty = 1; // 변수 초기화
+		const qtyInput = document.getElementById('qty'); // 수량 입력 필드
+		const totalPrice = document.getElementById('total');	// 합계 금액 입력 필드
 
 		function updateTotal() {
-//			totalPrice.textContent = (qty * unitPrice).toLocaleString();
+			totalPrice.textContent = (qty * unitPrice).toLocaleString();
+			document.getElementById('qty-hidden').value = qty;	// hidden에 qty값을 저장하는데 왜 저장하는거지
 		}
 
 		function increaseQty() {
-//			qty++;
-//			qtyInput.value = qty;
-//			updateTotal();
+			qty++;	// increaseQty를 타면 하나를 증가시켜
+			qtyInput.value = qty;	// 수량을 변경
+			updateTotal();	// updateTotal 함수로 이동
 		}
 
 		function decreaseQty() {
-//			if (qty > 1) {
-//				qty--;
-//				qtyInput.value = qty;
-//				updateTotal();
-//			}
+			if (qty > 1) {	// 수량이 1보다 크면
+				qty--;	// decreaseQty 타고 수량 감소
+				qtyInput.value = qty;	// 수량 변경해서 표시?
+				updateTotal();	// updateTotal로 이동
+			}
 		}
 
 		function handleWishlist() {
@@ -145,13 +148,15 @@
 			const form = document.getElementById("itemForm");
 			const optionSelect = document.getElementById("option");
 			
-			let url = "shop-cart-insert.jsp?ino=" + form.ino.value; 
+			let url = "shop-cart-insert.jsp?ino=" + form.ino.value
+				+ "&qty=" + document.getElementById("qty-hidden").value; 
 			
 			if (optionSelect) {
 			    url += "&option=" + optionSelect.value;
 			} else {
 			    url += "&option=0"; // 옵션이 없으면 0으로
 			}
+			
 			window.location.href = url;
 			
 			if (confirm('장바구니로 이동하시겠습니까?')) {

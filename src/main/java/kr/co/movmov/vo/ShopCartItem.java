@@ -15,12 +15,16 @@ public class ShopCartItem {
 	private Date createdDate;
 	private Date updatedDate;
 	
-	// private String user_id;
+	// private String userId;
 	private User user;
 	
-	// private int item_id;
+	// private int itemNo;
 	private ShopItem item;
 	
-	// private int option_id;
+	// private int optionNo;
 	private ShopItemOption option;
+	
+	public int getOrderPrice() {
+		return item.getPrice()*quantity;
+	}
 }
