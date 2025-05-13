@@ -1,3 +1,6 @@
+<%@page import="kr.co.movmov.mapper.CategoryMapper"%>
+<%@page import="kr.co.movmov.vo.Category"%>
+<%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.vo.Comment"%>
 <%@page import="kr.co.movmov.mapper.CommentMapper"%>
 <%@page import="kr.co.movmov.mapper.PostMapper"%>
@@ -17,21 +20,24 @@
 	*/
 	String reportType = "";
 	int contentNo = 0;
+	Post post = new Post();
+	Comment comment = new Comment();
 	if (request.getParameter("pno") != null) {
 		reportType = "post";
 		contentNo = StringUtils.strToInt(request.getParameter("pno"));
 		PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
-		Post post = postMapper.getPostByNo(contentNo);
-		pageContext.setAttribute("content", post);
+		post = postMapper.getPostByNo(contentNo);
 	} else {
 		reportType = "comment";
 		contentNo = StringUtils.strToInt(request.getParameter("cno"));
 		CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
-		Comment comment = commentMapper.getCommentByNo(contentNo);
-		pageContext.setAttribute("content", comment);
+		comment = commentMapper.getCommentByNo(contentNo);
 	}
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	String userId = loginedUser.getId();
+	
+	CategoryMapper catMapper = MybatisUtils.getMapper(CategoryMapper.class);
+	List<Category> reportHeaders = catMapper.getAllReportHeaders();
 	
 %>
 <!DOCTYPE html>
@@ -39,7 +45,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MovMov Community</title>
+<title>신고하기</title>
 <link rel="icon" href="../../resources/images/common/favicon.ico">
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
@@ -56,25 +62,35 @@
 		<div class="content-preview">
 			<div class="content-title">
 <%
-	if ("post".equals("post")) {
+	if ("post".equals(reportType)) {
+%>
+			<h3><strong>제목 | </strong><%=post.getTitle() %></h3>
+			<p>작성자 | <%=post.getUser().getNickname() %></p>
+<%
+	} else {
+%>
+			<p>작성자 ㅣ <%=comment.getUser().getNickname() %></p>
+<%
+	}
 %>
 			</div>
-<%
-
-%>
+			<hr class="divider">
 			<div class="content-contents">
-			
+				<%=("post".equals(reportType) ? post.getContent() : comment.getContent()) %>
 			</div>
 		</div>
-		<form>
-			<label for="reason">신고 사유</label> <select id="reason" name="reason"
-				required>
-				<option value="">-- 선택해주세요 --</option>
-				<option value="spam">스팸 또는 광고</option>
-				<option value="hate">혐오 발언 또는 괴롭힘</option>
-				<option value="violence">폭력적인 내용</option>
-				<option value="illegal">불법 정보 포함</option>
-				<option value="etc">기타</option>
+		<form action="create-report.jsp" method="post" id="form-create-report">
+			<input type="hidden" name="contentNo" id="content-no" value="<%=contentNo %>">
+			<input type="hidden" name="reportType" id="report-type" value="<%=reportType %>">
+			<label for="category">신고 사유</label> <select id="category" name="categoryId" required>
+				<option value="none">-- 선택해주세요 --</option>
+<%
+	for (Category option : reportHeaders) {
+%>
+				<option value="<%=option.getId() %>"><%=option.getName() %></option>
+<%
+	}
+%>
 			</select> <label for="details">상세 내용</label>
 			<textarea id="details" name="details"
 				placeholder="신고 사유에 대한 자세한 설명을 입력해주세요."></textarea>
@@ -86,4 +102,23 @@
 </body>
 	<!-- 푸터 -->
 	<%@ include file="../common/footer.jsp"%>
+	
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript">
+		$(".submit-btn").on("click", function(e) {
+			if ($("#category").val() == "none") {
+				e.preventDefault();
+				alert("신고사유는 필수 선택사항입니다.")
+				$("#category").focus();
+				return;
+			}
+			if ($("#category").val() == "205" && $("#details").val().trim() == "") {
+				e.preventDefault();
+				alert("신고 상세내용을 적어주세요.")
+				$("#details").focus();
+				return;
+			}
+		});
+	</script>
+	
 </html>

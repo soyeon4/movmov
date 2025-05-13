@@ -31,6 +31,7 @@
 	
 	<resultMap type="Comment" id="CommentResultMap">
 		<id column="comment_no" property="no" />
+		<result column="post_no" property="postNo" />
 		<result column="comment_content" property="content" />
 		<result column="comment_created_date" property="createdDate" />
 		<result column="comment_updated_date" property="updatedDate" />
@@ -89,7 +90,7 @@
 		  , C.comment_is_deleted
 		  , C.comment_is_reported
 		  , C.comment_report_count
-		  , C.user_id			as "user.id"
+		  , C.user_id			as user_id
 		  , U.user_nickname		as user_nickname
 		from movmov_community_comments C, movmov_users U
 		where
