@@ -53,9 +53,10 @@
 	int totalPages = commentPages.size();
 	int pagesPerBlock = 5;
 	List<Comment> currentPageComments = commentPages.get(pageNo - 1);
+	int totalCommentCount = commentArranger.getTotalCommentCount();
 	
-	String jsonComments = gson.toJson(currentPageComments);
-	String jsonAllComments = gson.toJson(allPostComments);
+	// 게시글 댓글 개수 업데이트
+	postMapper.setPostCommentCount(postNo, totalCommentCount);
 	
 	// 하단 게시글 목록
 	int boardId = post.getBoardType().getId();
@@ -166,7 +167,7 @@
 
 		<!-- 💬 댓글 -->
 		<div class="comment-header">
-			<p>💬 댓글 [<%=post.getCommentCount() %>]</p>
+			<p>💬 댓글 [<%=totalCommentCount %>]</p>
 		</div>
 		<div class="comments-section">
 <%

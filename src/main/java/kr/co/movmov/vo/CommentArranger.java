@@ -15,6 +15,8 @@ import lombok.Setter;
 @Alias("CommentArranger")
 public class CommentArranger {
 	
+	private int totalCommentCount;
+	
     public List<List<Comment>> paginateComments(List<Comment> flatComments, int pageLimit) {
         Map<Integer, Comment> commentMap = new HashMap<>();
         List<Comment> topLevelComments = new ArrayList<>();
@@ -42,10 +44,24 @@ public class CommentArranger {
         List<List<Comment>> commentPages = new ArrayList<>();
         List<Comment> currentPage = new ArrayList<>();
         int currentPageCommentCount = 0;
+        int totalComments = 0;
 
         for (Comment topComment : topLevelComments) {
             int nestedCount = topComment.getTotalNestedCount();
-
+            boolean hasReplies = !topComment.getReplies().isEmpty();
+            // 삭제된 댓글 처리
+            // 답글 없는 삭제 댓글이면 목록에 추가하지 않음
+            // 답글 있으면 내용을 변경한 후 추가
+            if ("Y".equals(topComment.getIsDeleted())) {
+            	if (!hasReplies) continue;
+            	topComment.setContent("삭제된 댓글입니다.");
+            }
+            // 신고된 댓글 처리
+            if (topComment.getReportCount() > 5) {
+            	if (!hasReplies) continue;
+        		topComment.setContent("신고되어 삭제처리된 댓글입니다.");
+            }
+            
             if (currentPageCommentCount + nestedCount > pageLimit && !currentPage.isEmpty()) {
             	commentPages.add(new ArrayList<>(currentPage));
                 currentPage.clear();
@@ -54,15 +70,17 @@ public class CommentArranger {
 
             currentPage.add(topComment);
             currentPageCommentCount += nestedCount;
+            totalComments += nestedCount;
         }
 
-        // Add the last page
+        // 마지막 페이지 추가
         if (!currentPage.isEmpty()) {
         	commentPages.add(currentPage);
         }
 
         // 댓글 리스트의 리스트.
         // 한 리스트가 한 페이지에 표시될 모든 부모/자식 댓글을 순서대로 가짐.
+        this.totalCommentCount = totalComments;
         return commentPages;
     }
 }

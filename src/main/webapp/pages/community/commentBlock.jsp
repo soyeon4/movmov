@@ -47,7 +47,7 @@
 </div>
 
 <%
-    if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
+    if (!comment.getReplies().isEmpty()) {
         for (Comment reply : comment.getReplies()) {
         	request.setAttribute("comment", reply);
         	request.setAttribute("level", level + 1);
