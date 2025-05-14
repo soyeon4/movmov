@@ -6,64 +6,66 @@
 <mapper namespace="kr.co.movmov.mapper.CsInquiryMapper">
 
 <!-- CS 1:1문의 -->
-	
-<!-- 1:1문의 전체 조회 Inquiry getAllInquiries(); -->
-	<select id="getAllInquirise" resultType="Inquiry"> 
-		SELECT 
-			inquiry_id 
-			,i.user_id 
-			, c.cat_id 
-			, i.inquiry_title 
-			, i.inquiry_content 
-			, i.inquiry_created_date 
-			, i.inquiry_answer_date 
-			, i.inquiry_status
-			, i.inquiry_is_secret
-		FROM
-			movmov_cs_user_inquiries i, movmov_content_categories c 
-		WHERE 
-			c.cat_id = i.cat_id
-	</select>
-	
-<!-- inquiry_id로 문의 내역 조회 Inquiry getInquiryById(int InquiryId); -->
-	<select id="getInquiryById" resultType="Inquiry"
-		parameterType="int"> 
-		SELECT 
-			inquiry_id 
-			, i.user_id 
-			, c.cat_id 
-			, i.inquiry_title 
-			, i.inquiry_content 
-			, i.inquiry_created_date 
-			, i.inquiry_answer_date 
-			, i.inquiry_status
-			, i.inquiry_is_secret
-		FROM
-			movmov_cs_user_inquiries i, movmov_content_categories c 
-		WHERE 
-			c.cat_id = i.cat_id AND i.inquiry_id = #{inquiryId} 
-	</select>
-		
-	<!-- user_id로 문의 내역 조회 -->
-	<select id="getInquiryByUserID" resultType="Inquiry"
-		parameterType="String">
-		SELECT
-			u.user_id,
-			c.cat_id,
-			i.inquiry_title,
-			i.inquiry_content,
-			i.inquiry_created_date,
-			i.inquiry_answer_date,
-			i.inquiry_status,
-			i.inquiry_is_secret
-		FROM
-			movmov_cs_user_inquiries i
-		JOIN movmov_content_categories c ON i.cat_id = c.cat_id
-		JOIN movmov_users u ON u.user_id = i.user_id
-		WHERE
-			u.user_id = #{user_id}
-	</select>
-	
-	<!-- 1:1문의 등록 -->
+
+<!-- 1:1문의 전체 조회 -->
+<select id="getAllInquiries" resultType="Inquiry"> 
+	SELECT 
+		i.inquiry_id,
+		i.inquiry_user_id AS user_id,
+		i.inquiry_cat_id,
+		c.cat_id,
+		i.inquiry_title,
+		i.inquiry_content,
+		i.inquiry_created_date,
+		i.inquiry_answer_date,
+		i.inquiry_status,
+		i.inquiry_is_secret
+	FROM
+		movmov_cs_user_inquiries i
+	JOIN movmov_content_categories c ON c.cat_id = i.inquiry_cat_id
+</select>
+
+<!-- inquiry_id로 문의 내역 조회 -->
+<select id="getInquiryById" resultType="Inquiry" parameterType="int"> 
+	SELECT 
+		i.inquiry_id,
+		i.inquiry_user_id,
+		i.inquiry_cat_id,
+		c.cat_id,
+		i.inquiry_title,
+		i.inquiry_content,
+		i.inquiry_created_date,
+		i.inquiry_answer_date,
+		i.inquiry_status,
+		i.inquiry_is_secret
+	FROM
+		movmov_cs_user_inquiries i
+	JOIN movmov_content_categories c ON c.cat_id = i.inquiry_cat_id
+	WHERE 
+		i.inquiry_id = #{inquiryId}
+</select>
+
+<!-- user_id로 문의 내역 조회 -->
+<select id="getInquiryByUserID" resultType="Inquiry" parameterType="String">
+	SELECT
+		i.inquiry_id,
+		u.user_id,
+		i.inquiry_cat_id,
+		c.cat_id,
+		i.inquiry_title,
+		i.inquiry_content,
+		i.inquiry_created_date,
+		i.inquiry_answer_date,
+		i.inquiry_status,
+		i.inquiry_is_secret
+	FROM
+		movmov_cs_user_inquiries i
+	JOIN movmov_content_categories c ON i.inquiry_cat_id = c.cat_id
+	JOIN movmov_users u ON u.user_id = i.user_id
+	WHERE
+		u.user_id = #{user_id}
+</select>
+
+<!-- 1:1문의 등록은 추후 구현 -->
 
 </mapper>

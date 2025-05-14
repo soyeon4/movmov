@@ -1,109 +1,96 @@
+
+<%@page import="kr.co.movmov.vo.Category"%>
+<%@page import="kr.co.movmov.mapper.CategoryMapper"%>
+<%@page import="kr.co.movmov.vo.Inquiry"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
-<%@page import="kr.co.movmov.vo.Inquiry"%>
-<%@page import="kr.co.movmov.mapper.CategoryMapper"%>
-<%@page import="kr.co.movmov.vo.Category"%>
+
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.mapper.CsInquiryMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
 
-<link rel="stylesheet" href="/movmov/resources/style/cs/inquiry.css">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="/movmov/resources/script/cs/inquiry.js"></script>
-
-<div class="qna-container">
-
 <%
-	CsInquiryMapper csInquiryMapper =MybatisUtils.getMapper(CsInquiryMapper.class);
-	Map<String, Object> conditionAllMemberInfoPosts = new HashMap<>();
-	conditionAllMemberInfoPosts.put("boardId", 10);	// '문의유형: 회원정보'인 문의글을 모두 조회
-	conditionAllMemberInfoPosts.put("rows", 5);
-	Map<String, Object> conditionAllFreePosts = new HashMap<>();
-	conditionAllFreePosts.put("boardId", 301);
-	conditionAllFreePosts.put("rows", 5);
-	Map<String, Object> conditionMoviePopular = new HashMap<>();
-	conditionMoviePopular.put("sort", "views");
-	conditionMoviePopular.put("rows", 5);
-	Map<String, Object> conditionFreePopular = new HashMap<>();
-	conditionFreePopular.put("boardId", 301);
-	conditionFreePopular.put("sort", "views");
-	conditionFreePopular.put("rows", 5);
-	List<Post> moviePosts = postMapper.getPosts(conditionAllMoviePosts);
-	List<Post> freePosts = postMapper.getPosts(conditionAllFreePosts);
-	List<Post> popularMoviePosts = postMapper.getPosts(conditionMoviePopular);
-	List<Post> popularFreePosts = postMapper.getPosts(conditionFreePopular);
-	
+CsInquiryMapper csInquiryMapper = MybatisUtils.getMapper(CsInquiryMapper.class); // 문의글 Mapper
+List<Inquiry> inquiries = csInquiryMapper.getAllInquiries();
+
+CategoryMapper categoryMapper = MybatisUtils.getMapper(CategoryMapper.class); // 카테고리 Mapper
+List<Category> inquiryCategorys = categoryMapper.getCategoriesByType("문의유형");
 %>
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>문의하기</title>
+    <link rel="stylesheet" href="/movmov/resources/style/cs/inquiry.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="/movmov/resources/script/cs/inquiry.js"></script>
+</head>
+<body>
 
-  <h2>Q&A</h2>
-  <p class="qna-guide-text">궁금하신 점이 있으신 경우 문의해주세요.</p>
+<div class="qna-container">
+    <h2>Q&A</h2>
+    <p class="qna-guide-text">궁금하신 점이 있으신 경우 문의해주세요.</p>
 
-  <div class="qna-write-wrap">
-    <button class="qna-write-btn" onclick="location.href='inquiry-write.jsp'">Q&A 작성하기</button>
-  </div>
+    <div class="qna-write-wrap">
+        <button class="qna-write-btn" onclick="location.href='inquiry-write.jsp'">Q&A 작성하기</button>
+    </div>
 
-  <div class="qna-filters">
-    <label><input type="checkbox" id="excludeSecret"> 비밀글 제외</label>
-    <label><input type="checkbox" id="myQnaOnly"> 내 Q&A 보기</label>
+    <div class="qna-filters">
+        <label><input type="checkbox" id="excludeSecret"> 비밀글 제외</label>
+        <label><input type="checkbox" id="myQnaOnly"> 내 Q&A 보기</label>
 
-    <label>
-     문의 유형
-      <select id="categoryFilter">
-        <option value="">전체</option>
-		<% CategoryMapper categoryMapper = MybatisUtils.getMapper(CategoryMapper.class);			
-            // 서버에서 카테고리 목록 받아옴     
-            
-            List<String> categories = (List<String>) request.getAttribute("categories");
-            if (categories != null && !categories.isEmpty()) {
-                for (String category : categories) {
+        <label>
+            문의 유형
+            <select id="categoryFilter">
+                <option value="">전체</option>
+                <% for (Category category : inquiryCategorys) { %>
+                    <option value="<%= category.getName() %>"><%= category.getName() %></option>
+                <% } %>
+            </select>
+        </label>
+
+        <label>
+            답변 상태
+            <select id="statusFilter">
+                <option value="">전체</option>
+                <option value="1">미답변</option>
+                <option value="2">답변완료</option>
+            </select>
+        </label>
+
+        <button type="button" onclick="applyFilters()">적용</button>
+    </div>
+
+    <div class="qna-list">
+        <% for (Inquiry inquiry : inquiries) {
+            if (inquiry != null) {
         %>
-            <option value="<%= category %>"><%= category %></option>
-        <%
-                }
-            } else {
-        %>
-            <option value="">카테고리가 없습니다.</option>
-        <%
-            }
-        %>
-      </select>
-    </label>
+            <div class="qna-item">
+                <div class="qna-header">
+                    <span class="qna-category">카테고리 ID: <%= inquiry.getCategoryId() %></span>
+                    <% if (inquiry.getIsSecret() == 1) { %>
+                        <span class="qna-secret">(비밀글)</span>
+                    <% } %>
+                </div>
+                <div class="qna-body">
+                    <h3 class="qna-title"><%= inquiry.getTitle() %></h3>
+                    <div class="qna-meta">
+                        <span>작성자: <%= inquiry.getUserId() %></span>
+                        <span>작성일: <%= inquiry.getCreatedDate() %></span>
+                        <span>상태: <%= inquiry.getStatus() == 1 ? "미답변" : "답변완료" %></span>
+                    </div>
+                    <p class="qna-content"><%= inquiry.getContent() %></p>
+                </div>
+            </div>
+        <% } } %>
+    </div>
 
-    <label>
-      답변 상태
-      <select id="statusFilter">
-        <option value="">전체</option>
-        <%
-            // 서버에서 답변 상태 목록 받아옴
-            List<String> statuses = (List<String>) request.getAttribute("statuses");
-            if (statuses != null && !statuses.isEmpty()) {
-                for (String status : statuses) {
-        %>
-            <option value="<%= status %>">
-                <%= status.equals("answered") ? "답변 완료" : "미답변" %>
-            </option>
-        <%
-                }
-            } else {
-        %>
-            <option value="">답변 상태가 없습니다.</option>
-        <%
-            }
-        %>
-
- 	 <button type="button" onclick="applyFilters()">적용</button>
-	</div>
-      </select>
-    </label>
-  </div>
-
-  <div class="qna-list">
-
-  </div>
-
-  <div class="pagination">
-    <!-- 선택적으로 추가 가능 -->
-  </div>
+    <div class="pagination">
+        <!-- 페이징 UI 삽입 예정 -->
+    </div>
 </div>
+
+</body>
+</html>

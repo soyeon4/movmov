@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @Alias("CsPost")
 public class CsPost {
+
 	private int id;
 	private String postType;
 	private Category category;
