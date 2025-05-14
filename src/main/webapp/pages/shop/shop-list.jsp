@@ -73,11 +73,9 @@ List<ShopItem> items = itemMapper.getShopItemByCategoryNo(catNo);
 							<a href="shop-detail.jsp?no=<%=item.getNo() %>"> <img
 								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
 
-							<div class="hover-actions">
-								<button class="wishlist" onclick="handleWishlist()">❤️
-									찜</button>
+							<!--<div class="hover-actions">
 								<button class="cart" onclick="handleCart()">🛒 장바구니</button>
-							</div>
+							</div>-->
 						</div>
 						<h4><%=item.getName()%></h4>
 						<p>
@@ -94,16 +92,11 @@ List<ShopItem> items = itemMapper.getShopItemByCategoryNo(catNo);
 	<!-- 푸터 -->
 	<%@ include file="/pages/common/footer.jsp" %>
 	<script type="text/javascript">
-	function handleWishlist() {
-		if (confirm('찜한 상품으로 이동하시겠습니까?')) {
-			window.location.href = 'wishlist.html';
-		}
-	}
-	function handleCart() {
+	<!--function handleCart() {
 		if (confirm('장바구니로 이동하시겠습니까?')) {
 			window.location.href = 'cart.html';
 		}
-	}
+	}-->
 	</script>
 </body>
 </html>

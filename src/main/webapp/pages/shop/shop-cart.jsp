@@ -147,17 +147,11 @@
 		})
 		// 장바구니 상품 체크가 변경됨에 따라 전체 선택/해제 체크박스 변경 이벤트 핸들러 등록
 		$(":checkbox[name=cno]").change(function(){
-//			console.log($(":checkbox[name=cno]:checked"));
 			let checkboxLength = $(":checkbox[name=cno]").length;
 			let checkedCheckboxLength = $(":checkbox[name=cno]:checked").length;
 			$("#checkbox-select-all").prop("checked", checkboxLength == checkedCheckboxLength);
 			newCalculation();
 		});
-		/*$(":checkbox[name=cno]:checked").closest(".cart-row")
-			.find("div:nth-child(5) span")
-			.each(function() {
-				console.log(this.textContent); // ✅ 이제 출력됨!
-			});*/
 		// 가격 계산
 		function newCalculation() {
 				let deliveryFee = 0;
@@ -168,7 +162,6 @@
 			.find("div:nth-child(5) span")
 			.each(function() {
 				let itemPrice = parseInt($(this).text().replaceAll(",", ""));
-//				console.log(itemPrice);
 				totalItemPrice += itemPrice;
 			})
 			
@@ -180,33 +173,18 @@
 			$("#total-item-price").text(totalItemPrice.toLocaleString());
 			$("#delivery-fee").text(deliveryFee.toLocaleString());
 			$("#total-order-price").text(totalOrderPrice.toLocaleString());
-//			console.log(totalItemPrice);
 		}
-
-		// 수량 수정
-//		function updateQty(btn, delta) {
-//			const input = btn.parentElement.querySelector('input');
-//			let qty = parseInt(input.value);
-//			qty = Math.max(1, qty + delta);
-//			input.value = qty;
-//			// 실제로는 구매금액 / 총합 갱신 로직이 들어가야 함
-//		}
 		$(document).ready(function() {
 		    // 수량 증가
 		    $(".btn-increase").click(function() {
 		        const row = $(this).closest(".cart-row");
-		        let itemNo = parseInt(row.find(".item-no").val());	// 장바구니 번호
-		        let optionNo = row.find(".option-no").val();	// 장바구니 번호
+		        let itemNo = parseInt(row.find(".item-no").val());
+		        let optionNo = row.find(".option-no").val();
 		        optionNo = optionNo ? parseInt(optionNo) : 0;
-//		        console.log(itemNo);
-//		        console.log(optionNo);
 		        let unitPrice = parseInt(row.find(".unit-price").text().replaceAll(",", ""));
 		        let qty = parseInt(row.find(".qty").val());
 		        qty++;
 		        let itemOrderPrice = unitPrice * qty;
-//		        console.log(unitPrice);
-//		        console.log(qty);;
-//		        console.log(itemOrderPrice);
 		        row.find(".qty").val(qty);
 		        row.find(".qty-hidden").val(qty);
 		        row.find(".item-order-price").text(itemOrderPrice.toLocaleString());
@@ -217,19 +195,14 @@
 		    // 수량 감소
 		    $(".btn-decrease").click(function() {
 		        const row = $(this).closest(".cart-row");
-		        let itemNo = parseInt(row.find(".item-no").val());	// 장바구니 번호
-		        let optionNo = row.find(".option-no").val();	// 장바구니 번호
+		        let itemNo = parseInt(row.find(".item-no").val());
+		        let optionNo = row.find(".option-no").val();
 		        optionNo = optionNo ? parseInt(optionNo) : 0;
-//		        console.log(itemNo);
-//		        console.log(optionNo);
 		        let unitPrice = parseInt(row.find(".unit-price").text().replaceAll(",", ""));
 		        let qty = parseInt(row.find(".qty").val());
 		        if (qty > 1) {
 		            qty--;
 		            let itemOrderPrice = unitPrice * qty;
-//			        console.log(unitPrice);
-//			        console.log(qty)
-//			        console.log(itemOrderPrice);
 		            row.find(".qty").val(qty);
 		            row.find(".qty-hidden").val(qty);
 		            row.find(".item-order-price").text(itemOrderPrice.toLocaleString());
