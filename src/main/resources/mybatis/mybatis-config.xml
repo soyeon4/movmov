@@ -29,6 +29,7 @@
 
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
+		<mapper resource="mybatis/mappers/AddressMapper.xml" />
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
 		<mapper resource="mybatis/mappers/CommentMapper.xml" />
 		<mapper resource="mybatis/mappers/ReportMapper.xml" />
