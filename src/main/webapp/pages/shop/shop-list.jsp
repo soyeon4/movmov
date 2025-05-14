@@ -9,11 +9,13 @@
 /*
 	요청 정보
 		- 요청 URL
-	/shop/shop-list.jsp?cno=xxx
+			/shop/shop-list.jsp?cno=xxx
 		- 요청 파라미터
-	name		value
-	------------------------------
-	cno			카테고리 번호
+			name		value
+			------------------------------
+			cno			카테고리 번호
+	요청처리 절차
+		1. 카테고리 번호를 받아 해당 카테고리의 상품을 전부 조회한다.
 */
 
 int catNo = StringUtils.strToInt(request.getParameter("cno"));
@@ -70,7 +72,7 @@ List<ShopItem> items = itemMapper.getShopItemByCategoryNo(catNo);
 					%>
 					<div class="goods-card">
 						<div class="image-wrapper">
-							<a href="shop-detail.jsp?no=<%=item.getNo() %>"> <img
+							<a href="shop-detail.jsp?ino=<%=item.getNo() %>"> <img
 								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
 
 							<!--<div class="hover-actions">

@@ -9,17 +9,14 @@
 <%
 	/*
 		요청 정보
-			요청 URL
-				/shop-cart.jsp
-			요청 파라미터
-				name	value
-				-----------------------
-				user	유저아이디
-				item	상품아이디
-			
+			- 요청 URL
+				pages/shop/shop-cart.jsp
+			- 요청 파라미터
+				없음
+		요청처리 절차
+			1. 세션에서 사용자 아이디를 획득한다.
+			2. 사용자 아이디를 전달해서 장바구니 목록을 조회한다.
 	*/
-	
-	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -36,6 +33,7 @@
 <body>
 	<%@ include file="/pages/common/header.jsp" %>
 <%
+	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	if (loginUser == null) {
 			response.sendRedirect("../mypage/modal-login.jsp");
 			return;
@@ -70,8 +68,9 @@
 					name="cno" 
 					value="<%=cartItem.getNo() %>" checked />
 				</div>
-				<div style="display: flex; align-items: center; gap: 10px;">
-					<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" alt="<%=cartItem.getItem().getImagePath() %>"> 
+				<div style="display: flex; align-items: center; gap: 30px;">
+					<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" 
+						alt="<%=cartItem.getItem().getImagePath() %>"> 
 					<span><%=cartItem.getItem().getName() %>
 <%
 	if (cartItem.getOption() != null) {
@@ -82,7 +81,6 @@
 	}
 %>
 					</span>
-					
 				</div>
 				<div>
 					<span class="unit-price"><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></span>원

@@ -7,43 +7,54 @@
 
 
 	<!--
-		void updateCartItemQuantity(@Param("userId") String userId, 
-							@Param("itemNo") int itemNo, 
+		void updateCartItemQuantityByCartNo(@Param("cartNo") int cartNo, 
 							@Param("quantity") int quantity);
 	-->
-	<update id="updateCartItemQuantity">
+	<update id="updateCartItemQuantityByCartNo">
 		update movmov_shop_cart_items
 		set
 			item_quantity = #{quantity}, 
 			item_updated_date = sysdate
 		where
-			user_id = #{userId}
-			and item_no = #{itemNo}
+			cart_item_no = #{cartNo}
 	</update>
 	
 	<!--
-		void updateCartItemOption(@Param("userId") String userId, 
-							@Param("itemNo") int itemNo, 
+		void updateCartItemOptionByCartNo(@Param("cartNo") String cartNo, 
 							@Param("optionNo") int optionNo);
 	-->
-	<update id="updateCartItemOption">
+	<update id="updateCartItemOptionByCartNo">
 		update movmov_shop_cart_items
 		set
 			option_no = #{optionNo}, 
 			item_updated_date = sysdate
 		where
-			user_id = #{userId}
-			and item_no = #{itemNo}
+			cart_item_no = #{cartNo}
 	</update>
 
 	<!--
-		void insertCartItem(String userId, int itemNo);
+		void insertCartItem(@Param("userId") String userId, 
+					@Param("itemNo") int itemNo, 
+					@Param("optionNo") int optionNo, 
+					@Param("quantity") int quantity);
 	-->
 	<insert id="insertCartItem">
 		insert into movmov_shop_cart_items
-		(cart_item_no, user_id, item_no)
+		(cart_item_no
+		, user_id
+		, item_no
+		<if test="optionNo > 0">
+			, option_no
+		</if>
+		, item_quantity)
 		values
-		(cart_item_no_seq.nextval, #{userId}, #{itemNo})
+		(cart_item_no_seq.nextval
+		, #{userId}
+		, #{itemNo}
+		<if test="optionNo > 0">
+		, #{optionNo}
+		</if>
+		, #{quantity})
 	</insert>
 	
 	<!--

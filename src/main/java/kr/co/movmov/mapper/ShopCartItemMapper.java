@@ -11,31 +11,33 @@ public interface ShopCartItemMapper {
 	
 	/**
 	 * 장바구니 상품 옵션 정보 등록
-	 * @param userId 사용자 아이디
-	 * @param itemNo 상품 번호
+	 * @param cartNo
 	 * @param optionNo 옵션 번호
 	 */
-	void updateCartItemOption(@Param("userId") String userId, 
-							@Param("itemNo") int itemNo, 
+	void updateCartItemOptionByCartNo(@Param("cartNo") int cartNo, 
 							@Param("optionNo") int optionNo);
 	
 	/**
 	 * 장바구니 상품 수량 정보 수정
-	 * @param userId 사용자 아이디
-	 * @param itemNo 상품 번호
+	 * @param cartNo
 	 * @param quantity 수량
 	 */
-	void updateCartItemQuantity(@Param("userId") String userId, 
-							@Param("itemNo") int itemNo, 
+	void updateCartItemQuantityByCartNo(@Param("cartNo") int cartNo, 
 							@Param("quantity") int quantity);
 	
 	
 	
 	/**
 	 * 사용자 아이디와 상품 아이디를 전달받아 장바구니에 추가
+	 * @param userId
 	 * @param itemNo
+	 * @param optionNo
+	 * @param quantity
 	 */
-	void insertCartItem(@Param("userId") String userId, @Param("itemNo") int itemNo);
+	void insertCartItem(@Param("userId") String userId, 
+					@Param("itemNo") int itemNo, 
+					@Param("optionNo") int optionNo, 
+					@Param("quantity") int quantity);
 	
 	
 	
