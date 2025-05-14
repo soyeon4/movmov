@@ -65,7 +65,7 @@ ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 					%>
 					<div class="goods-card">
 						<div class="image-wrapper">
-							<a href="shop-detail.jsp?no=<%=item.getNo() %>"><img
+							<a href="shop-detail.jsp?ino=<%=item.getNo() %>"><img
 								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
 							<!--<div class="hover-actions">
 								<button class="cart" onclick="handleCart()">🛒 장바구니</button>

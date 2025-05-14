@@ -14,9 +14,11 @@
 			요청 파라미터
 				name 	values
 				------------------
-				id		상품 코드
+				ino		상품 코드
+		요청처리 절차
+			1. 상품 번호를 전달받아 상품의 상세정보를 조회한다.
 	*/
-	int itemNo = StringUtils.strToInt(request.getParameter("no"));
+	int itemNo = StringUtils.strToInt(request.getParameter("ino"));
 	ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 	ShopItem item = itemMapper.getShopItemByItemNo(itemNo);
 	List<ShopItemOption> options = itemMapper.getOptionsByItemNo(itemNo);
@@ -39,25 +41,25 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
 	.swiper {
-      width: 100%;
-      height: 400px;
-}
-
-.swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-}
-
-.swiper-slide img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-}
+	      width: 100%;
+	      height: 400px;
+	}
+	
+	.swiper-slide {
+	      text-align: center;
+	      font-size: 18px;
+	      background: #fff;
+	      display: flex;
+	      justify-content: center;
+	      align-items: center;
+	}
+	
+	.swiper-slide img {
+	      display: block;
+	      width: 100%;
+	      height: 100%;
+	      object-fit: contain;
+	}
 </style>
 </head>
 <body>
@@ -70,8 +72,9 @@
 		<div class="detail-container">
 			<div class="swiper mySwiper">
 			    <div class="swiper-wrapper">
-			    <div class="swiper-slide"><img src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></div>
- 
+			    <div class="swiper-slide">
+			    	<img src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" />
+			    </div>
 <%
 	String baseImageName = item.getImagePath();
 	String prefix = baseImageName.substring(0, baseImageName.lastIndexOf("."));
