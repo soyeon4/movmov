@@ -345,6 +345,16 @@
 		WHERE post_no = #{postNo}
 	</update>
 	
+	<!--
+		void setPostCommentCount(@Param("postNo") int postNo,
+							@Param("commentCount") int commentCount);
+	-->
+	<update id="setPostCommentCount">
+		UPDATE MOVMOV_COMMUNITY_POSTS P
+		SET post_comment_count = #{commentCount}
+		WHERE post_no = #{postNo}
+	</update>
+	
 	<select id="getRecentPostsByUserId" resultMap="PostResultMap">
 		SELECT 
 		    p.POST_NO               AS post_no,
