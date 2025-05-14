@@ -6,6 +6,8 @@
 		<form id="address-form"
 			action="/movmov/pages/payment/insert-address.jsp" method="post">
 			<h2>입력한 정보를 확인 후 저장해주세요</h2>
+			
+			<input type="hidden" name="address-id" id="address-id" value="">
 
 			<!-- 받는 이 -->
 			<div class="form-group">
@@ -64,7 +66,7 @@
 
 			<!-- 기본 배송지 설정 -->
 			<div class="checkbox-group">
-				<input type="checkbox" id="default-address" /> <label
+				<input type="checkbox" id="default-address" name="default-address" value="yes"/> <label
 					for="default-address">기본 배송지로 설정</label>
 			</div>
 

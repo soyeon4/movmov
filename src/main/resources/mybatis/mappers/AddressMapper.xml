@@ -19,19 +19,8 @@
 			, zipcode
 		)
 		values
-		(#{id}, #{addressName}, #{road}, #{detail}, #{user.id}, #{receiverPhone}, #{receiverName}, #{zipcode})
+		(seq_addr_id.NEXTVAL, #{addressName}, #{road}, #{detail}, #{user.id}, #{receiverPhone}, #{receiverName}, #{zipcode})
 	</insert>
-	
-	<!-- R:RETRIEVE int countAddress(); -->
-	<select id="countAddress">
-	
-		select 
-			count(*)
-			
-		from 
-			movmov_user_addresses
-			
-	</select>
 
 	<!-- R:RETRIEVE Address getDefaultAddress(User user); -->
 	<select id="getDefaultAddress" resultType="Address" parameterType="User">
@@ -98,4 +87,39 @@
 			user_id = #{id}
 	</select>
 	
+	<!-- U:UPDATE void updateAddress(Address address); -->
+	<update id="updateAddress" parameterType="Address">
+		update
+			movmov_user_addresses
+			
+		set
+			addr_name = #{addressName},
+    		addr_road = #{road},
+    		addr_detail = #{detail},
+    		user_id = #{user.id},
+    		receiver_number = #{receiverPhone},
+    		receiver_name = #{receiverName},
+    		zipcode = #{zipcode}
+    		
+    	where
+    		addr_id = #{id}
+	</update>
+	
+	<!-- U:UPDATE void updateDefaultAddress(@Param("addrID") int addrID, @Param("user") User user); -->
+	<update id="updateDefaultAddress" parameterType="map">
+        update 
+        	movmov_users
+        	
+        set 
+        	addr_id = #{addrID}
+        	
+        where 
+        	user_id = #{user.id}
+    </update>
+
+	<!-- D:DELETE void deleteAddressById(@Param("addrId") int addrId, @Param("userId") String userId); -->
+	<delete id="deleteAddressById" parameterType="map">
+		DELETE FROM movmov_user_addresses
+		WHERE addr_id = #{addrId} AND user_id = #{userId}
+	</delete>
 </mapper>

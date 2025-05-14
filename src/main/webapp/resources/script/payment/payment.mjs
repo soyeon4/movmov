@@ -71,6 +71,7 @@ btnNewAddress.addEventListener('click', () => {
 	inputs.forEach(input => { input.value = ''; });
 });
 
+//수정버튼 이벤트 리스너 부여
 btnsEdit.forEach(btn => {
 	btn.addEventListener('click', () => {
 		const addressCard = btn.closest('.address-card');
@@ -79,7 +80,9 @@ btnsEdit.forEach(btn => {
 	});
 });
 
+//수정 함수
 function openEditAddressInfo(card) {
+	const id = card.querySelector('.address-id').value.trim() || '';
 	const name = card.querySelector('.address-header strong').textContent.trim() || '';
 	const comment = card.querySelector('.address-header span').textContent.trim() || '';
 	const phone = card.querySelector('.phone').textContent.trim() || '';
@@ -87,6 +90,7 @@ function openEditAddressInfo(card) {
 	const detail = card.querySelector('.detail').textContent.trim() || '';
 	const number = card.querySelector('.post-number').textContent.trim() || '';
 
+	document.getElementById('address-id').value = id;
 	document.getElementById('recipient').value = name;
 	document.getElementById('phone').value = phone;
 	document.getElementById('title').value = comment;
@@ -96,15 +100,27 @@ function openEditAddressInfo(card) {
 }
 
 
-
+//배송지 리스트에서 삭제하는 경우
 btnsDelete.forEach(btn => {
 	btn.addEventListener('click', () => {
 		const result = confirm("선택한 배송지를 삭제하시겠습니까?");
 		if (result) {
+			const card = btn.closest('.address-card');
+			const addrId = card.querySelector('.address-id').value;
 
-		}
-		else {
+			// 폼 동적 생성 후 전송 (POST 방식)
+			const form = document.createElement('form');
+			form.method = 'post';
+			form.action = '/movmov/pages/payment/delete-address.jsp';
 
+			const input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = 'addr_id';
+			input.value = addrId;
+
+			form.appendChild(input);
+			document.body.appendChild(form);
+			form.submit();
 		}
 	});
 });

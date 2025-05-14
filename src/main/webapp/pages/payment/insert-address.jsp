@@ -1,3 +1,6 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.vo.Address"%>
 <%@page import="kr.co.movmov.mapper.UserMapper"%>
@@ -17,10 +20,17 @@
 	String addr_detail = request.getParameter("detail");
 	String zipcode = request.getParameter("zipcode");
 	zipcode = zipcode.replaceAll("[^0-9]", "");
-		
+	String isDefault = request.getParameter("default-address");
+	String valueOfID = request.getParameter("address-id");
+	
+	int addressID = -1;
+
+	if (valueOfID != null && !valueOfID.trim().isEmpty()) {
+        addressID = Integer.parseInt(valueOfID);
+    }
+	
 	//get Mybatis mapper
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
-	int addressID = addressMapper.countAddress();
 	
 	// validate values
 	if (zipcode == null || zipcode.length() != 5 || !zipcode.matches("\\d{5}")) {
@@ -69,8 +79,17 @@
 	address.setReceiverPhone(receiver_phone);
 	address.setZipcode(zipcode);
 	
-	//insert address
-	addressMapper.insertAddress(address);
+	//insert or update address
+	if(valueOfID.isEmpty() || "".equals(valueOfID)) {
+		addressMapper.insertAddress(address);
+	} else {
+		addressMapper.updateAddress(address);
+	}
+	
+	if("yes".equals(isDefault)) {
+		addressMapper.updateDefaultAddress(addressID, user);
+	}
+	
 	response.sendRedirect("payment.jsp");
 	return;
 %>

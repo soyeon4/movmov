@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="kr.co.movmov.vo.Address"%>
+<%@ page import="kr.co.movmov.mapper.AddressMapper"%>
+<%@ page import="kr.co.movmov.utils.MybatisUtils"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -19,9 +22,12 @@
 </head>
 <body>
 	<%@ include file="/pages/common/header.jsp"%>
-	
-	<% 
+
+	<%
 	// 미 로그인 상태인 경우 홈으로 이동
+	AddressMapper addressMapperForMain = MybatisUtils.getMapper(AddressMapper.class);
+	Address defaultAddressForMain = addressMapperForMain.getDefaultAddress(loginUser);
+
 	if (loginUser == null) {
 	%>
 	<script type="text/javascript">
@@ -30,7 +36,6 @@
 	</script>
 	<%
 	}
-	
 	%>
 
 	<main class="payment-wrapper">
@@ -39,20 +44,44 @@
 				<h3>배송 정보</h3>
 				<div class="shipping-info">
 
+					<%
+					if (defaultAddressForMain != null) {
+					%>
 					<p id="address-header">
-						<strong id="receiver-name">송하영</strong><span id="address-comment">(우리
-							집)</span>
+						<strong id="receiver-name"><%=defaultAddressForMain.getReceiverName()%></strong>
+						<span id="address-comment"><%=defaultAddressForMain.getAddressName()%></span>
 						<button class="tag" id="btn-list-address">주소지 선택</button>
 					</p>
 					<p id="receiver-phone">
-						010-0000-1111
+						<%=defaultAddressForMain.getReceiverPhone()%>
+					</p>
+					<p>
+						<span id="receiver-address"><%=defaultAddressForMain.getRoad()%></span>
+						<span id="receiver-address-detail"><%=defaultAddressForMain.getDetail()%></span><br>
+						<span id="post-number"><%=defaultAddressForMain.getZipcode()%></span>
+					</p>
+					<%
+					} else {
+					%>
+					<script type="text/javascript">
+						alert("기본 배송지를 저장하여 주세요!");
+					</script>
+					<p id="address-header">
+						<strong id="receiver-name"></strong>
+						<span id="address-comment"></span>
+						<button class="tag" id="btn-list-address">주소지 선택</button>
+					</p>
+					<p id="receiver-phone">
 						<button class="tag">안심번호 사용</button>
 					</p>
 					<p>
-						<span id="receiver-address">서울특별시 종로구 율곡로10길 105 디아망 4층</span> 
-						<span id="receiver-address-detail">(공동현관 중3805)</span><br> 
-						<span id="post-number">(03033)</span>
+						<span id="receiver-address"></span>
+						<span id="receiver-address-detail"></span><br>
+						<span id="post-number"></span>
 					</p>
+					<%
+					}
+					%>
 
 
 					<%
@@ -64,13 +93,13 @@
 					//배송지 입력창
 					%>
 
-					<%@ include file="modal-enter-address.jsp" %>
+					<%@ include file="modal-enter-address.jsp"%>
 
 					<%
 					//배송지 검색
-					%>			
-					
-					<%@ include file="modal-search-address.jsp" %>
+					%>
+
+					<%@ include file="modal-search-address.jsp"%>
 
 					<select>
 						<option>선택 안 함</option>
@@ -79,9 +108,7 @@
 						<option>경비실에 맡겨주세요</option>
 						<option>부재 시 연락주세요</option>
 						<option>배송 전 미리 연락주세요</option>
-					</select> <label class="checkbox"> <input type="checkbox" checked>
-						다음에도 사용할게요
-					</label>
+					</select> 
 				</div>
 			</section>
 
@@ -95,7 +122,7 @@
 							<p>
 								<strong>MovMov 상품권 50,000원 권</strong>
 							</p>
-							<p class="option">무료 배송 / 수량 : 1개</p>
+							<p class="option">배송비 : 무료 배송 / 수량 : 1개</p>
 							<p class="price">
 								<del>50,000원</del>
 								<strong>49,560원</strong>
@@ -131,14 +158,17 @@
 				<h4>Pay 결제</h4>
 				<label>
 					<button class="account">
-						<img src="/movmov/resources/images/payment/logo_navergr_small.svg" alt="">
+						<img src="/movmov/resources/images/payment/logo_navergr_small.svg"
+							alt="">
 					</button>
 					<button class="account">
-						<img src="/movmov/resources/images/payment/Toss_Logo_Primary.png" alt="">
+						<img src="/movmov/resources/images/payment/Toss_Logo_Primary.png"
+							alt="">
 					</button>
 					<button class="account">
 						<img
-							src="/movmov/resources/images/payment/payment_icon_yellow_medium.png" alt="">
+							src="/movmov/resources/images/payment/payment_icon_yellow_medium.png"
+							alt="">
 					</button>
 					<button class="account">
 						<img src="/movmov/resources/images/payment/payco_logo.png" alt="">
@@ -193,7 +223,7 @@
 			</div>
 		</div>
 	</main>
-	
+
 	<%@ include file="/pages/common/footer.jsp"%>
 
 	<script type="text/javascript"
