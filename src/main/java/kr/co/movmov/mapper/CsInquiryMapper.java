@@ -11,6 +11,7 @@ public interface CsInquiryMapper {
 	
 	List<Inquiry> getInquiryById(int InquiryId);	// inquiry_id로 특정 문의 내역 조회
 	
-	List<Inquiry> getInquiryByUserID(User userId);	// user_id로 특정 문의 내역 조회
+	List<Inquiry> getInquiryByUserID(String userId);	// user_id로 특정 문의 내역 조회
+	
 	
 }

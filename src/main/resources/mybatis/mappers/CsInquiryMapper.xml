@@ -5,67 +5,97 @@
 
 <mapper namespace="kr.co.movmov.mapper.CsInquiryMapper">
 
-<!-- CS 1:1문의 -->
+	<!-- CS QnA -->
 
-<!-- 1:1문의 전체 조회 -->
-<select id="getAllInquiries" resultType="Inquiry"> 
-	SELECT 
-		i.inquiry_id,
-		i.inquiry_user_id AS user_id,
-		i.inquiry_cat_id,
-		c.cat_id,
-		i.inquiry_title,
-		i.inquiry_content,
-		i.inquiry_created_date,
-		i.inquiry_answer_date,
-		i.inquiry_status,
-		i.inquiry_is_secret
-	FROM
-		movmov_cs_user_inquiries i
-	JOIN movmov_content_categories c ON c.cat_id = i.inquiry_cat_id
+	<!-- ResultMap 정의 (User, Category 포함) -->
+	<resultMap id="inquiryResultMap" type="Inquiry">
+		<id property="inquiryId" column="inquiry_id" />
+		<result property="title" column="inquiry_title" />
+		<result property="content" column="inquiry_content" />
+		<result property="createdDate" column="inquiry_created_date" />
+		<result property="answerDate" column="inquiry_answer_date" />
+		<result property="status" column="inquiry_status" />
+		<result property="isSecret" column="inquiry_is_secret" />
+
+		<association property="user" javaType="User">
+			<id property="id" column="inquiry_user_id" />
+			<result property="name" column="user_name" />
+		</association>
+
+		<association property="category" javaType="Category">
+			<id property="id" column="cat_id" />
+			<result property="name" column="cat_name" />
+		</association>
+	</resultMap>
+
+<select id="getAllInquiries" resultMap="inquiryResultMap">
+  SELECT
+    i.inquiry_id,
+    i.inquiry_user_id,    
+    u.user_name,        
+    i.inquiry_cat_id,
+    c.cat_id,               
+    c.cat_name,           
+    i.inquiry_title,
+    i.inquiry_content,
+    i.inquiry_created_date,
+    i.inquiry_answer_date,
+    i.inquiry_status,
+    i.inquiry_is_secret
+  FROM movmov_cs_user_inquiries i
+  JOIN movmov_users u ON u.user_id = i.inquiry_user_id
+  JOIN movmov_content_categories c ON c.cat_id = i.inquiry_cat_id
 </select>
 
-<!-- inquiry_id로 문의 내역 조회 -->
-<select id="getInquiryById" resultType="Inquiry" parameterType="int"> 
-	SELECT 
+
+	<!-- inquiry_id로 조회 -->
+	<select id="getInquiryById" resultMap="inquiryResultMap"
+		parameterType="int">
+		SELECT
 		i.inquiry_id,
 		i.inquiry_user_id,
+		u.user_name,
 		i.inquiry_cat_id,
 		c.cat_id,
+		c.cat_name,
 		i.inquiry_title,
 		i.inquiry_content,
 		i.inquiry_created_date,
 		i.inquiry_answer_date,
 		i.inquiry_status,
 		i.inquiry_is_secret
-	FROM
-		movmov_cs_user_inquiries i
-	JOIN movmov_content_categories c ON c.cat_id = i.inquiry_cat_id
-	WHERE 
+		FROM movmov_cs_user_inquiries i
+		JOIN movmov_users u ON u.user_id = i.inquiry_user_id
+		JOIN
+		movmov_content_categories c ON c.cat_id = i.inquiry_cat_id
+		WHERE
 		i.inquiry_id = #{inquiryId}
-</select>
+	</select>
 
-<!-- user_id로 문의 내역 조회 -->
-<select id="getInquiryByUserID" resultType="Inquiry" parameterType="String">
-	SELECT
+	<!-- user_id로 조회 -->
+	<select id="getInquiryByUserID" resultMap="inquiryResultMap"
+		parameterType="String">
+		SELECT
 		i.inquiry_id,
-		u.user_id,
+		i.inquiry_user_id,
+		u.user_name,
 		i.inquiry_cat_id,
 		c.cat_id,
+		c.cat_name,
 		i.inquiry_title,
 		i.inquiry_content,
 		i.inquiry_created_date,
 		i.inquiry_answer_date,
 		i.inquiry_status,
 		i.inquiry_is_secret
-	FROM
-		movmov_cs_user_inquiries i
-	JOIN movmov_content_categories c ON i.inquiry_cat_id = c.cat_id
-	JOIN movmov_users u ON u.user_id = i.user_id
-	WHERE
-		u.user_id = #{user_id}
-</select>
+		FROM movmov_cs_user_inquiries i
+		JOIN movmov_users u ON u.user_id = i.inquiry_user_id
+		JOIN
+		movmov_content_categories c ON c.cat_id = i.inquiry_cat_id
+		WHERE
+		u.user_id = #{userId}
+	</select>
 
-<!-- 1:1문의 등록은 추후 구현 -->
+	<!-- 1:1문의 등록은 추후 구현 -->
 
 </mapper>
