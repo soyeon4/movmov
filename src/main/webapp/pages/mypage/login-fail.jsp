@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
     String type = request.getParameter("fail");
+	session.invalidate();
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -40,7 +41,8 @@
 <%
     }
 %>
-    <a href="modal-login.jsp" class="btn btn-primary btn-login">다시 로그인</a>
+	
+    <a href="../../index.jsp" class="btn btn-primary btn-login">다시 로그인</a>
   </div>
 
 </body>

@@ -25,7 +25,7 @@ public class CartDto {
 		int totalItemPrice = 0;
 		
 		for (ShopCartItem item : cartItems) {
-			totalItemPrice += item.getItem().getPrice();
+			totalItemPrice += item.getItem().getPrice()*item.getQuantity();
 		}
 		return totalItemPrice;
 	}

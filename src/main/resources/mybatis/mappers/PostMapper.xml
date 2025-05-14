@@ -63,9 +63,9 @@
 	</select>
 	
 	<!--
-		List<Post> getPostsByBoardId(int boardId);
+		List<Post> getRecentPostsByBoardId(int boardId);
 	-->
-	<select id="getPostsByBoardId" resultMap="PostResultMap">
+	<select id="getRecentPostsByBoardId" resultMap="PostResultMap">
 		select
 			P.post_no
 		  , P.post_title
@@ -92,6 +92,7 @@
 			<![CDATA[AND P.post_report_count < 5]]>
 		order by
 			P.post_no desc
+		fetch first 5 rows only
 	</select>
 	
 	<resultMap type="Post" id="PostResultMap">
@@ -152,27 +153,36 @@
 		condition 값:
 			{boardId:게시판번호,
 				spoiler:스포일러유무,
-				header:말머리번호}
+				header:말머리번호,
+				searchFilter:제목/작성자,}
 				- boardId: 선택 (커뮤니티 메인에서 모두 조회한 후 페이지에서 분류)
 				- spoiler: 선택
 				- header: 선택
 	-->
 	<select id="getTotalRows">
 		SELECT
-			count(*)
+			COUNT(*)
 		FROM
-			movmov_community_posts
+			MOVMOV_COMMUNITY_POSTS P
+			JOIN MOVMOV_USERS U ON P.USER_ID = U.USER_ID
 		WHERE
-			post_is_deleted = 'N'
-			<![CDATA[AND post_report_count < 5]]>
+			P.post_is_deleted = 'N'
+			<![CDATA[AND P.post_report_count < 5]]>
 			<if test="boardId != null">
-				and post_board_type = #{boardId}
+				AND P.post_board_type = #{boardId}
 			</if>
 			<if test="spoiler != null">
-				and post_is_spoiler = #{spoiler}
+				AND P.post_is_spoiler = #{spoiler}
 			</if>
 			<if test="header != null">
-				and post_header = #{header}
+				AND P.post_header = #{header}
+			</if>
+			<if test="searchFilter != null">
+				AND (
+					LOWER(P.post_content) LIKE '%' || LOWER(#{searchFilter}) || '%'
+				OR LOWER(P.post_title) LIKE '%' || LOWER(#{searchFilter}) || '%'
+			 	OR LOWER(U.user_nickname) LIKE '%' || LOWER(#{searchFilter}) || '%'
+				)
 			</if>
 	</select>
 	
@@ -183,6 +193,7 @@
 			{boardId:게시판번호,
 				spoiler:스포일러유무,
 				header:말머리번호,
+				searchFilter:제목/작성자,
 				offset:오프셋값,
 				rows:행개수,
 				sort:정렬기준}
@@ -192,7 +203,7 @@
 				- sort: 선택
 	-->
 	<select id="getPosts" parameterType="map" resultMap="PostResultMap">
-		select
+		SELECT
 			P.post_no
 		  , P.post_title
 		  , P.post_content
@@ -208,21 +219,31 @@
 		  , HC.cat_name					as header_cat_name
     	  , BC.cat_id					as board_cat_id
     	  , BC.cat_name					as board_cat_name
-		from movmov_community_posts P
+		FROM movmov_community_posts P
 			join movmov_content_categories HC on P.post_header = HC.cat_id
 			join movmov_content_categories BC on P.post_board_type = BC.cat_id
 			join movmov_users U on P.user_id = U.user_id
-		where
+		WHERE
 			P.post_is_deleted = 'N'
 			<![CDATA[AND P.post_report_count < 5]]>
 		<if test="boardId != null">
-			and P.post_board_type = #{boardId}
+			AND P.post_board_type = #{boardId}
 		</if>
 		<if test="spoiler != null">
-			and P.post_is_spoiler = #{spoiler}
+			AND P.post_is_spoiler = #{spoiler}
 		</if>
 		<if test="header != null">
-			and P.post_header in #{header}
+			AND P.post_header in #{header}
+		</if>
+		<if test="searchFilter != null">
+			AND (
+				LOWER(P.post_content) LIKE '%' || LOWER(#{searchFilter}) || '%'
+			 OR LOWER(P.post_title) LIKE '%' || LOWER(#{searchFilter}) || '%'
+			 OR LOWER(U.user_nickname) LIKE '%' || LOWER(#{searchFilter}) || '%'
+			)
+		</if>
+		<if test="userId != null">
+		and P.user_id = #{userId}
 		</if>
 		order by
 		<choose>
@@ -323,6 +344,38 @@
 		)
 		WHERE post_no = #{postNo}
 	</update>
+	
+	<select id="getRecentPostsByUserId" resultMap="PostResultMap">
+		SELECT 
+		    p.POST_NO               AS post_no,
+		    p.POST_TITLE            AS post_title,
+		    p.POST_CONTENT          AS post_content,
+		    p.POST_CREATED_DATE     AS post_created_date,
+		    p.POST_UPDATED_DATE     AS post_updated_date,
+		    p.POST_VIEW_COUNT       AS post_view_count,
+		    p.POST_COMMENT_COUNT    AS post_comment_count,
+		    p.POST_UPVOTE_COUNT     AS post_upvote_count,         
+		    p.POST_IS_SPOILER       AS post_is_spoiler,           
+		    p.USER_ID               AS user_id,
+		    U.USER_NICKNAME         AS user_nickname,
+		    HC.CAT_ID               AS header_cat_id,
+		    HC.CAT_NAME             AS header_cat_name,
+		    BC.CAT_ID               AS board_cat_id,
+		    BC.CAT_NAME             AS board_cat_name
+		FROM movmov_community_posts P
+			JOIN movmov_content_categories HC ON P.post_header = HC.cat_id
+			JOIN movmov_content_categories BC ON P.post_board_type = BC.cat_id
+			JOIN movmov_users U ON P.user_id = U.user_id
+		WHERE p.user_id = #{id}
+		ORDER BY p.post_created_date DESC
+		FETCH FIRST 10 ROWS ONLY
+	</select>
+	
+	<select id="getTotalPostRowsByUserId" parameterType="string" resultType="int">
+    	SELECT COUNT(*)
+    	FROM movmov_community_posts
+    	WHERE user_id = #{userId}
+   </select>
 	
 </mapper>
  

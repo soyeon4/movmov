@@ -1,8 +1,10 @@
+
 <%@page import="kr.co.movmov.vo.Category"%>
 <%@page import="kr.co.movmov.mapper.CategoryMapper"%>
 <%@page import="kr.co.movmov.vo.Inquiry"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
+
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.mapper.CsInquiryMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>

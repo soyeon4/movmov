@@ -9,13 +9,15 @@ import lombok.Data;
 @Data
 @Alias("CsPost")
 public class CsPost {
-	int id;
-	String postType;
-	Category category;
-	String title;
-	String content;
-	int postTop;
-	Date createdDate;
-	Date updatedDate;
-	int viewCount;
+
+	private int id;
+	private String postType;
+	private Category category;
+	private String title;
+	private String content;
+	private int postTop;
+	private Date createdDate;
+	private Date updatedDate;
+	private int viewCount;
+	
 }

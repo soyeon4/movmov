@@ -21,12 +21,13 @@ public interface PostMapper {
 	Post getPostByNo(int postNo);
 	
 	/**
-	 * 게시판 고유번호를 전달받아서 게시글 목록을 가져온다.
+	 * 게시판 고유번호를 전달받아서 해당 게시판의
+	 * 최신 5개 게시글 목록을 가져온다.
 	 * 삭제된 게시글은 불러오지 않는다.
 	 * @param boardNo 게시판 번호
 	 * @return 게시글 목록
 	 */
-	List<Post> getPostsByBoardId(int boardId);
+	List<Post> getRecentPostsByBoardId(int boardId);
 	
 	/**
 	 * 게시글을 업데이트한다.
@@ -93,5 +94,7 @@ public interface PostMapper {
 	 */
 	int getUpvoteCount(int postNo);
 	
+	List<Post> getRecentPostsByUserId(String userId);
 	
+	int getTotalPostRowsByUserId(String userId);
 }

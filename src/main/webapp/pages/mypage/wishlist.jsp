@@ -56,7 +56,6 @@
 <%
 		for (WishMovie wish : wishMovies) {
 			Movie movie = movieMapper.getMovieByNo(wish.getMovie().getNo());
-
 %>
 		<div class="bg-white rounded-xl shadow p-4 flex gap-4">
 			<img src="/movmov/resources/images/movie/<%=movie.getPosterImagePath()%>" alt="<%=movie.getTitle()%>" class="w-24 h-36 object-cover rounded">
@@ -71,20 +70,6 @@
 %>
 	</div>
 
-		<h3 class="text-xl font-semibold mt-12 mb-4">🛍️ 찜한 상품</h3>
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-		<!-- 샘플 상품 카드 -->
-		<div class="bg-white rounded-xl shadow p-4 flex gap-4">
-			<img src="/movmov/resources/images/shop/sample-product.jpg" alt="샘플 상품" class="w-24 h-24 object-cover rounded">
-			<div class="flex flex-col justify-between">
-				<h4 class="font-bold text-lg mb-1">[샘플] 무비 굿즈 키링</h4>
-				<p class="text-sm text-gray-700">✨ 인기 상품</p>
-				<p class="text-sm text-gray-500">₩12,000</p>
-			</div>
-		</div>
-	</div>
-
-
 	<!-- 페이지네이션 -->
 	<div class="pagination mt-10 text-center">
 <% if (!pagination.isFirst()) 
@@ -93,11 +78,9 @@
 		<a href="#" class="page-link px-3 py-1" data-page-no="<%=pagination.getPrevPage()%>">이전</a>
 <% 
 	} 
-%>
-<% for (int i = pagination.getBeginPage(); i <= pagination.getEndPage(); i++) 
+	 for (int i = pagination.getBeginPage(); i <= pagination.getEndPage(); i++) 
 	{ 
-%>
-<% 		if (i == pagination.getCurrentPage()) 
+ 		if (i == pagination.getCurrentPage()) 
 		{ 
 %>
 			<span class="page-link px-3 py-1 bg-pink-500 text-white font-bold"><%=i%></span>
@@ -106,12 +89,9 @@
 %>
 			<a href="#" class="page-link px-3 py-1" data-page-no="<%=i%>"><%=i%></a>
 <% 
-		} 
-%>
-<% 
+		}  
 	} 
-%>
-<% if (!pagination.isLast()) 
+	 if (!pagination.isLast()) 
 	{ 
 %>
 			<a href="#" class="page-link px-3 py-1" data-page-no="<%=pagination.getNextPage()%>">다음</a>

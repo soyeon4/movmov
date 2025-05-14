@@ -17,8 +17,6 @@
 	
 	List<WishMovie> wishMovies = whisMovieMapper.getWishMoviesbyUserId(userId);
 	List<Review> reviews = reviewMapper.getReviewsByUserId(userId);
-
-	
 %>
 	
 
@@ -67,7 +65,7 @@
 			int totalWishMovieCount = wishMovies.size(); 
 %>
         <a href="reviews-ratings.jsp">총 리뷰 <%=totalReviewCount %></a>
-          <a href="wishlist.jsp">찜한 작품 및 상품 <%=totalWishMovieCount %></a>
+          <a href="wishlist.jsp">찜한 작품<%=totalWishMovieCount %></a>
         </div>
       </div>
       <a href="settings.jsp" class="settings-btn" title="설정">⚙</a>
@@ -96,7 +94,7 @@
           <a href="reviews-ratings.jsp" class="more">더보기</a>
         </div>
         <div>
-          <h4>찜한 작품 및 상품</h4>
+          <h4>찜한 작품</h4>
           <ul>
 <%	
 
@@ -134,8 +132,8 @@
         <p>작성한 게시글</p>
       </a>
       <a href="wishlist.jsp" class="link-card">
-        <h4>찜한 작품 및 상품</h4>
-        <p>보관한 작품 및 상품 목록</p>
+        <h4>찜한 작품</h4>
+        <p>보관한 작품</p>
       </a>
     </div>
   </section>

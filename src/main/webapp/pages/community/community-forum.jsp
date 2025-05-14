@@ -15,14 +15,19 @@
 		bid		300		영화게시판
 		bid		301		자유게시판
 		pg				페이지 번호
+		searchFilter	검색 내용 (제목/작성자)
 	*/
 	int boardId = StringUtils.strToInt(request.getParameter("bid"), 300);
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	int pageNo = StringUtils.strToInt(request.getParameter("pg"), 1);
+	String searchFilter = StringUtils.nullToBlank(request.getParameter("searchFilter"));
 	
-	// 페이지네이션 처리
 	Map<String, Object> condition = new HashMap<>();
 	condition.put("boardId", boardId);
+	// 검색 조건 추가
+	condition.put("searchFilter", searchFilter.trim());
+	
+	// 페이지네이션 처리
 	int totalRows = postMapper.getTotalRows(condition);
 	int rows = 5;
 	Pagination pagination = new Pagination(pageNo, totalRows, rows);
@@ -34,7 +39,6 @@
 
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	boolean isLoggedIn = loginedUser != null;
-	
 	
 %>
 <!DOCTYPE html>
@@ -62,17 +66,28 @@
 <%
 	if (boardId == 300) {
 %>
-			<div class="board-title">🎬 영화게시판</div>
+			<a href="community-forum.jsp?bid=300">
+				<div class="board-title">🎬 영화게시판</div>
+			</a>
 <%
 	} else {
 %>
-			<div class="board-title">🎈 자유게시판</div>
+			<a href="community-forum.jsp?bid=301">
+				<div class="board-title">🎈 자유게시판</div>
+			</a>
+<%
+	}
+	if (!searchFilter.equals("")) {
+%>
+			<div class="search-term">게시글에서 검색: "<%=searchFilter %>"</div>
 <%
 	}
 %>
 			<div class="search-bar">
-				<input type="text" placeholder="제목 또는 작성자 검색">
-				<button>검색</button>
+				<form id="search-posts" action="community-forum.jsp?bid=<%=boardId %>" method="post">
+					<input type="text" name="searchFilter" placeholder="제목 또는 작성자 검색">
+					<button type="submit" id="btn-search-posts">검색</button>
+				</form>
 			</div>
 		</div>
 
@@ -124,6 +139,12 @@
 				</tr>
 <%
 	}
+	if (boardPosts.isEmpty()) {
+%>
+				<tr><td colspan="7">게시물이 없습니다.</td></tr>
+				
+<%
+	}
 %>
 			</tbody>
 		</table>
@@ -166,6 +187,7 @@
 		$("#btn-page-first").on("click", function() {
 			let params = $.param({
 				bid: <%=boardId %>,
+				searchFilter: "<%=searchFilter %>",
 				pg: 1
 			});
 			window.location.href = window.location.pathname + '?' + params;
@@ -174,6 +196,7 @@
 		$("#btn-page-last").on("click", function() {
 			let params = $.param({
 				bid: <%=boardId %>,
+				searchFilter: "<%=searchFilter %>",
 				pg: <%=pagination.getTotalPages() %>
 			});
 			window.location.href = window.location.pathname + '?' + params;
@@ -182,6 +205,7 @@
 		$(".btn-page-no").on("click", function() {
 			let params = $.param({
 				bid: <%=boardId %>,
+				searchFilter: "<%=searchFilter %>",
 				pg: $(this).text()
 			});
 			window.location.href = window.location.pathname + '?' + params;

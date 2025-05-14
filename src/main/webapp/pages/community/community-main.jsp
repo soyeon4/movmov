@@ -7,12 +7,6 @@
     pageEncoding="UTF-8"%>
 <%
 	PostMapper postMapper =MybatisUtils.getMapper(PostMapper.class);
-	Map<String, Object> conditionAllMoviePosts = new HashMap<>();
-	conditionAllMoviePosts.put("boardId", 300);
-	conditionAllMoviePosts.put("rows", 5);
-	Map<String, Object> conditionAllFreePosts = new HashMap<>();
-	conditionAllFreePosts.put("boardId", 301);
-	conditionAllFreePosts.put("rows", 5);
 	Map<String, Object> conditionMoviePopular = new HashMap<>();
 	conditionMoviePopular.put("sort", "views");
 	conditionMoviePopular.put("rows", 5);
@@ -20,8 +14,8 @@
 	conditionFreePopular.put("boardId", 301);
 	conditionFreePopular.put("sort", "views");
 	conditionFreePopular.put("rows", 5);
-	List<Post> moviePosts = postMapper.getPosts(conditionAllMoviePosts);
-	List<Post> freePosts = postMapper.getPosts(conditionAllFreePosts);
+	List<Post> moviePosts = postMapper.getRecentPostsByBoardId(300);
+	List<Post> freePosts = postMapper.getRecentPostsByBoardId(301);
 	List<Post> popularMoviePosts = postMapper.getPosts(conditionMoviePopular);
 	List<Post> popularFreePosts = postMapper.getPosts(conditionFreePopular);
 	

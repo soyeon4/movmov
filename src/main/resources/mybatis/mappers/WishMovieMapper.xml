@@ -60,4 +60,5 @@
     SELECT COUNT(*) FROM movmov_wish_movies WHERE user_id = #{userId}
   </select>
 
+
 </mapper>

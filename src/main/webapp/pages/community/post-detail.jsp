@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.utils.Pagination"%>
 <%@page import="com.google.gson.Gson"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
@@ -14,13 +15,17 @@
 	/*
 		요청 URL
 			/pages/community/post-detail.jsp?pno=xxx
+			/pages/community/post-detail.jsp?pno=xxx&pg=xxx
 		
 			name		value
 			----------------
 			pno			게시글 번호
+			pg			댓글 페이지 번호
 	*/
 
 	int postNo = StringUtils.strToInt(request.getParameter("pno"));
+	int pageNo = StringUtils.strToInt(request.getParameter("pg"), 1);
+
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	postMapper.updatePostViewCount(postNo);
 	Post post = postMapper.getPostByNo(postNo);
@@ -39,15 +44,22 @@
 	
 	// 댓글 불러오기
 	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
-	List<Comment> postComments = commentMapper.getCommentsByPostNo(postNo);
+	// 댓글 페이지네이션
+	Map<String, Object> condition = new HashMap<>();
+	condition.put("postNo", postNo);
+	condition.put("topLevel", "Y");
+	int totalRows = commentMapper.getTotalRows(condition);
+	int rows = 5;
+	Pagination pagination = new Pagination(pageNo, totalRows, rows);
+	int offset = pagination.getOffset();
+	condition.put("offset", offset);
+	condition.put("rows", rows);
+	
+	List<Comment> postComments = commentMapper.getCommentsByCondition(condition);
 
 	// 하단 게시글 목록
-	Map<String, Object> conditionRecent = new HashMap<>();
 	int boardId = post.getBoardType().getId();
-	conditionRecent.put("boardId", boardId);
-	conditionRecent.put("rows", 4);
-	
-	List<Post> recentPosts = postMapper.getPosts(conditionRecent);
+	List<Post> recentPosts = postMapper.getRecentPostsByBoardId(boardId);
 	
 %>
 <!DOCTYPE html>
@@ -144,7 +156,8 @@
 	if (post.getUser().getId().equals(userId)) {
 %>
 			<a href="post-form-edit.jsp?pno=<%=post.getNo() %>">수정</a>
-			<a href="">삭제</a>
+			<a href="delete-post.jsp?pno=<%=post.getNo() %>"
+				onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
 <%
 	}
 %>
@@ -159,20 +172,20 @@
 <%
 	for (Comment comment : postComments) {
 %>
-			<div class="comment-block">
+			<div class="comment-block" data-comment-no="<%=comment.getNo() %>">
 				<div class="comment-author">
 					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
 					<span class="author-name"><%=comment.getUser().getNickname() %></span>
 					<div class="meta">작성일: <%=StringUtils.simpleDateTimeFormat(comment.getCreatedDate()) %>
 					<%=(comment.getCreatedDate().compareTo(comment.getUpdatedDate()) != 0 ? 
-							"수정일: " + StringUtils.simpleDateTimeFormat(comment.getUpdatedDate()) : "" ) %></div>
+							"| 수정일: " + StringUtils.simpleDateTimeFormat(comment.getUpdatedDate()) : "" ) %></div>
 				</div>
 				<div class="content"><%=comment.getContent() %></div>
 				<div class="comment-options">
 <%
 		if (comment.getUser().getId().equals(userId)) {
 %>
-					<a href="">수정</a>
+					<a href="#" class="edit-comment">수정</a>
 					<a href="delete-comment.jsp?cno=<%=comment.getNo() %>" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
 <%
 		}
@@ -186,20 +199,35 @@
 	}
 %>
 			<div class="pagination">
-				<button>&laquo;</button>
-				<button class="active">1</button>
-				<button>2</button>
-				<button>3</button>
-				<button>4</button>
-				<button>5</button>
-				<button>&raquo;</button>
+				<button type="button" id="btn-page-first">&laquo;</button>
+<%
+	int blockFirst = Math.max(Math.min(pagination.getTotalPages() - 4, pageNo - 2), 1);
+	int blockLast = Math.min(Math.max(pagination.getPages(), pageNo + 2), pagination.getTotalPages());
+	for (int i = blockFirst; i < blockLast + 1; i++) {
+%>
+				<button type="button"
+					class="btn-page-no<%=(i == pageNo ? " active" : "") %>"><%=i %></button>
+<%
+	}
+%>
+				<button type="button" id="btn-page-last">&raquo;</button>
 			</div>
-			<div class="comment-form">
+			<div class="comment-form create">
 				<h4>댓글 작성</h4>
-				<form action="create-comment.jsp" method="post">
+<%
+	if (isLoggedIn) {
+%>
+				<div class="comment-author">
+					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
+					<span class="author-name"><%=loginedUser.getNickname() %></span>
+				</div>
+<%
+	}
+%>
+				<form action="create-comment.jsp" method="post" id="create-comment">
 					<input type="hidden" name="postNo" value="<%=postNo %>" />
 					<textarea name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
-					<button type="submit">등록</button>
+					<button type="submit" class="btn-create-comment">등록</button>
 				</form>
 			</div>
 		</div>
@@ -227,7 +255,6 @@
 %>
 		</div>
 	</div>
-</body>
 
 	<!-- 푸터 -->
 	<%@ include file="../common/footer.jsp"%>
@@ -237,89 +264,9 @@
 		let userId = "<%=userId %>";
 		let postUserId = "<%=post.getUser().getId() %>";
 		let upvoteIdList = JSON.parse('<%=upvoteJson %>');
-		
-		function fadeInDialog(dialog) {
-			dialog.classList.add("fade");
-			dialog.showModal();
-			requestAnimationFrame(() => {
-				dialog.classList.add("showing");
-			});
-		}
-
-		function fadeOutDialog(dialog) {
-			dialog.classList.remove("showing");
-			setTimeout(() => {
-				dialog.close();
-			}, 300);
-		}
-		
-		let loginWarningDialog = document.getElementById("login-warning-dialog");
-		
-		$(".btn-upvote").on("click", function(e) {
-			if (!isLoggedIn) {
-				fadeInDialog(loginWarningDialog);
-				return;
-			}
-			if (userId == postUserId) {
-				alert("본인의 게시글을 추천할 수 없습니다.");
-				// 본인 게시글 추천 눌렀을 때
-				return;
-			}
-			if (upvoteIdList.includes(userId)) {
-				alert("이미 추천한 게시글입니다.")
-				// 이미 추천한 게시글일 때
-				return;
-			}
-			$.ajax({
-				url: "add-upvote.jsp",
-				method: "POST",
-				data: {
-					postNo: "<%=postNo %>",
-					userId: userId
-				},
-				success: function(response) {
-					// 응답으로 업데이트된 추천 개수 받아옴
-					$("#upvote-cnt").text(response);
-					$(".upvote-icon").text("❤");
-					upvoteIdList.push(userId);
-				}
-			});
-		});
-		
-		$(".report-button").on("click", function(e) {
-			if (!isLoggedIn) {
-				e.preventDefault();
-				fadeInDialog(loginWarningDialog);
-				return;
-			}
-			if ($(this).hasClass('post') && userId == postUserId) {
-				e.preventDefault();
-				alert("본인의 게시글을 신고할 수 없습니다.");
-				// 본인 게시글 신고 눌렀을 때
-				return;
-			}
-			if ($(this).hasClass('comment') && userId == $(this).attr("data-user-id")) {
-				e.preventDefault();
-				alert("본인의 댓글을 신고할 수 없습니다.");
-				// 본인 댓글 신고 눌렀을 때
-				return;
-			}
-			
-		});
-		
-		$("#btn-close-warning").on("click", function() {
-			fadeOutDialog(loginWarningDialog);
-		});
-		
-		$("#btn-login-trigger").on("click", function() {
-			loginWarningDialog.close();
-			loginWarningDialog.classList.remove("showing");
-			$("#btn-header-login").trigger("click");
-		});
-		
-		loginWarningDialog.addEventListener("cancel", (e) => {
-			e.preventDefault();
-			fadeOutDialog(loginWarningDialog);
-		});
+		let postNo = <%=postNo %>;
+		let totalPages = <%=pagination.getTotalPages() %>;	
 	</script>
+	<script src="/movmov/resources/script/community/post-detail.js"></script>
+</body>
 </html>
