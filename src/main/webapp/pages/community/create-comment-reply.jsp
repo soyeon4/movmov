@@ -49,6 +49,7 @@
 	commentInfoJson.put("userNickname", comment.getUser().getNickname());
 	commentInfoJson.put("createdDate", StringUtils.simpleDateTimeFormat(currentTime));
 	commentInfoJson.put("content", content);
+	commentInfoJson.put("parentCommentNo", parentCommentNo);
 	
 	Gson gson = new Gson();
 	String jsonResponse = gson.toJson(commentInfoJson);

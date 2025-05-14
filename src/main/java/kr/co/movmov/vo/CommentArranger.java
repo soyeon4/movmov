@@ -62,7 +62,7 @@ public class CommentArranger {
         		topComment.setContent("신고되어 삭제처리된 댓글입니다.");
             }
             
-            if (currentPageCommentCount + nestedCount > pageLimit && !currentPage.isEmpty()) {
+            if (currentPageCommentCount > pageLimit && !currentPage.isEmpty()) {
             	commentPages.add(new ArrayList<>(currentPage));
                 currentPage.clear();
                 currentPageCommentCount = 0;
