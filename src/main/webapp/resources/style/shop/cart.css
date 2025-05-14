@@ -54,8 +54,21 @@
 	gap: 8px;
 }
 
+.qty-box button {
+	border: none;
+    background: none;
+    font-size: 14px;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border-radius: 6px;`
+    cursor: pointer;
+    background-color: #FF74A8;
+    color: white;
+}
+
 .qty-box input {
 	width: 40px;
+	padding: 6px;
 	text-align: center;
 }
 

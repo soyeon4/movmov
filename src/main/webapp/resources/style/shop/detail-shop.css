@@ -36,13 +36,20 @@
 }
 
 .quantity-control button {
-	width: 32px;
-	height: 32px;
-	font-size: 16px;
+	border: none;
+    background: none;
+    font-size: 14px;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #FF74A8;
+    color: white;
 }
 
 .quantity-control input {
 	width: 40px;
+	padding: 6px;		
 	text-align: center;
 }
 
@@ -80,4 +87,5 @@
 	background: #f9f9f9;
 	padding: 24px;
 	border-radius: 8px;
+	white-space: pre-line;
 }

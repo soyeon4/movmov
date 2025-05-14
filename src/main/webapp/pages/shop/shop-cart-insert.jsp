@@ -28,10 +28,7 @@
 	int quantity = StringUtils.strToInt(request.getParameter("qty"));
 	
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
-	if (loginedUser == null){
-		response.sendRedirect("../mypage/modal-login.jsp");
-	}
-	else {
+	if (loginedUser != null){
 		String userId = loginedUser.getId();
 		ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
 		ShopCartItem cartItem = cartItemMapper.getCartItem(userId, itemNo, optionNo);
