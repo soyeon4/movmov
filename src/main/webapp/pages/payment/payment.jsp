@@ -122,10 +122,11 @@
 			<%
 			List<ShopCartItem> cartItems = shopCartItemMapper.getCartItemsByUserId(loginUser.getId());
 			CartDto cartDto = new CartDto(cartItems);
+			int totalPriceOfOrder = 0;
 			for (ShopCartItem cartItem : cartItems) {
+				int totalPriceOfItem = cartItem.getItem().getPrice()*cartItem.getQuantity();
 			%>
 				<div class="product-detail">
-					<div class="store-name"><%=cartItem.getNo() %></div>
 					<div class="product-summary">
 						<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" alt="상품 이미지">
 						<div class="summary-text">
@@ -135,15 +136,18 @@
 							<p class="option">배송비 : <%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %> / 수량 :<%=cartItem.getQuantity() %> </p>
 							<p class="price">
 								<del></del>
-								<strong><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></strong>
+								<strong><%=StringUtils.commaWithNumber(totalPriceOfItem) %></strong>
 							</p>
 						</div>
 					</div>
 				</div>
-			</section>
+				<br>
 			<%
+				totalPriceOfOrder += totalPriceOfItem;
 			}
 			%>
+			</section>
+			
 
 			<section class="point-wallet">
 				<h3>포인트 사용</h3>
@@ -158,15 +162,12 @@
 						<input type="number" placeholder="사용 금액 입력">
 						<button class="btn-outline">전액사용</button>
 					</div>
-					<label class="checkbox"> <input type="checkbox" checked>
-						항상 잔여 사용
-					</label>
 				</div>
 			</section>
 
 			<section class="pay-method">
 				<h3>
-					결제수단 <span class="price-main">49,560원</span>
+					결제수단 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
 				</h3>
 				<h4>Pay 결제</h4>
 				<label>
@@ -205,7 +206,7 @@
 		<div class="payment-right">
 			<section class="summary-box">
 				<h3>
-					결제상세 <span class="price-main">49,560원</span>
+					결제상세 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
 				</h3>
 				<p>
 					포인트 사용 <span class="price">49,560원</span>
@@ -232,7 +233,7 @@
 			</section>
 
 			<div class="payment-btn-container">
-				<button type="submit" class="pay-btn">49,560원 결제하기</button>
+				<button type="submit" class="pay-btn"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원 결제하기</button>
 			</div>
 		</div>
 	</main>

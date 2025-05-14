@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
     
 <%@ page import="kr.co.movmov.vo.User" %>
-<%@ page import="kr.co.movmov.mapper.AddressMapper" %>
+<%@ page import="kr.co.movmov.mapper.AddressMapper"%>
 <%@ page import="kr.co.movmov.utils.MybatisUtils" %>
 
 <%
