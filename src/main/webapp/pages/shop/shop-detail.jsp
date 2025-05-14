@@ -114,28 +114,28 @@
 	<%@ include file="/pages/common/footer.jsp" %>
 
 	<script type="text/javascript">
-		const itemPrice = document.getElementById('itemPrice');	// itemPrice라는 이름의 값을 가져옴, 상수로 저장
-		let unitPrice = parseInt(itemPrice.textContent.replaceAll(',', '')); // 숫자로 변환
-		let qty = 1; // 변수 초기화
-		const qtyInput = document.getElementById('qty'); // 수량 입력 필드
-		const totalPrice = document.getElementById('total');	// 합계 금액 입력 필드
+		const itemPrice = document.getElementById('itemPrice');
+		let unitPrice = parseInt(itemPrice.textContent.replaceAll(',', ''));
+		let qty = 1;
+		const qtyInput = document.getElementById('qty');
+		const totalPrice = document.getElementById('total');
 
 		function updateTotal() {
 			totalPrice.textContent = (qty * unitPrice).toLocaleString();
-			document.getElementById('qty-hidden').value = qty;	// hidden에 qty값을 저장하는데 왜 저장하는거지
+			document.getElementById('qty-hidden').value = qty;
 		}
 
 		function increaseQty() {
-			qty++;	// increaseQty를 타면 하나를 증가시켜
-			qtyInput.value = qty;	// 수량을 변경
-			updateTotal();	// updateTotal 함수로 이동
+			qty++;
+			qtyInput.value = qty;
+			updateTotal();
 		}
 
 		function decreaseQty() {
-			if (qty > 1) {	// 수량이 1보다 크면
-				qty--;	// decreaseQty 타고 수량 감소
-				qtyInput.value = qty;	// 수량 변경해서 표시?
-				updateTotal();	// updateTotal로 이동
+			if (qty > 1) {
+				qty--;
+				qtyInput.value = qty;
+				updateTotal();
 			}
 		}
 
