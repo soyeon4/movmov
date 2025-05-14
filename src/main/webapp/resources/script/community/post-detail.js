@@ -114,7 +114,10 @@ $(".comments-section").on("submit", ".comment-form.reply", function(e) {
 		    datatype: "json",
 		    success: function(response) {
 		    	let completedReplyBlock = `
-		    		<div class="comment-block" data-comment-no="${response.cno}" data-level="${replyLevel}">
+		    		<div class="comment-block"
+						data-comment-no="${response.cno}"
+						data-level="${replyLevel}"
+						parent-comment-no="${response.parentCommentNo}">
 						<div class="comment-author">
 							<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
 							<span class="author-name">${response.userNickname}</span>
@@ -134,6 +137,8 @@ $(".comments-section").on("submit", ".comment-form.reply", function(e) {
 					</div>
 				`;
 			replyBlock.replaceWith(completedReplyBlock);
+			let currentCommentCount = parseInt($(".comment-header").find("span").text());
+			$(".comment-header").find("span").text(currentCommentCount + 1);
 		},
 		fail: function() {
 			alert("답글을 달지 못했습니다.");
@@ -148,12 +153,17 @@ $(".comments-section").on("click", ".edit-comment", function(e) {
 	
 	let commentBlock = $(this).closest(".comment-block");
 	let commentNo = commentBlock.data("comment-no");
+	let commentLevel = commentBlock.data("level");
+	let commentParentNo = commentBlock.attr("parent-comment-no");
 	let commentContent = commentBlock.find(".content").text();
 
 	originalCommentBlock[commentNo] = commentBlock.clone();
 
 	let editFormHtml = `
-		<div class="comment-block" data-comment-no="${commentNo}">
+		<div class="comment-block"
+			data-comment-no="${commentNo}"
+			data-level="${commentLevel}"
+			parent-comment-no="${commentParentNo}">
 			<div class="comment-form edit" data-comment-no="${commentNo}">
 				<h4>댓글 수정</h4>
 				<div class="comment-author">
@@ -193,6 +203,8 @@ $(".comments-section").on("submit", ".comment-form.edit", function(e) {
 	
 	let commentBlock = $(this).closest(".comment-block");
 	let commentNo = commentBlock.data("comment-no");
+	let commentLevel = commentBlock.data("level");
+	let commentParentNo = commentBlock.attr("parent-comment-no");
 	let newContent = commentBlock.find("textarea").val();
 	if (newContent == "") {
 		alert("댓글 내용을 입력해주세요.");
@@ -209,7 +221,10 @@ $(".comments-section").on("submit", ".comment-form.edit", function(e) {
 	    datatype: "json",
 	    success: function(response) {
 	    	let updatedBlock = `
-	    		<div class="comment-block" data-comment-no="${response.cno}">
+	    		<div class="comment-block"
+					data-comment-no="${response.cno}"
+					data-level="${commentLevel}"
+					parent-comment-no="${commentParentNo}">
 					<div class="comment-author">
 						<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
 						<span class="author-name">${response.userNickname}</span>

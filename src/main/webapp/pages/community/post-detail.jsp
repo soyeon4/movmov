@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="kr.co.movmov.vo.CommentArranger"%>
 <%@page import="kr.co.movmov.utils.Pagination"%>
 <%@page import="com.google.gson.Gson"%>
@@ -52,7 +53,10 @@
 	List<List<Comment>> commentPages = commentArranger.paginateComments(allPostComments, 5);
 	int totalPages = commentPages.size();
 	int pagesPerBlock = 5;
-	List<Comment> currentPageComments = commentPages.get(pageNo - 1);
+	List<Comment> currentPageComments = new ArrayList<>();
+	if (!allPostComments.isEmpty()) {
+		currentPageComments = commentPages.get(pageNo - 1);
+	}
 	int totalCommentCount = commentArranger.getTotalCommentCount();
 	
 	// 게시글 댓글 개수 업데이트
@@ -167,7 +171,7 @@
 
 		<!-- 💬 댓글 -->
 		<div class="comment-header">
-			<p>💬 댓글 [<%=totalCommentCount %>]</p>
+			<p>💬 댓글 [<span><%=totalCommentCount %></span>]</p>
 		</div>
 		<div class="comments-section">
 <%

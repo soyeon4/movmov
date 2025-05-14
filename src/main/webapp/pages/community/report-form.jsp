@@ -99,7 +99,6 @@
 			<button type="button" class="return-btn">돌아가기</button>
 		</form>
 	</div>
-</body>
 	<!-- 푸터 -->
 	<%@ include file="../common/footer.jsp"%>
 	
@@ -120,5 +119,5 @@
 			}
 		});
 	</script>
-	
+</body>
 </html>
