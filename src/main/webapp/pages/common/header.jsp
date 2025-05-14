@@ -24,7 +24,7 @@
 			<li><a href="/movmov/index.jsp">홈</a></li>
 			<li><a href="/movmov/pages/movie/movie-list.jsp">영화</a></li>
 			<li><a href="/movmov/pages/community/community-main.jsp">커뮤니티</a></li>
-			<li><a href="/movmov/pages/commerce/shopmain.jsp">Mov Commerce</a></li>
+			<li><a href="/movmov/pages/shop/shop-main.jsp">Mov Commerce</a></li>
 		</ul>
 	</nav>
 <%
@@ -47,7 +47,7 @@
 		<a href="/movmov/pages/mypage/page.jsp">
 			<button type="button" class="btn-signin"><%=loginUser.getNickname() %></button>
 		</a>
-		<a href="">
+		<a href="/movmov/pages/shop/shop-cart.jsp">
 			<button type="button" class="btn-cart">장바구니</button>
 		</a>
 		<a href="/movmov/pages/mypage/logout.jsp">
@@ -76,47 +76,6 @@
 	}
 %>
 </header>
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-	<script type="text/javascript">
-		$("#btn-header-login").click(function() {
-			$(".modal-background").fadeIn();
-		});
-		$(".modal-close").click(function() {
-			$(".modal-background").fadeOut();
-		});
-
-		$(window).click(function(e) {
-			if ($(e.target).is(".modal-background")) {
-				$(".modal-background").fadeOut();
-			}
-		});
-		
-		$("#login-form").on("submit", function(e) {
-	        e.preventDefault(); // prevent form from submitting normally
-
-	        // 로그인 성공 후 페이지 리로드를 했을 때
-	        // get 방식으로 전달된 쿼리스트링은 보존되지만
-	        // post 방식으로 전달된 값은 저장되지 않음.
-	        $.ajax({
-	            url: "/movmov/pages/mypage/login-ajax.jsp",
-	            method: "POST",
-	            data: $(this).serialize(), // 폼 입력값을 json 형식으로 변환
-	            dataType: "json",	// ajax-login.jsp의 응답이 json 형식임
-	            success: function(response) {
-	                if (response.success) {
-	                    // 로그인 성공
-	                    if (window.location.pathname === "/login.jsp" || window.location.pathname === "/") {
-	                        window.location.href = "index.jsp";
-	                    } else if (response.redirectUrl != "null") {
-	                    	window.location.href = response.redirectUrl;
-	                    } else {
-	                    	location.reload(); // 현재 페이지 리로드
-	                    }
-	                } else {
-	                	window.location.href = response.redirectUrl;
-	                }
-	            }
-	        });
-	    });
-	</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/movmov/resources/script/common/header-login.js"></script>
 	

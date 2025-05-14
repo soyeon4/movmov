@@ -1,3 +1,8 @@
+<%@page import="kr.co.movmov.vo.WishMovie"%>
+<%@page import="kr.co.movmov.mapper.WishMovieMapper"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.movmov.mapper.ReviewMapper"%>
+<%@page import="kr.co.movmov.vo.Review"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
@@ -5,7 +10,15 @@
 
 <%
     User user = (User) session.getAttribute("LOGIN_USER");
+	String userId = user.getId();	
+
+	ReviewMapper reviewMapper = MybatisUtils.getMapper(ReviewMapper.class);
+	WishMovieMapper whisMovieMapper = MybatisUtils.getMapper(WishMovieMapper.class);
+	
+	List<WishMovie> wishMovies = whisMovieMapper.getWishMoviesbyUserId(userId);
+	List<Review> reviews = reviewMapper.getReviewsByUserId(userId);
 %>
+	
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -47,8 +60,12 @@
         <h2><%=user.getName() %></h2>
         <p class="bio"><%=user.getEmail() %></p>
         <div class="stats">
-          <a href="reviews-ratings.jsp">총 리뷰 10</a>
-          <a href="wishlist.jsp">찜한 작품 8</a>
+<%
+			int totalReviewCount = reviews.size();
+			int totalWishMovieCount = wishMovies.size(); 
+%>
+        <a href="reviews-ratings.jsp">총 리뷰 <%=totalReviewCount %></a>
+          <a href="wishlist.jsp">찜한 작품<%=totalWishMovieCount %></a>
         </div>
       </div>
       <a href="settings.jsp" class="settings-btn" title="설정">⚙</a>
@@ -61,16 +78,39 @@
         <div>
           <h4>최근 리뷰</h4>
           <ul>
-            <li><a href="#">🎬 [영화제목1] - 너무 재밌었어요!</a></li>
-            <li><a href="#">🎬 [영화제목2] - 별로였어요...</a></li>
+<%
+
+	int reviewcount = 0;
+	for (Review review : reviews) {
+		if (reviewcount <= 4) {
+%>      
+            <li><a href="#">🎬 [<%=review.getMovie().getTitle() %>] - <%=review.getComment() %></a></li>
+<%
+		reviewcount++;
+		}
+	}
+%>        
           </ul>
           <a href="reviews-ratings.jsp" class="more">더보기</a>
         </div>
         <div>
-          <h4>최근 찜한 작품</h4>
+          <h4>찜한 작품</h4>
           <ul>
-            <li><a href="#">📌 영화제목3</a></li>
-            <li><a href="#">📌 영화제목4</a></li>
+<%	
+
+	int wishMoviecount = 0;
+	for (WishMovie wishMovie : wishMovies) {
+		if (wishMoviecount <= 4) {
+%>          
+            <li><a href="#">📌 <%=wishMovie.getMovie().getTitle() %></a></li>
+<%
+		System.out.println("wishMovie.getMovie().getTitle(): " + wishMovie.getMovie().getTitle());
+		wishMoviecount++;
+		}
+	}
+		
+		
+%>            
           </ul>
           <a href="wishlist.jsp" class="more">더보기</a>
         </div>
@@ -93,7 +133,7 @@
       </a>
       <a href="wishlist.jsp" class="link-card">
         <h4>찜한 작품</h4>
-        <p>보관한 콘텐츠 목록</p>
+        <p>보관한 작품</p>
       </a>
     </div>
   </section>

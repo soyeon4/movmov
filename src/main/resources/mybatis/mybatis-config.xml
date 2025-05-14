@@ -18,12 +18,10 @@
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
-
 				<property name="driver" value="${driver}" />
 	            <property name="url" value="${url}" />
 	            <property name="username" value="${username}" />
 	            <property name="password" value="${password}" />
-
 			</dataSource>
 		</environment>
 	</environments>
@@ -32,7 +30,10 @@
 	<mappers>
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
 		<mapper resource="mybatis/mappers/CommentMapper.xml" />
+		<mapper resource="mybatis/mappers/ReportMapper.xml" />
 		<mapper resource="mybatis/mappers/CategoryMapper.xml" />
+		<mapper resource="mybatis/mappers/ShopItemMapper.xml"/>
+		<mapper resource="mybatis/mappers/ShopCartItemMapper.xml"/>
 		<mapper resource="mybatis/mappers/UserMapper.xml" />
 		<mapper resource="mybatis/mappers/MovieMapper.xml" />
 		<mapper resource="mybatis/mappers/GenreMapper.xml" />
@@ -40,7 +41,9 @@
 		<mapper resource="mybatis/mappers/ReviewMapper.xml" />
 		<mapper resource="mybatis/mappers/ReviewLikeMapper.xml" />
 		<mapper resource="mybatis/mappers/WishMovieMapper.xml" />
-		<mapper resource="mybatis/mappers/ShopItemMapper.xml" />
+		<mapper resource="mybatis/mappers/CsInquiryMapper.xml" />
+		<mapper resource="mybatis/mappers/CsPostMapper.xml" />
+		<mapper resource="mybatis/mappers/FaqMapper.xml" />
 
 	</mappers>
 </configuration>

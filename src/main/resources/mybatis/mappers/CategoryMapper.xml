@@ -63,7 +63,18 @@
 		order by cat_id asc
 	</select>
 	
-	
+	<!--
+		List<Category> getAllReportHeaders();
+	-->
+	<select id="getAllReportHeaders">
+		select
+			cat_id		as id
+		  , cat_name	as name
+		from movmov_content_categories
+		where
+			cat_type in '신고사유'
+		order by cat_id asc
+	</select>
 	
 </mapper>
  

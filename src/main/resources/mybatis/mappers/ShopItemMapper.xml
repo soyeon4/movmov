@@ -5,12 +5,28 @@
  
 <mapper namespace="kr.co.movmov.mapper.ShopItemMapper">
 
+
 	<!--
-		ShopItem getShopItemById(int id);
+		List<ShopItemOption> getOptionsByItemNo(int itemNo);
 	-->
-	<select id="getShopItemById" resultType="ShopItem">
+	<select id="getOptionsByItemNo">
 		select
-			i.item_id as id, 
+			option_no as optionNo, 
+			option_name as optionName, 
+			item_stock as stock, 
+			item_no as itemNo
+		from 
+			movmov_shop_item_options
+		where 
+			item_no = #{itemNo}
+	</select>
+
+	<!--
+		ShopItem getShopItemByItemNo(int itemNo);
+	-->
+	<select id="getShopItemByItemNo" resultType="ShopItem">
+		select
+			i.item_no as no, 
 			i.item_name as name,
 			i.item_component as component, 
 			i.item_description as description, 
@@ -32,37 +48,32 @@
 		where 
 			i.category_no = c.category_no
 			and i.seller_id = s.seller_id
-			and i.item_id = #{id}
+			and i.item_no = #{itemNo}
 	</select>
 	
 	<!--
-		List<ShopItem> getShopItemByCategoryNo(int no);
+		List<ShopItem> getShopItemByCategoryNo(int categoryNo);
 	-->
 	<select id="getShopItemByCategoryNo" resultType="ShopItem">
 		select
-			i.item_id as id, 
+			i.item_no as no, 
 			i.item_name as name,
-			i.item_component as component, 
-			i.item_description as description, 
 			i.item_price as price, 
 			i.item_discount_rate as discountRate, 
-			i.item_stock as stock, 
 			i.item_sold_out as soldOut, 
 			i.item_image_path as imagePath, 
 			i.item_created_date as createdDate,  
 			i.item_updated_date as updatedDate,  
 			c.category_no as "category.no", 
-			c.category_name as "category.name", 
-			s.seller_id as "seller.id", 
-			s.seller_name as "seller.name", 
-			i.item_has_option as hasOption, 
-			i.image_count as imageCount
+			c.category_name as "category.name"
+<!-- 		s.seller_id as "seller.id", -->
+<!--		s.seller_name as "seller.name", -->
 		from 
-			movmov_shop_items i, movmov_shop_item_categories c, movmov_shop_item_sellers s
+			movmov_shop_items i, movmov_shop_item_categories c <!-- , movmov_shop_item_sellers s -->
 		where 
 			i.category_no = c.category_no
-			and i.seller_id = s.seller_id
-			and to_char(i.category_no) like #{no} || '%'
+<!--		and i.seller_id = s.seller_id -->
+			and to_char(i.category_no) like #{categoryNo} || '%'
 	</select>
 	
 </mapper>

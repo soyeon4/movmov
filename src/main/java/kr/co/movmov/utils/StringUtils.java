@@ -2,6 +2,8 @@ package kr.co.movmov.utils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class StringUtils {
@@ -10,6 +12,7 @@ public class StringUtils {
 	private static SimpleDateFormat detailDateFormat = new SimpleDateFormat("yyyy년 M월 d일 a h시 m분 s초");
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private static SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private static SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
 	
 	/**
 	 * 값을 전달받아서, 해당 값이 null이면 defaultValue를 반환한다.
@@ -71,6 +74,26 @@ public class StringUtils {
 			return "";
 		}
 		return simpleDateTimeFormat.format(date);
+	}
+	
+	/**
+	 * 날짜를 전달받아서
+	 * "00:00" 24시간 형식의 문자열을 반환한다.
+	 * @param date 날짜
+	 * @return "00:00" 형식의 문자열
+	 */
+	public static String simpleTimeFormat(Date date) {
+		if (date == null) {
+			return "";
+		}
+		return simpleTimeFormat.format(date);
+	}
+	
+	public static boolean isSameDay(Date date) {
+		Date currentDate = new Date();
+		LocalDate localDate1 = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate localCurrentDate = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		return localDate1.equals(localCurrentDate);
 	}
 	
 	/**

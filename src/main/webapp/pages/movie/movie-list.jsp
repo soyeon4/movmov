@@ -76,6 +76,7 @@
   <link rel="stylesheet"
    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="../../resources/style/common/main.css">
+  <link rel="icon" href="resources/images/common/favicon.ico">
 </head>
 <body>
    <%@ include file="../common/header.jsp" %>

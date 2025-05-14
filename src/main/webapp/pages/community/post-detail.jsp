@@ -1,3 +1,6 @@
+<%@page import="kr.co.movmov.vo.CommentArranger"%>
+<%@page import="kr.co.movmov.utils.Pagination"%>
+<%@page import="com.google.gson.Gson"%>
 <%@page import="kr.co.movmov.vo.Comment"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.mapper.CommentMapper"%>
@@ -11,22 +14,54 @@
 	/*
 		요청 URL
 			/pages/community/post-detail.jsp?pno=xxx
+			/pages/community/post-detail.jsp?pno=xxx&pg=xxx
 		
 			name		value
 			----------------
 			pno			게시글 번호
+			pg			댓글 페이지 번호
 	*/
 
 	int postNo = StringUtils.strToInt(request.getParameter("pno"));
-	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
-	Post post = postMapper.getPostById(postNo);
-	post.setViewCount(post.getViewCount() + 1);
-	postMapper.updatePost(post);
-	post = postMapper.getPostById(postNo);
-	
-	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
-	List<Comment> postComments = commentMapper.getCommentsByPostNo(postNo);
+	int pageNo = StringUtils.strToInt(request.getParameter("pg"), 1);
 
+	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
+	postMapper.updatePostViewCount(postNo);
+	Post post = postMapper.getPostByNo(postNo);
+	
+	User loginedUser = (User) session.getAttribute("LOGIN_USER");
+	boolean isLoggedIn = loginedUser != null;
+	String userId = "";
+	String userNickname = "";
+	if (isLoggedIn) {
+		userId = loginedUser.getId();
+		userNickname = loginedUser.getNickname();
+	}
+	
+	// 추천 목록 불러오기
+	List<String> upvoteIds = postMapper.getUpvoteIds(postNo);
+	Gson gson = new Gson();
+	String upvoteJson = gson.toJson(upvoteIds);
+	
+	// 댓글 불러오기
+	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
+	List<Comment> allPostComments = commentMapper.getCommentsByPostNo(postNo);
+	CommentArranger commentArranger = new CommentArranger();
+	
+	// 댓글 페이지네이션
+	List<List<Comment>> commentPages = commentArranger.paginateComments(allPostComments, 5);
+	int totalPages = commentPages.size();
+	int pagesPerBlock = 5;
+	List<Comment> currentPageComments = commentPages.get(pageNo - 1);
+	int totalCommentCount = commentArranger.getTotalCommentCount();
+	
+	// 게시글 댓글 개수 업데이트
+	postMapper.setPostCommentCount(postNo, totalCommentCount);
+	
+	// 하단 게시글 목록
+	int boardId = post.getBoardType().getId();
+	List<Post> recentPosts = postMapper.getRecentPostsByBoardId(boardId);
+	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -38,15 +73,25 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet" href="../../resources/style/community/post-detail.css">
 </head>
 <body>
+	
 	<!-- 헤더 -->
 	<%@ include file="../common/header.jsp"%>
-      
+	
+	<!-- 로그인 요구 팝업 -->
+	<dialog id="login-warning-dialog" closedby="any">
+		<form method="dialog">
+			<p>해당 기능을 사용하려면 로그인해야 합니다.</p>
+			<menu>
+				<button type="button" id="btn-login-trigger">로그인</button>
+				<button type="button" id="btn-close-warning" class="button-return">돌아가기</button>
+			</menu>
+		</form>
+	</dialog>
+	
 	<div class="container">
     <!-- 🔷 게시판 이름 -->
 <%
@@ -100,78 +145,117 @@
 			<div class="post-content"><%=post.getContent() %></div>
 			<hr class="divider">
 			<!-- ❤️ 추천 버튼 -->
-			<div class="recommend-button">
-				<button class="btn-recommend">
-					<span class="recommend-icon">♡</span>추천 0
+			<div class="upvote-button">
+				<button type="button" class="btn-upvote">
+					<span class="upvote-icon"><%=(upvoteIds.contains(userId) ? "❤" : "♡" ) %></span>
+					<span>추천</span><span id="upvote-cnt"><%=post.getUpvoteCount() %></span>
 				</button>
 			</div>
 		</div>
 		<div class="post-options">
-			<a href="">수정</a>
-			<a href="">삭제</a>
-			<a href="report-form.html" class="report-button">신고하기</a>
+<%
+	if (post.getUser().getId().equals(userId)) {
+%>
+			<a href="post-form-edit.jsp?pno=<%=post.getNo() %>">수정</a>
+			<a href="delete-post.jsp?pno=<%=post.getNo() %>"
+				onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+<%
+	}
+%>
+			<a href="report-form.jsp?pno=<%=post.getNo() %>" class="report-button post">신고하기</a>
 		</div>
 
 		<!-- 💬 댓글 -->
+		<div class="comment-header">
+			<p>💬 댓글 [<%=totalCommentCount %>]</p>
+		</div>
 		<div class="comments-section">
-			<div class="comment-header">
-				<p>💬 댓글 [<%=post.getCommentCount() %>]</p>
-			</div>
 <%
-	for (Comment comment : postComments) {
+	for (Comment comment : currentPageComments) {
+		request.setAttribute("comment", comment);
+		request.setAttribute("level", 0);
 %>
-			<div class="comment-block">
-				<div class="comment-author">
-					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
-					<span class="author-name"><%=comment.getUser().getNickname() %></span>
-					<div class="meta"><%=StringUtils.detailDate(comment.getCreatedDate()) %></div>
-				</div>
-				<div class="content"><%=comment.getContent() %></div>
+			<jsp:include page="commentBlock.jsp" />
+<%
+	}
+%>
+<%
+	if (!allPostComments.isEmpty()) {
+%>
+			<div class="pagination">
+				<button type="button" id="btn-page-first">&laquo;</button>
+<%
+		int blockFirst = Math.max(Math.min(totalPages - 4, pageNo - 2), 1);
+		int blockLast = Math.min(Math.max(pagesPerBlock, pageNo + 2), totalPages);
+		for (int i = blockFirst; i < blockLast + 1; i++) {
+%>
+				<button type="button"
+					class="btn-page-no<%=(i == pageNo ? " active" : "") %>"><%=i %></button>
+<%
+		}
+%>
+				<button type="button" id="btn-page-last">&raquo;</button>
 			</div>
 <%
 	}
 %>
-			<div class="pagination">
-				<button>&laquo;</button>
-				<button class="active">1</button>
-				<button>2</button>
-				<button>3</button>
-				<button>4</button>
-				<button>5</button>
-				<button>&raquo;</button>
-			</div>
-			<div class="comment-form">
+			<div class="comment-form create">
 				<h4>댓글 작성</h4>
-				<form action="create-comment.jsp" method="post">
-					<input type="hidden" name="postNo" value="<%=post.getNo() %>" />
+<%
+	if (isLoggedIn) {
+%>
+				<div class="comment-author">
+					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
+					<span class="author-name"><%=loginedUser.getNickname() %></span>
+				</div>
+<%
+	}
+%>
+				<form action="create-comment.jsp" method="post" id="create-comment">
+					<input type="hidden" name="postNo" value="<%=postNo %>" />
+					<input type="hidden" name="pg" value="<%=pageNo %>" />
 					<textarea name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
-					<button type="submit">등록</button>
+					<button type="submit" class="btn-create-comment">등록</button>
 				</form>
 			</div>
 		</div>
 
 		<!-- 📃 하단 관련 게시글 목록 -->
 		<div class="related-posts">
-			<h3>📋 영화게시판 다른 글</h3>
-			<div class="post-preview">
-				<div class="title">[잡담] 오늘 본 영화 공유해요</div>
-				<div class="author">cinemania</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[리뷰] 범죄도시3 개봉 후기</div>
-				<div class="author">영화왕</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[정보] 넷플릭스 신작 추천 목록</div>
-				<div class="author">스트리머</div>
-			</div>
+			<a class="no-deco" href="community-forum.jsp?bid=<%=boardId %>">
+				<h3>📋 <%=(boardId == 300 ? "영화" : "자유") %>게시판 다른 글</h3>
+			</a>
+<%
+	for (Post recentPost : recentPosts) {
+%>
+			<a href="post-detail.jsp?pno=<%=recentPost.getNo() %>" class="no-deco">
+				<div class="post-preview">
+					<div class="title">
+						<span class="spoiler"><%=("Y".equals(recentPost.getIsSpoiler()) ? "[스포일러]" : "") %></span>
+						<span class="header"><%=recentPost.getHeader().getName() %></span>
+						<span><%=recentPost.getTitle() %></span>
+					</div>
+					<div class="author"><%=recentPost.getUser().getNickname() %></div>
+				</div>
+			</a>
+<%
+	}
+%>
 		</div>
 	</div>
-</body>
 
 	<!-- 푸터 -->
 	<%@ include file="../common/footer.jsp"%>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
+		let isLoggedIn = <%=isLoggedIn %>;
+		let userId = "<%=userId %>";
+		let postUserId = "<%=post.getUser().getId() %>";
+		let upvoteIdList = JSON.parse('<%=upvoteJson %>');
+		let postNo = <%=postNo %>;
+		let totalPages = <%=totalPages %>;
+		let userNickname = "<%=userNickname %>";
 	</script>
+	<script src="/movmov/resources/script/community/post-detail.js"></script>
+</body>
 </html>

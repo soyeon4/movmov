@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	/*
+/*
 		요청 파라미터
-			- redirectUrl (null 가능)
-				- null 일 경우 request.getRequestURI() 로 응답 전송
+	- redirectUrl (null 가능)
+		- null 일 경우 request.getRequestURI() 로 응답 전송
 	*/
 	String redirectUrl = request.getParameter("redirectUrl");
 %>

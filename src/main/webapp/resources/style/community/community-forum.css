@@ -15,10 +15,26 @@
 	margin-bottom: 20px;
 }
 
+.board-header a {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.board-header a:hover {
+	color: #e93d7c;
+}
+
 .board-title {
 	font-size: 24px;
 	font-weight: bold;
 	color: #FF498D;
+}
+
+.search-term {
+    margin-left: auto;
+    font-size: smaller;
+    border-radius: 8px;
+    padding: 8px 20px;
 }
 
 .search-bar {
@@ -43,6 +59,10 @@
 	border-radius: 8px;
 	cursor: pointer;
 	font-weight: bold;
+}
+
+.search-bar button:hover {
+	background-color: #e93d7c;
 }
 
 .board-table {
@@ -93,20 +113,22 @@
 }
 
 .board-table a {
+	display: contents;
 	text-decoration: none;
 	color: inherit;
 }
 
 .write-btn {
-	margin-top: 20px;
-	float: right;
-	background-color: #FF498D;
-	color: white;
-	border: none;
-	padding: 10px 20px;
-	border-radius: 8px;
-	font-weight: bold;
-	cursor: pointer;
+    margin-top: 20px;
+    display: flex;
+    margin-left: auto;
+    background-color: #FF498D;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .write-btn:hover {
@@ -114,7 +136,7 @@
 }
 
 .pagination {
-	margin-top: 40px;
+	margin-top: 1em;
 	text-align: center;
 }
 

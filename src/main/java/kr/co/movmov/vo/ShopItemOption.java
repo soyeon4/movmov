@@ -8,11 +8,11 @@ import lombok.Data;
 @Alias("ShopItemOption")
 public class ShopItemOption {
 
-	private int optionId;
+	private int optionNo;
 	private String optionName;
 	private int stock;
 	
-	private int itemId;
+	private int itemNo;
 	private ShopItem item;
 	
 }

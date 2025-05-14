@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.mapper.PostMapper"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
@@ -19,7 +20,7 @@
 				content		내용
 				spoiler		스포일러 여부
 				header		머리말 아이디
-				boardType	게시판 아이디
+				boardId		게시판 아이디
 				
 		게시글 등록 절차
 		1. 요청 파라미터값을 조회한다.
@@ -35,11 +36,11 @@
 	String content = request.getParameter("content");
 	String spoiler = request.getParameter("spoiler");
 	int headerId = StringUtils.strToInt(request.getParameter("header"));
-	int boardTypeId = StringUtils.strToInt(request.getParameter("boardType"));
+	int boardId = StringUtils.strToInt(request.getParameter("boardId"));
 	
 	CategoryMapper categoryMapper = MybatisUtils.getMapper(CategoryMapper.class);
 	Category header = categoryMapper.getCategoryFromId(headerId);
-	Category boardType = categoryMapper.getCategoryFromId(boardTypeId);
+	Category boardType = categoryMapper.getCategoryFromId(boardId);
 
 	Post post = new Post();
 	post.setHeader(header);
@@ -48,6 +49,9 @@
 	post.setContent(content);
 	post.setIsSpoiler(spoiler);
 	post.setUser(loginUser);
+	Date currentTime = new Date();
+	post.setCreatedDate(currentTime);
+	post.setUpdatedDate(currentTime);
 	
 	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	postMapper.insertPost(post);

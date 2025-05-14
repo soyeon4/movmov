@@ -13,6 +13,8 @@ public interface ReviewMapper {
 
 	List<Review> getReviewsByMovieNo(int movieNo);
 	
+	List<Review> getReviewsByUserIdSort(Map<String, Object> condition);
+	
 	Review getReviewByUserIdAndMovieNo(@Param("userId") String userId, @Param("movieNo") int movieNo);
 	
 	Review getReviewByReviewNo(int reviewNo);
@@ -28,4 +30,7 @@ public interface ReviewMapper {
 	int getTotalRows(Map<String, Object> condition);
 	
 	List<Review> getReviews(Map<String, Object> condition);
+
+	int getTotalReviewRowsByUserId(String userId);
+	
 }

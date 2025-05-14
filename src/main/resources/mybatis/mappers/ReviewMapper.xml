@@ -4,6 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="kr.co.movmov.mapper.ReviewMapper">
+
 	<!-- 
 		List<Review> getReviewsByUserId(String userId);
 	 -->
@@ -188,4 +189,51 @@
 	 	where 
 	 		review_no = #{no}
 	</update>
+
+   <select id="getReviewsByUserIdSort" resultType="Review">
+      select 
+         r.review_no as no
+         , r.review_star as star
+         , r.review_comment as "comment"
+         , r.review_created_date as createdDate
+         , r.review_updated_date as updatedDate
+         , u.user_id as "user.id"
+         , r.movie_no as "movie.no"
+         , m.movie_title as "movie.title"
+         , m.movie_poster_image_path as "movie.posterImagePath"
+         , r.review_open_status as openStatus
+      from 
+    	movmov_movie_reviews r
+    	join movmov_users u on r.user_id = u.user_id
+    	join movmov_movies m on r.movie_no = m.movie_no
+      where 
+         u.user_id = #{userId}
+         and r.user_id = u.user_id
+         <if test="userId != null">
+         	and u.user_id = #{userId}
+         </if>
+		<choose>
+	 	 <when test="sort == 'latest'">
+			order by r.review_created_date desc
+		 </when>
+		 <when test="sort == 'rating'">
+		 	order by r.review_star desc
+		 </when>
+		 <when test="sort == 'title'">
+		 	order by m.movie_title desc
+		 </when>
+	    </choose>
+	    OFFSET #{offset} ROWS
+		FETCH NEXT #{limit} ROWS ONLY
+   </select> 
+    
+    <!-- 
+    	getTotalReviewRowsByUserId
+     -->
+    <select id="getTotalReviewRowsByUserId" parameterType="String" resultType="int">
+    	select count(*)
+    	from movmov_movie_reviews
+    	where user_id = #{userId}
+    </select>
+    
 </mapper>

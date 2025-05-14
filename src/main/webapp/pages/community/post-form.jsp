@@ -11,17 +11,17 @@
 	/*
 		요청 정보
 			- 요청 URL
-				/pages/community/post-form.jsp?boardType=xxx
+				/pages/community/post-form.jsp?bid=xxx
 			- 요청 파라미터
 				name		value
 				--------------------
-				boardType	300
+				bid			300
 							301
 		게시글 작성 폼 설정
-			1. boardType 값에 따라 기본 선택된 게시판을 설정하고 해당 말머리를 불러온다.
+			1. bid 값에 따라 기본 선택된 게시판을 설정하고 해당 말머리를 불러온다.
 	*/
 	
-	int boardType = StringUtils.strToInt(request.getParameter("boardType"));
+	int boardId = StringUtils.strToInt(request.getParameter("bid"));
 	CategoryMapper catMapper = MybatisUtils.getMapper(CategoryMapper.class);
 	List<Category> movieHeaders = catMapper.getCategoriesByType("영화게시글");
 	List<Category> freeHeaders = catMapper.getCategoriesByType("자유게시글");
@@ -41,8 +41,6 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet" href="../../resources/style/community/post-form.css">
 </head>
@@ -54,9 +52,9 @@
 		<form id="form-create-post" method="post" action="create-post.jsp">
 			<!-- 🔷 게시판 이름 -->
 			<div class="board-tab-container">
-				<div class="board-label" board-type="300">🎬 영화게시판</div>
-				<div class="board-label" board-type="301">🎬 자유게시판</div>
-				<input type="hidden" name="boardType" id="board-type-id" value="<%=boardType %>">
+				<div class="board-label" board-id="300">🎬 영화게시판</div>
+				<div class="board-label" board-id="301">🎬 자유게시판</div>
+				<input type="hidden" name="boardId" id="board-type-id" value="<%=boardId %>">
 			</div>
 
 			<!-- ✍️ 글쓰기 폼 -->
@@ -87,7 +85,7 @@
 					<input type="hidden" name="header" id="header-select">
 					<div class="header-toggle-group" id="post-headers">
 <%
-	for (Category header : (boardType == 300 ? movieHeaders : freeHeaders)) {
+	for (Category header : (boardId == 300 ? movieHeaders : freeHeaders)) {
 %>
 						<button type="button" class="tag-toggle header"
 							data-value="<%=header.getId()%>"><%=header.getName()%></button>
@@ -113,141 +111,24 @@
 						<div class="input-tooltip" id="content-tooltip">내용은 10 글자 이상이어야 합니다.</div>
 					</div>
 					<textarea name="content" placeholder="내용을 입력하세요"></textarea>
+					<div class="buttons-section">
+						<button type="submit" class="submit-btn">등록하기</button>
+						<button type="button" class="return-btn button-return">돌아가기</button>
+					</div>
 				</div>
-				<button type="submit" class="submit-btn">등록하기</button>
 			</div>
 		</form>
-
-		<!-- 📃 하단 관련 게시글 목록 -->
-		<div class="related-posts">
-			<h3>📋 영화게시판 다른 글</h3>
-			<div class="post-preview">
-				<div class="title">[후기] 전공의생활 2화</div>
-				<div class="author">무비러버</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[잡담] 오늘 뭐 봄?</div>
-				<div class="author">영화덕후</div>
-			</div>
-			<div class="post-preview">
-				<div class="title">[공지] 이번 주 굿즈 할인</div>
-				<div class="author">관리자</div>
-			</div>
-		</div>
 	</section>
-</body>
 
 	<!-- 푸터 -->
 	<%@ include file="../common/footer.jsp"%>
 	
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript">
-		function handleToggleClick(parentSelector, childSelector, attributeName, targetInputId) {
-		    $(parentSelector).on("click", childSelector, function() {
-		        $(parentSelector + " " + childSelector).removeClass("active");
-		        $(this).addClass("active");
-		        
-		        // 미선택 툴팁이 표시되고 있는지 확인하고 삭제하기
-		        let $currentTooltip = $(this).closest(".header-toggle-group")
-		            .prevAll(".tooltip-group")
-		            .find(".input-tooltip");
-		        $currentTooltip.removeClass("show");
-		        
-		        let selectedValue = $(this).attr(attributeName);
-		        $("#" + targetInputId).val(selectedValue);
-		    });
-		}
-		
-		// '글쓰기'를 클릭했던 게시판을 하이라이트한다.
-		let boardType = <%=boardType %>;
-		if (boardType) {
-		    $(".board-label[board-type=" + boardType + "]").addClass("active");
-		};
-		
-		$(".board-label").click(function() {
-			let boardType = $(this).attr("board-type");
-			let headers = (boardType == "300" ? <%=movieHeadersJson %> : <%=freeHeadersJson %>);
-			// 스포일러가 선택되어 있다면 해제
-			$(".tag-toggle.spoiler").removeClass("active");
-			$("#post-headers").empty();
-
-			headers.forEach(function(header) {
-				let button = $('<button>')
-			      .addClass('tag-toggle header')
-			      .attr('type', 'button')
-			      .attr('data-value', header.id)
-			      .text(header.name);
-
-			    $("#post-headers").append(button);
-			});
-		});
-		
-		handleToggleClick(".form-container", ".board-label", "board-type", "board-type-id");
-		handleToggleClick(".header-toggle-group", ".tag-toggle.spoiler", "data-value", "contains-spoiler");
-		handleToggleClick(".header-toggle-group", ".tag-toggle.header", "data-value", "header-select");
-		
-		let titleRegex = /^[0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{2,}$/
-		let contentRegex = /^[\.0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]{10,}$/
-		let titleCheckPassed = false;
-		let contentCheckPassed = false;
-		
-		$("#form-create-post").submit(function() {
-			if ($("input[name=title]").val() == "") {
-				alert("제목은 필수입력값입니다.");
-				$("input[name=title]").focus();
-				return false;
-			}
-			if (!titleCheckPassed) {
-				alert("제목은 두 글자 이상이어야 합니다.");
-				$("input[name=title]").focus();
-				return false;
-			}
-			if ($("input[name=content]").val() == "") {
-				alert("내용은 10글자 이상이어야 합니다.");
-				$("textarea[name=content]").focus();
-				return false;
-			}
-			if (!contentCheckPassed) {
-				alert("내용은 10글자 이상이어야 합니다.");
-				$("textarea[name=content]").focus();
-				return false;
-			}
-			if ($(".tag-toggle.spoiler.active").length == 0) {
-				alert("스포일러 포함 여부를 반드시 표시하셔야 합니다.");
-				$("#spoiler-tooltip").focus();
-				$("#spoiler-tooltip").addClass("show");
-				return false;
-			}
-			if ($(".tag-toggle.header.active").length == 0) {
-				alert("말머리를 반드시 표시하셔야 합니다.");
-				$("#header-tooltip").focus();
-				$("#header-tooltip").addClass("show");
-				return false;
-			}
-			return true;
-		});
-		
-		$("input[name=title]").keyup(function() {
-			let title = $("input[name=title]").val().trim();
-			
-			if (!titleRegex.test(title)) {
-				$("#title-tooltip").addClass("show");
-			} else {
-				$("#title-tooltip").removeClass("show")
-				titleCheckPassed = true;
-			};
-		});
-		
-		$("textarea[name=content]").keyup(function() {
-			let content = $("textarea[name=content]").val().trim();
-			
-			if (!contentRegex.test(content)) {
-				$("#content-tooltip").addClass("show");
-			} else {
-				$("#content-tooltip").removeClass("show")
-				contentCheckPassed = true;
-			};
-		});
-		
+		let boardId = <%=boardId %>;
+		let movieHeaders = JSON.parse('<%=movieHeadersJson %>');
+		let freeHeaders = JSON.parse('<%=freeHeadersJson %>');
 	</script>
+	<script src="/movmov/resources/script/community/post-form.js"></script>
+</body>
 </html>
