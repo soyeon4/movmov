@@ -471,3 +471,9 @@ select.input-login {
 .btn-login-submit:hover {
 	background-color: #e53c7e;
 }
+
+.tooltip-error {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: red;
+}
