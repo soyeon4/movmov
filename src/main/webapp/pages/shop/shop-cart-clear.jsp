@@ -7,11 +7,6 @@
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	String userId = loginedUser.getId();
 	
-	if (loginedUser == null) {
-		response.sendRedirect("../mypage/modal-login.jsp");
-		return;
-	}
-	
 	ShopCartItemMapper cartMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
 	
 	cartMapper.deleteCartItemByUserId(userId);

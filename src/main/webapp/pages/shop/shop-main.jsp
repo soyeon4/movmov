@@ -22,18 +22,7 @@ ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	href="../style/shopmain.css" rel="stylesheet" />
 <link rel="icon" href="resources/images/common/favicon.ico">
-<script>
-	function handleWishlist() {
-		if (confirm('찜한 상품으로 이동하시겠습니까?')) {
-			window.location.href = 'wishlist.html';
-		}
-	}
-	function handleCart() {
-		if (confirm('장바구니로 이동하시겠습니까?')) {
-			window.location.href = 'cart.html';
-		}
-	}
-</script>
+
 </head>
 <body>
 	<!-- 네비게이션 바 -->
@@ -78,11 +67,9 @@ ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 						<div class="image-wrapper">
 							<a href="shop-detail.jsp?no=<%=item.getNo() %>"><img
 								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
-							<div class="hover-actions">
-								<button class="wishlist" onclick="handleWishlist()">❤️
-									찜</button>
+							<!--<div class="hover-actions">
 								<button class="cart" onclick="handleCart()">🛒 장바구니</button>
-							</div>
+							</div>-->
 						</div>
 						<h4><%=item.getName()%></h4>
 						<p>
@@ -101,5 +88,13 @@ ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 
 	<!-- 푸터 -->
 	<%@ include file="/pages/common/footer.jsp"%>
+	
+	<script>
+		<!--function handleCart() {
+			if (confirm('장바구니로 이동하시겠습니까?')) {
+				window.location.href = 'cart.html';
+			}
+		}-->
+	</script>
 </body>
 </html>

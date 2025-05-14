@@ -6,15 +6,6 @@
 	gap: 40px;
 }
 
-.detail-image {
-	flex: 1;
-}
-
-.detail-image img {
-	width: 90%; /* ✅ 이미지 크기 줄이기 */
-	border-radius: 8px;
-}
-
 .detail-info {
 	flex: 1;
 }

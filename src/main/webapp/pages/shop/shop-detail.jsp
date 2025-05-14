@@ -26,7 +26,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1" />
 <title>상품 상세 페이지</title>
 <link rel="stylesheet" href="/movmov/resources/style/common/main.css" />
 <link rel="stylesheet" href="/movmov/resources/style/shop/detail-shop.css" />
@@ -36,6 +36,29 @@
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet" />
 <link rel="icon" href="resources/images/common/favicon.ico">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+	.swiper {
+      width: 100%;
+      height: 400px;
+}
+
+.swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+}
+
+.swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+}
+</style>
 </head>
 <body>
 	<!-- header -->
@@ -43,9 +66,30 @@
 	<main>
 		<!-- ✅ 상단 메뉴 추가 -->
 		<%@ include file="shop-nav.jsp" %>
+		
 		<div class="detail-container">
-			<div class="detail-image">
-				<img src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" />
+			<div class="swiper mySwiper">
+			    <div class="swiper-wrapper">
+			    <div class="swiper-slide"><img src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></div>
+ 
+<%
+	String baseImageName = item.getImagePath();
+	String prefix = baseImageName.substring(0, baseImageName.lastIndexOf("."));
+	String ext = baseImageName.substring(baseImageName.lastIndexOf("."));
+
+	for (int i = 2; i <= item.getImageCount(); i++) {
+		String imageFileName = prefix + i + ext;
+%>
+				<div class="swiper-slide">
+					<img src="/movmov/resources/images/shop/<%=imageFileName %>" alt="<%=imageFileName %>" />
+				</div>
+<%
+	}
+%>
+			    </div>
+			    <div class="swiper-button-next"></div>
+			    <div class="swiper-button-prev"></div>
+			    <div class="swiper-pagination"></div>
 			</div>
 				<div class="detail-info">
 				
@@ -92,7 +136,6 @@
 				</div>
 
 				<div class="detail-actions">
-					<button type="button" onclick="handleWishlist()">찜하기</button>
 					<button type="button" onclick="moveToCart()">
 						<i class="fa-solid fa-cart-shopping"> 장바구니</i> 
 					</button>
@@ -112,8 +155,16 @@
 
 	<!-- footer -->
 	<%@ include file="/pages/common/footer.jsp" %>
-
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	
 	<script type="text/javascript">
+		var swiper = new Swiper(".mySwiper", {
+	      navigation: {
+	        nextEl: ".swiper-button-next",
+	        prevEl: ".swiper-button-prev",
+	      },
+	    });
+	
 		const itemPrice = document.getElementById('itemPrice');
 		let unitPrice = parseInt(itemPrice.textContent.replaceAll(',', ''));
 		let qty = 1;
@@ -138,12 +189,7 @@
 				updateTotal();
 			}
 		}
-
-		function handleWishlist() {
-//			if (confirm('찜한 상품으로 이동하시겠습니까?')) {
-//				window.location.href = 'wishlist.html';
-//			}
-		}
+		
 		function moveToCart() {
 			const form = document.getElementById("itemForm");
 			const optionSelect = document.getElementById("option");
@@ -154,7 +200,7 @@
 			if (optionSelect) {
 			    url += "&option=" + optionSelect.value;
 			} else {
-			    url += "&option=0"; // 옵션이 없으면 0으로
+			    url += "&option=0"; // 옵션이 없으면 0으로 초기화
 			}
 			
 			window.location.href = url;
