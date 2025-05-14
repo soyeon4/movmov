@@ -4,5 +4,8 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.co.movmov.mapper.OrderMapper">
-	
+	<!-- List<ShopCartItem> getAllCartItemOfUser(User user); -->
+	<select id="getAllCartItemOfUser" parameterType="User" resultType="ShopCartItem">
+		
+	</select>
 </mapper>

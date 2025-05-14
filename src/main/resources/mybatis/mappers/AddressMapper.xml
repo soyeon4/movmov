@@ -119,7 +119,9 @@
 
 	<!-- D:DELETE void deleteAddressById(@Param("addrId") int addrId, @Param("userId") String userId); -->
 	<delete id="deleteAddressById" parameterType="map">
-		DELETE FROM movmov_user_addresses
-		WHERE addr_id = #{addrId} AND user_id = #{userId}
+		delete from 
+			movmov_user_addresses
+		where 
+			addr_id = #{addrId} AND user_id = #{userId}
 	</delete>
 </mapper>

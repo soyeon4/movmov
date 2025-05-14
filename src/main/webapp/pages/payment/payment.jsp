@@ -1,3 +1,7 @@
+<%@page import="kr.co.movmov.utils.StringUtils"%>
+<%@page import="kr.co.movmov.dto.CartDto"%>
+<%@page import="kr.co.movmov.vo.ShopCartItem"%>
+<%@page import="kr.co.movmov.mapper.ShopCartItemMapper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="kr.co.movmov.vo.Address"%>
@@ -27,7 +31,9 @@
 	// 미 로그인 상태인 경우 홈으로 이동
 	AddressMapper addressMapperForMain = MybatisUtils.getMapper(AddressMapper.class);
 	Address defaultAddressForMain = addressMapperForMain.getDefaultAddress(loginUser);
-
+	ShopCartItemMapper shopCartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
+	
+	
 	if (loginUser == null) {
 	%>
 	<script type="text/javascript">
@@ -111,26 +117,33 @@
 					</select> 
 				</div>
 			</section>
-
 			<section class="product-box">
 				<h3>주문상품</h3>
+			<%
+			List<ShopCartItem> cartItems = shopCartItemMapper.getCartItemsByUserId(loginUser.getId());
+			CartDto cartDto = new CartDto(cartItems);
+			for (ShopCartItem cartItem : cartItems) {
+			%>
 				<div class="product-detail">
-					<div class="store-name">CGV</div>
+					<div class="store-name"><%=cartItem.getNo() %></div>
 					<div class="product-summary">
-						<img src="/movmov/resources/images/shop/" alt="상품 이미지">
+						<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" alt="상품 이미지">
 						<div class="summary-text">
 							<p>
-								<strong>MovMov 상품권 50,000원 권</strong>
+								<strong><%=cartItem.getItem().getName() %></strong>
 							</p>
-							<p class="option">배송비 : 무료 배송 / 수량 : 1개</p>
+							<p class="option">배송비 : <%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %> / 수량 :<%=cartItem.getQuantity() %> </p>
 							<p class="price">
-								<del>50,000원</del>
-								<strong>49,560원</strong>
+								<del></del>
+								<strong><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></strong>
 							</p>
 						</div>
 					</div>
 				</div>
 			</section>
+			<%
+			}
+			%>
 
 			<section class="point-wallet">
 				<h3>포인트 사용</h3>

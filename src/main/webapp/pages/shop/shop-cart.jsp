@@ -34,7 +34,6 @@
 <body>
 	<%@ include file="/pages/common/header.jsp" %>
 <%
-
 	String userId = loginUser.getId();
 	ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
 	List<ShopCartItem> cartItems = cartItemMapper.getCartItemsByUserId(userId);
