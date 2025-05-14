@@ -47,4 +47,14 @@ public interface CommentMapper {
 	 */
 	List<Comment> getCommentsByCondition(Map<String, Object> condition);
 	
+	/**
+	 * comment_no_seq.currval을 반환한다.
+	 * @return 작성된 댓글 번호
+	 */
+	int getCurrentCommentNo();
+	
+	List<Comment> getTopLevelCommentsByPostNo(int PostNo);
+	
+	List<Comment> getReplyCommentsByPostNo(int PostNo);
+	
 }

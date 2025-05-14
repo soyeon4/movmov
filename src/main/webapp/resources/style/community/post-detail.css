@@ -1,7 +1,16 @@
+h4 {
+	margin: 6px;
+}
+
 .container {
-	max-width: 800px;
-	margin: 30px auto;
-	padding: 0 20px;
+    display: flex;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 20px;
+    justify-content: center;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
 }
 
 .board-label a {
@@ -74,8 +83,7 @@
 .divider {
     border: none;
     border-top: 1px solid #ccc;
-    margin: 1.5rem auto;
-    width: 94%;
+    margin: 1em auto;
 }
 
 .post-content {
@@ -118,8 +126,12 @@
 .post-options, .comment-options {
 	margin: 5px;
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    align-items: end;
+	justify-content: flex-end;
+}
+
+.comment-reply {
+    margin-right: auto;
 }
 
 .post-options a, .comment-options a {
@@ -138,6 +150,10 @@
 .comment-header {
 	font-size: 20px;
 	font-weight: bold;
+}
+
+.comments-section {
+	width: 90%;
 }
 
 .comment-block {
@@ -163,6 +179,40 @@
 	font-size: 15px;
 	white-space: pre-line;
 	padding: 6px 10px 0 10px;
+}
+
+.comment-block[data-level="1"] {
+	margin-left: 3em;
+}
+
+.comment-block[data-level="2"] {
+	margin-left: 6em;
+}
+
+.comment-block[data-level="3"] {
+	margin-left: 9em;
+}
+
+.comment-block[data-level="4"] {
+	margin-left: 12em;
+}
+
+.btn-reply {
+	background-color: #e7e7e7;
+    border: none;
+    font-size: 12px;
+    padding: 6px 10px;
+    margin: 10px 5px 2px 4px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-reply:hover {
+	background-color: #cfcfcf;
+}
+
+.btn-create-comment-reply {
+	margin: 0px 14px 10px 8px;
 }
 
 .comment-form textarea {
@@ -330,15 +380,15 @@ dialog button {
 	text-decoration: none;
 }
 
-button#btn-close-warning {
+button.button-return {
 	background-color: lightgrey;
 	color: #3f3f3f;
 }
 
-button#btn-login-trigger:hover {
-	background-color: #e53c7e;
+button.button-return:hover {
+	background-color: #959595;
 }
 
-button#btn-close-warning:hover {
-	background-color: #959595;
+button#btn-login-trigger:hover {
+	background-color: #e53c7e;
 }
