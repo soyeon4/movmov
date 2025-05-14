@@ -12,4 +12,6 @@ public interface MovieMapper {
 	List<Movie> getMovies(Map<String, Object> condition);
 	
 	Movie getMovieByNo(int no); 
+	
+	void updateMovieReviewCntOrWishCnt(Movie movie);
 }

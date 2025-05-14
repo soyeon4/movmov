@@ -17,6 +17,7 @@
 			, u.user_id as "user.id"
 			, r.review_open_status as openStatus
 			, r.movie_no as "movie.no"
+			, r.review_like_cnt as likeCnt
 		from 
 			movmov_movie_reviews r, movmov_users u, movmov_movies m
 		where 
@@ -40,6 +41,7 @@
 			, u.user_nickname as "user.nickname"
 			, r.movie_no as movie_no
 			, r.review_open_status as openStatus
+			, r.review_like_cnt as likeCnt
 		from 
     		movmov_movie_reviews r
 		join movmov_users u on r.user_id = u.user_id
@@ -63,11 +65,29 @@
 			, review_open_status as openStatus
 			, user_id as "user.id"
 			, movie_no as "movie.no"
+			, review_like_cnt as likeCnt
 		from movmov_movie_reviews
 		where 
 			movie_no = #{movieNo}
 			and user_id = #{userId}
 		order by review_updated_date desc
+	</select>
+	<!-- 
+		Review getReviewByReviewNo(int reviewNo);
+	 -->
+	<select id="getReviewByReviewNo" resultType="Review">
+		select
+			review_no as no
+			, review_star as star
+			, review_comment as "comment"
+			, review_created_date as createdDate
+			, review_updated_date as updatedDate
+			, user_id as "user.id"
+			, movie_no as "movie.no"
+			, review_open_status as openStatus
+			, review_like_cnt as likeCnt
+		from movmov_movie_reviews
+		where review_no = #{reviewNo}
 	</select>
 	<!-- 
 		void insertReview(Review review);
@@ -88,8 +108,84 @@
 	 		, review_comment = #{comment}
 	 		, review_updated_date = sysdate
 	 		, review_open_status = #{openStatus}
+	 		, review_like_cnt = #{likeCnt}
 	 	where 
 	 		review_no = #{no}
 	 </update>
-
+	<!-- 
+		void deleteReview(int reviewNo);
+	 -->
+	<delete id="deleteReview">
+		delete from movmov_movie_reviews
+		where
+			review_no = #{reviewNo}
+	</delete>
+	<!-- 
+		int getTotalRows(int movieNo);
+	 -->
+	<select id="getTotalRows" parameterType="map">
+		select count(*)
+		from movmov_movie_reviews r
+		where 1=1
+			<if test="userId != null and userId != ''">
+				and user_id = #{userId}
+			</if>
+			<if test="movieNo != null">
+				and movie_no = #{movieNo}
+			</if>
+	</select>
+	<!-- 
+		List<Review> getReviews(Map<String, Object> condition);
+	 -->
+	<select id="getReviews" parameterType="map" resultType="Review">
+		select 
+			r.review_no as no
+			, r.review_star as star
+			, r.review_comment as "comment"
+			, r.review_created_date as createdDate
+			, r.review_updated_date as updatedDate
+			, u.user_id as "user.id"
+			, u.user_nickname as "user.nickname"
+			, m.movie_no as "movie.no"
+			, r.review_open_status as openStatus
+			, r.review_like_cnt as likeCnt
+		from movmov_movie_reviews r, movmov_users u, movmov_movies m
+		where r.user_id = u.user_id
+			and r.movie_no = m.movie_no
+		<if test="userId != null and userId != ''">
+			and u.user_id = #{userId}
+		</if>
+		<if test="movieNo != null">
+			and m.movie_no = #{movieNo}
+		</if>
+			and r.review_open_status = 'Y'
+		<choose>
+			<when test="sort == 'date-desc'">
+	 			order by r.review_updated_date desc
+	 		</when>
+			<when test="sort == 'date-asc'">
+	 			order by r.review_updated_date asc
+	 		</when>
+			<when test="sort == 'star-desc'">
+	 			order by r.review_star desc
+	 		</when>
+			<when test="sort == 'star-asc'">
+	 			order by r.review_star asc
+	 		</when>
+			<when test="sort == 'like-desc'">
+	 			order by r.review_like_cnt desc
+	 		</when>
+		</choose>
+		offset #{offset} rows
+		fetch next #{rows} rows only
+	</select>
+	<!-- 
+		void updateReviewLikeCnt(Review review);
+	 -->
+	<update id="updateReviewLikeCnt" parameterType="Review">
+		update movmov_movie_reviews
+	 	set review_like_cnt = #{likeCnt}
+	 	where 
+	 		review_no = #{no}
+	</update>
 </mapper>

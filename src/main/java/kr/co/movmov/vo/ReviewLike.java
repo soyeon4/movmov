@@ -11,15 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Alias("Review")
-public class Review {
+@Alias("ReviewLike")
+public class ReviewLike {
 	private int no;
-	private int star;
-	private String comment;
-	private Date createdDate;
-	private Date updatedDate;
+	private Review review;
 	private User user;
-	private Movie movie;
-	private String openStatus;
-	private int likeCnt;
+	private Date createdDate; 
 }

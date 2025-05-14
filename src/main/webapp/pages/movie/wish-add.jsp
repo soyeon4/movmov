@@ -25,5 +25,7 @@
 	
 	movie.setWishCnt(movie.getWishCnt() + 1);
 	
+	movieMapper.updateMovieReviewCntOrWishCnt(movie);
+	
 	response.sendRedirect("movie-detail.jsp?movieNo=" + movieNo);
 %>

@@ -50,7 +50,6 @@
 	condition.put("rows", 10);
 	
 	
-	List<Movie> movies = movieMapper.getMovies(condition);
 	
 	
 	List<Genre> allGenres = genreMapper.getAllGenres();
@@ -59,6 +58,7 @@
 	int totalRows = movieMapper.getTotalRows(condition);
 	Pagination pagination = new Pagination(pageNo, totalRows, 10);
 	
+	List<Movie> movies = movieMapper.getMovies(condition);
 
 %>
 <!DOCTYPE html>
@@ -148,14 +148,14 @@
     <form id="sort-form" action="movie-list.jsp" method="get" onchange="document.getElementById('sort-form').submit();">
     <select class="form-select form-select-sm mb-3" name="sort" style="width: 150px;">
 	  <option value="">정렬 기준</option>
-	  <option value="length-asc" <%= "length-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>상영시간 오름차순</option>
-	  <option value="length-desc" <%= "length-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>상영시간 내림차순</option>
-	  <option value="star-asc" <%= "star-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>평균평점 오름차순</option>
-	  <option value="star-desc" <%= "star-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>평균평점 내림차순</option>
-	  <option value="review-desc" <%= "review-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>리뷰 많은 순</option>
-	  <option value="wish-desc" <%= "wish-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>찜 많은 순</option>
-	  <option value="year-asc" <%= "year-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 오름차 순</option>
-	  <option value="year-desc" <%= "year-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 내림차 순</option>
+	  <option value="length-asc" <%= "length-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>상영시간 짧은 순</option>
+	  <option value="length-desc" <%= "length-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>상영시간 긴 순</option>
+	  <option value="star-asc" <%= "star-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>평균평점 낮은 순</option>
+	  <option value="star-desc" <%= "star-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>평균평점 높은 순</option>
+	  <option value="reviews" <%= "reviews".equals(request.getParameter("sort")) ? "selected" : "" %>>리뷰 많은 순</option>
+	  <option value="wishes" <%= "wishes".equals(request.getParameter("sort")) ? "selected" : "" %>>찜 많은 순</option>
+	  <option value="year-asc" <%= "year-asc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 오래된 순</option>
+	  <option value="year-desc" <%= "year-desc".equals(request.getParameter("sort")) ? "selected" : "" %>>개봉연도 최신 순</option>
 	</select>
 	  <input type="hidden" name="title" value="<%=request.getParameter("title") != null ? request.getParameter("title") : "" %>">
 	  <input type="hidden" name="director" value="<%=request.getParameter("director") != null ? request.getParameter("director") : "" %>">
@@ -170,34 +170,28 @@
     <table class="table table-hover align-middle">
       <thead class="table-light">
         <tr >
-          <th scope="col" style="width: 5%;">포스터</th>
+          <th scope="col" style="width: 2%;">포스터</th>
           <th scope="col" style="width: 10%;">제목</th>
-          <th scope="col" style="width: 5%;">개봉연도</th>
+          <th scope="col" style="width: 7%;">개봉연도</th>
+          <th scope="col" style="width: 5%;">국가</th>
           <th scope="col" style="width: 15%;">장르</th>
           <th scope="col" style="width: 10%;">감독</th>
           <th scope="col" style="width: 7%;">상영시간</th>
           <th scope="col" style="width: 7%;">상영등급</th>
           <th scope="col" style="width: 7%;">평균 별점</th>
+          <th scope="col" style="width: 7%;">찜 수</th>
         </tr>
       </thead>
       <tbody>
 <% 
    for (Movie movie : movies) {
-      List<Review> reviews = reviewMapper.getReviewsByMovieNo(movie.getNo());
       List<Genre> genres = movieGenreMapMapper.getGenresByMovieNo(movie.getNo());
-      
-      int starSum = 0;
-      double starAvg = 0;
-      
-      for (Review review : reviews) {
-         starSum += review.getStar();
-      }
-      starAvg = (reviews.size() != 0) ? (double) starSum / reviews.size() : 0;
 %>
         <tr class="movie-row">
           <td><a href="movie-detail.jsp?movieNo=<%=movie.getNo() %>"><img src="../../resources/images/movie/<%=movie.getPosterImagePath() %>" alt="포스터" class="movie-poster"></a></td>
           <td><a href="movie-detail.jsp?movieNo=<%=movie.getNo() %>"><%=movie.getTitle() %></a></td>
           <td><%=movie.getReleaseYear() %> 년</td>
+          <td><%=movie.getCountry() %></td>
           <td>
           <%
                 for (Genre genre : genres) {
@@ -210,13 +204,18 @@
           <td><%=movie.getDirector() %></td>
           <td><%=movie.getLength() %> 분</td>
           <td><%=movie.getRating() %></td>
-          <td><%=String.format("%.1f", starAvg) %>점</td>
+          <td><%=String.format("%.1f", movie.getAvgStar()) %>점 (<%=movie.getReviewCnt() %>명)</td>
+          <td><%=movie.getWishCnt() %></td>
         </tr>
 <%
    }
 %>        
       </tbody>
     </table>
+<% 
+	if (pagination.getTotalPages() > 0) { 
+%>
+
     <div class="d-flex justify-content-center mt-4">
 <%
 	//검색조건 및 정렬 파라미터 유지
@@ -251,6 +250,19 @@
 	}
 %>
 </div>
+<% 
+	} else {
+%>
+	<div class="text-center my-5">
+    <p class="text-muted fs-5">검색 결과가 없습니다.</p>
+  </div>
+	
+
+
+
+<%
+	}
+%>
   </div>
 
   <!-- Bootstrap JS -->
