@@ -126,7 +126,7 @@
 				<div class="meta">
 					상품교환: <a href="#">사용가능 <%=item.getSeller().getName() %> 보기</a>
 				</div>
-
+				
 				<div class="quantity-control">
 					<button type="button" onclick="decreaseQty()">-</button>
 					<input type="text" id="qty" value="1" readonly />
@@ -145,7 +145,6 @@
 					<button type="button" onclick="moveToPurchase()">구매하기</button>
 				</div>
 				
-				
 				</form>
 			</div>
 		</div>
@@ -158,9 +157,12 @@
 
 	<!-- footer -->
 	<%@ include file="/pages/common/footer.jsp" %>
+	<%
+		boolean isLoggedIn = loginUser != null;
+	%>
 	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-	
 	<script type="text/javascript">
+		const isLoggedIn = <%= isLoggedIn %>;
 		var swiper = new Swiper(".mySwiper", {
 	      navigation: {
 	        nextEl: ".swiper-button-next",
@@ -194,24 +196,26 @@
 		}
 		
 		function moveToCart() {
-			const form = document.getElementById("itemForm");
-			const optionSelect = document.getElementById("option");
-			
-			let url = "shop-cart-insert.jsp?ino=" + form.ino.value
-				+ "&qty=" + document.getElementById("qty-hidden").value; 
-			
-			if (optionSelect) {
-			    url += "&option=" + optionSelect.value;
+			if (!isLoggedIn) {
+				$("#btn-header-login").trigger("click");
 			} else {
-			    url += "&option=0"; // 옵션이 없으면 0으로 초기화
+				const form = document.getElementById("itemForm");
+				const optionSelect = document.getElementById("option");
+				
+				let url = "shop-cart-insert.jsp?ino=" + form.ino.value
+					+ "&qty=" + document.getElementById("qty-hidden").value; 
+				
+				if (optionSelect) {
+				    url += "&option=" + optionSelect.value;
+				} else {
+				    url += "&option=0"; // 옵션이 없으면 0으로 초기화
+				}
+				window.location.href = url;
+				
+				if (confirm('장바구니로 이동하시겠습니까?')) {
+					window.location.href = 'shop-cart.jsp';
+				}
 			}
-			
-			window.location.href = url;
-			
-			if (confirm('장바구니로 이동하시겠습니까?')) {
-				window.location.href = 'shop-cart.jsp';
-			}
-			
 		}
 		function moveToPurchase() {
 //			if (confirm('결제 페이지로 이동하시겠습니까?')) {
