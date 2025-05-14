@@ -5,6 +5,7 @@
 <%@page import="kr.co.movmov.vo.User"%>
 <%@page import="kr.co.movmov.utils.MybatisUtils"%>
 <%@page import="kr.co.movmov.utils.StringUtils"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%

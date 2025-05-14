@@ -51,8 +51,6 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet"
 	href="../../resources/style/community/community-forum.css">
@@ -149,7 +147,7 @@
 			</tbody>
 		</table>
 		<form id="write-post" method="get" action="post-form.jsp">
-			<input type="hidden" name="boardType" value="<%=boardId %>">
+			<input type="hidden" name="bid" value="<%=boardId %>">
 			<button type="submit" class="write-btn">✍️ 글쓰기</button>
 		</form>
 		<div class="pagination">
@@ -167,7 +165,7 @@
 			<button type="button" id="btn-page-last">&raquo;</button>
 		</div>
 	</div>
-</body>
+
 	<!-- 푸터 -->
 	<%@ include file="../common/footer.jsp"%>
 	
@@ -212,5 +210,5 @@
 		});
 
 	</script>
-
+</body>
 </html>

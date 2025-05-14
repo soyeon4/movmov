@@ -6,7 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	PostMapper postMapper =MybatisUtils.getMapper(PostMapper.class);
+	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	Map<String, Object> conditionMoviePopular = new HashMap<>();
 	conditionMoviePopular.put("sort", "views");
 	conditionMoviePopular.put("rows", 5);
