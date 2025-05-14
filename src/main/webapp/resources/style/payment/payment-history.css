@@ -1,0 +1,147 @@
+@charset "UTF-8";
+/* dashboard.css */
+.dashboard {
+	display: flex;
+	justify-content: center;
+	padding: 40px;
+	gap: 32px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.dashboard-left {
+	flex: 1;
+	max-width: 700px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.dashboard-right {
+	width: 300px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+}
+
+.dashboard-right .box, .dashboard-right .balance-container {
+	width: 100%;
+}
+
+.box {
+	background: #fff;
+	border: 1px solid #eee;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	padding: 20px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+	font-size: 16px;
+	font-weight: 600;
+	margin-bottom: 12px;
+	color: #FF498D;
+	display: flex;
+	justify-content: space-between;
+}
+
+.section-title span a {
+	color: #7f7f7f;
+	font-size: 12px;
+}
+
+.order-item, .point-item, .canceled-item {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+}
+
+.canceled-item span {
+	color: #7f7f7f;;
+}
+
+.user-summary {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	width: 20vw;
+}
+
+.user-summary img {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.user-meta strong {
+	font-size: 16px;
+}
+
+.user-meta p {
+	font-size: 13px;
+	color: #555;
+	margin: 4px 0 0 0;
+}
+
+.balance-container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	width: 20vw;
+}
+
+.balance-box {
+	background-color: #FF498D;
+	color: white;
+	text-align: center;
+	padding: 8px 16px;
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 16px;
+	/* 	margin: 10px; */
+	border: none;
+	cursor: pointer;
+}
+
+.balance-box h3 {
+	margin: 3px 6px;
+}
+
+.balance-box a {
+	margin: 0;
+}
+
+.balance-box:hover {
+	background-color: #ff005d;
+}
+
+.balance-box strong {
+	font-size: 13px;
+}
+
+.big-point {
+	font-size: 15px;
+	color: #333333;
+}
+
+.box ul {
+	list-style: none;
+	padding-left: 0;
+	font-size: 14px;
+	color: #333;
+	line-height: 1.6;
+}
+
+.box ul li {
+	margin-bottom: 6px;
+}
+
+.box a {
+	text-decoration: none;
+	color: #333333;
+	font-weight: 500;
+}

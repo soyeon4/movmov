@@ -15,8 +15,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MovMov 결제</title>
 <link rel="stylesheet" href="/movmov/resources/style/common/main.css">
-<link rel="stylesheet"
-	href="/movmov/resources/style/payment/payment.css">
+<link rel="stylesheet" href="/movmov/resources/style/payment/payment.css">
 <link rel="icon" href="/movmov/resources/images/common/favicon.ico">
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
@@ -32,7 +31,7 @@
 	AddressMapper addressMapperForMain = MybatisUtils.getMapper(AddressMapper.class);
 	Address defaultAddressForMain = addressMapperForMain.getDefaultAddress(loginUser);
 	ShopCartItemMapper shopCartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
-	
+	int pointUsage = 0;
 	
 	if (loginUser == null) {
 	%>
@@ -136,7 +135,7 @@
 							<p class="option">배송비 : <%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %> / 수량 :<%=cartItem.getQuantity() %> </p>
 							<p class="price">
 								<del></del>
-								<strong><%=StringUtils.commaWithNumber(totalPriceOfItem) %></strong>
+								<strong><%=StringUtils.commaWithNumber(totalPriceOfItem) %>원</strong>
 							</p>
 						</div>
 					</div>
@@ -160,14 +159,14 @@
 					</ul>
 					<div class="point-use">
 						<input type="number" placeholder="사용 금액 입력">
-						<button class="btn-outline">전액사용</button>
+						<button class="btn-outline"> 적용 </button>
 					</div>
 				</div>
 			</section>
 
 			<section class="pay-method">
 				<h3>
-					결제수단 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
+					결제수단 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage) %>원</span>
 				</h3>
 				<h4>Pay 결제</h4>
 				<label>
@@ -206,9 +205,10 @@
 		<div class="payment-right">
 			<section class="summary-box">
 				<h3>
-					결제상세 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
+					결제상세 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder-pointUsage) %>원</span>
 				</h3>
 				<p>
+					주문 금액 <span class="price"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
 					포인트 사용 <span class="price">49,560원</span>
 				</p>
 			</section>
