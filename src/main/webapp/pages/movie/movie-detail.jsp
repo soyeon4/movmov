@@ -1,3 +1,8 @@
+<%@page import="kr.co.movmov.utils.Pagination"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="kr.co.movmov.vo.ReviewLike"%>
+<%@page import="kr.co.movmov.mapper.ReviewLikeMapper"%>
 <%@page import="kr.co.movmov.vo.WishMovie"%>
 <%@page import="kr.co.movmov.mapper.WishMovieMapper"%>
 <%@page import="kr.co.movmov.vo.Review"%>
@@ -19,13 +24,30 @@
 	if (user != null) {
 		userId = user.getId();
 	};
-	// 전달받은 영화번호	
+	// 전달받은 영화번호, 페이지번호, 정렬기준
 	int movieNo = StringUtils.strToInt(request.getParameter("movieNo"));
+	int pageNo = StringUtils.strToInt(request.getParameter("pageNo"), 1);
+	String sort = request.getParameter("sort");
+	if (sort == null || sort.isEmpty()) {
+	    sort = "date-desc";
+	}
 	
+	Map<String, Object> condition = new HashMap<>();
+	
+	condition.put("movieNo", movieNo);
+	condition.put("sort", sort);
+	condition.put("sort", sort);
+	
+	// 페이지당 5개
+	condition.put("offset", (pageNo - 1) * 5);
+	condition.put("rows", 5);
+	
+	// 매퍼 불러오기
 	MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
 	MovieGenreMapMapper movieGenreMapMapper = MybatisUtils.getMapper(MovieGenreMapMapper.class);
 	ReviewMapper reviewMapper = MybatisUtils.getMapper(ReviewMapper.class);
 	WishMovieMapper wishMovieMapper = MybatisUtils.getMapper(WishMovieMapper.class);
+	ReviewLikeMapper reviewLikeMapper = MybatisUtils.getMapper(ReviewLikeMapper.class);
 	
 	// 영화정보 받아오기
 	Movie movie = movieMapper.getMovieByNo(movieNo);
@@ -33,8 +55,25 @@
 	// 영화장르 받아오기
 	List<Genre> genres = movieGenreMapMapper.getGenresByMovieNo(movieNo);
 	
+	// 리뷰수
+	int totalRows = reviewMapper.getTotalRows(condition);
 	
+	// 해당 영화 리뷰 불러오기
+	List<Review> reviews = reviewMapper.getReviews(condition);
 	
+	// 페이지네이션 객체 만들기
+	Pagination pagination = new Pagination(pageNo, totalRows, 5);
+
+	// 평균별점 구하기
+	int starSum = 0;
+	double starAvg = 0;
+	
+	if (reviews.size() >= 1) {
+		for (Review review : reviews) {
+			starSum += review.getStar();
+		}
+		starAvg = starSum/reviews.size();
+	}
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -94,6 +133,13 @@
             <h3>내 별점: 로그인하세요</h3>
             <p><strong>코멘트:</strong> 로그인하세요 </p>
           </div>
+<% 
+	if (reviews.size() >= 1) {
+%>
+          <p>평균 별점: <%=String.format("%.1f", starAvg) %>점(<%= reviews.size()%>명)</p>
+<%
+	}
+%>
           <!-- 평가/보고싶어요 버튼 -->
           <div class="action-buttons">
             <form id="test-form" action="../mypage/modal-login.jsp" method="post" class="d-inline-block me-2">
@@ -140,6 +186,13 @@
 	
 %>
           </div>
+<% 
+	if (reviews.size() >= 1) {
+%>
+          <p>평균 별점: <%=String.format("%.1f", starAvg) %>점(<%= reviews.size()%>명)</p>
+<%
+	}
+%>
           <!-- 평가/보고싶어요 버튼 -->
           <div class="action-buttons">
             <form action="movie-review.jsp?movieNo=<%=movieNo %>" method="post" class="d-inline-block me-2">
@@ -173,26 +226,61 @@
         <section class="content-section" id="comments">
           <h2>코멘트 모음</h2>
 <%
-	List<Review> reviews = reviewMapper.getReviewsByMovieNo(movieNo);
+	// 이 영화에 리뷰가 없으면
 	if (reviews.isEmpty()) {
 %>
 		<div class="comment">
             <p>아직 이 영화에 작성된 리뷰가 없습니다</p>
           </div>
 <%
+	// 이 영화에 리뷰가 있으면
 	} else {
+%>		
+		<div class="mb-3">
+		<form action="movie-detail.jsp" method="get" class="d-flex justify-content-between mb-3">
+		
+			<input type="hidden" name="movieNo" value=<%=movieNo %>>
+		  <select name="sort" id="review-sort" class="form-select form-select-sm" style="width:200px;" onchange="this.form.submit()">
+		    <option value="date-desc" <%= "date-desc".equals(sort) ? "selected":"" %>>최신 순</option>
+		    <option value="date-asc" <%= "date-asc".equals(sort)  ? "selected":"" %>>오래된 순</option>
+		    <option value="star-desc" <%= "star-desc".equals(sort) ? "selected":"" %>>별점 높은 순</option>
+		    <option value="star-asc" <%= "star-asc".equals(sort)  ? "selected":"" %>>별점 낮은 순</option>
+		    <option value="like-desc" <%= "like-desc".equals(sort) ? "selected":"" %>>좋아요 많은 순</option>
+		  </select>
+		</form>
+		</div>
+
+<%		
 		for (Review review : reviews) {
+			// 이 리뷰의 좋아요 수
+			int likeCnt = review.getLikeCnt();
 %>
-          <div class="comment">
-            <p><strong><%=review.getUser().getNickname() %> </strong> <small class="text-muted"><%=review.getUpdatedDate() %></small></p>
+          <div class="comment" data-review-no="<%=review.getNo() %>">
+            <p>
+            	<strong><%=review.getUser().getNickname() %> </strong> 
+            	<small class="text-muted"><%=review.getUpdatedDate() %></small>
+            </p>
 <%
     		for (int i = 0; i < review.getStar(); i++) {
 %>
     		<span class="star-icon">★</span>
 <%
     		}
+		if (review.getComment() != null) {
 %>
             <p><%=review.getComment() %></p>
+<%
+		} else {
+%>
+			<p>(코멘트가 없습니다.)</p>
+<%
+		}
+%>
+            <!-- 여기에 좋아요 버튼 & 카운트 -->
+		    <button class="btn-like">
+		      <span class="like-icon"><%=reviewLikeMapper.getReviewLikeByUserIdAndReviewNo(userId, review.getNo()) != null ? "💖" : "🤍" %></span>
+		      <span class="like-count"><%=likeCnt %></span>
+		    </button>
           </div>
 <%
 		}
@@ -202,6 +290,38 @@
         </section>
       </div>
     </div>
+    <% 
+	if (pagination.getTotalPages() > 0) { 
+%>
+
+    <div class="d-flex justify-content-center mt-4">
+<%
+	//이전 버튼
+	if (!pagination.isFirst()) {
+%>
+	  <a href="movie-detail.jsp?movieNo=<%= movieNo %>&pageNo=<%=pagination.getPrevPage()%>&sort=<%=sort%>" class="btn btn-outline-secondary me-2">이전</a>
+<%
+	}
+	
+	// 페이지 번호들
+	for (int i = pagination.getBeginPage(); i <= pagination.getEndPage(); i++) {
+%>
+	  <a href="movie-detail.jsp?movieNo=<%= movieNo %>&pageNo=<%=i%>&sort=<%=sort%>"
+	     class="btn btn-outline-secondary me-2 <%= i == pagination.getCurrentPage() ? "active" : "" %>"><%=i%></a>
+<%
+	}
+	
+	// 다음 버튼
+	if (!pagination.isLast()) {
+%>
+	  <a href="movie-detail.jsp?movieNo=<%= movieNo %>&pageNo=<%=pagination.getNextPage()%>&sort=<%=sort%>" class="btn btn-outline-secondary me-2">다음</a>
+<%
+	}
+%>
+</div>
+<% 
+	}
+%>
   </div>
   </div>
 
@@ -212,19 +332,45 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script type="text/javascript">
 	  $("#test-form").submit(function() {
-	      if (<%=loginUser %> === null) {
 	         $("#btn-header-login").trigger("click");
-<%-- 	         $("input[name=redirectUrl]").val("/movmov/pages/movie/movie-detail.jsp?movieNo=<%=movie.getNo()%>"); --%>
 	         return false;
-	      }
 	   });
 	  $("#test-form2").submit(function() {
-	      if (<%=loginUser %> === null) {
 	         $("#btn-header-login").trigger("click");
-<%-- 	         $("input[name=redirectUrl]").val("/movmov/pages/movie/movie-detail.jsp?movieNo=<%=movie.getNo()%>"); --%>
 	         return false;
-	      }
 	   });
+	  $(function(){
+		// (1) 테스트용 로그: 이게 찍히면 jQuery와 이 스크립트가 로드된 것
+		  console.log('좋아요 스크립트 로드');
+
+		  $(document).on('click', '.btn-like', function(){
+			  console.log('버튼 클릭 리스너 진입');
+			  let $btn = $(this);
+			  let reviewNo = $btn.closest('.comment').data('review-no');
+			  console.log('리뷰 번호:', reviewNo);
+			  $.ajax({
+				  url: 'review-like-toggle.jsp',
+				  type: 'post',
+				  data: { reviewNo },
+				  dataType: 'json'
+			  })
+			  .done(function(res){
+				  console.log('AJAX 성공, res=', res);
+				  $btn.find('.like-icon')
+				  	  .text(res.liked ? '💖' : '🤍');
+				  $btn.find('.like-count')
+				      .text(res.count);
+			  })
+			  .fail(function(xhr){
+				  if (xhr.status === 401) {
+				      alert('로그인이 필요합니다!');
+				    } else {
+				      console.error(xhr.responseText);
+				      alert('요청 중 오류가 발생했습니다.');
+				    }
+				});
+		  	});
+		  });
   </script>
   
 </body>

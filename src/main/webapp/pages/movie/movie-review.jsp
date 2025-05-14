@@ -175,6 +175,13 @@
       <!-- 버튼 -->
       <button type="submit" class="btn btn-primary">저장</button>
       <a href="movie-detail.jsp?movieNo=<%=movie.getNo()%>" class="btn btn-secondary">취소</a>
+<%
+	if (review != null) {
+%>
+		<a href="review-delete.jsp?reviewNo=<%=review.getNo()%>&movieNo=<%=movieNo %>" class="btn btn-secondary">삭제</a>
+<%
+	}
+%>
     </form>
   </div>
   </div>
