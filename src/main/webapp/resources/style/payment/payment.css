@@ -1,4 +1,11 @@
 @charset "UTF-8";
+.shipping-box, .product-box, .point-wallet, .pay-method {
+	width: 35vw;
+}
+
+.summary-box, .point-benefit, .payment-btn-container {
+	width: 20vw;
+}
 
 /* payment.css */
 .payment-wrapper {

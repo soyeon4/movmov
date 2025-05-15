@@ -48,7 +48,6 @@
 	<!-- R:RETRIEVE Payment getPaymentById(int id); -->
 	<select id="getPaymentById" parameterType="int">
 		select
-			select 
 			pay_id 				as payId
 			, pay_status_id		as payStatusId
 			, user_id			as "user.id"
@@ -69,6 +68,36 @@
 		where
 			pay_id = #{id}
 			
+	</select>
+	
+	<!-- R:RETRIEVE Payment getRecentPayment(User user); -->
+	<select id="getRecentPayment" parameterType="User">
+		select
+			pay_id 				as payId
+			, pay_status_id		as payStatusId
+			, user_id			as "user.id"
+			, item_no			as "item.no"
+			, option_no			as "option.no"
+			, pay_amount		as payAmount
+			, pay_date			as payDate
+			, pt_use_amount		as ptUseAmount
+			, pt_earn_amount 	as ptEarnAmount
+			, addr_id			as "address.id"
+			, pay_method_id		as payMethodId
+			, request			as request
+			, item_quantity		as itemQuantity
+			
+		from 
+			movmov_payment_histories
+		
+		where
+			user_id = {user.id}
+		
+		order by 
+			pay_id desc
+		
+		fetch first 1 rows only
+		
 	</select>
 	
 	<!-- R:RETRIEVE List<Payment> getAllPaymentOfUser(User user); -->

@@ -26,7 +26,7 @@ Address defaultAddress = addressMapper.getDefaultAddress(user);
 				%>
 				<div class="address-card selected">
 					<div class="address-header">
-						<input type="hidden" class="address-id" name="address-id" value="<%=defaultAddress.getId()%>">
+						<input type="hidden" id="address-id-0" name="address-id" value="<%=defaultAddress.getId()%>">
 						<strong><%=defaultAddress.getReceiverName()%></strong>
 						<span><%=defaultAddress.getAddressName()%></span> 
 						<span class="selected-text">✓ 선택됨</span>
@@ -44,13 +44,13 @@ Address defaultAddress = addressMapper.getDefaultAddress(user);
 				</div>
 				<%
 				}
-				
+				int index = 1;
 				for (Address address : addressList) {
 					if(defaultAddress != null && address.getId() == defaultAddress.getId()){ continue; }
 				%>
 				<div class="address-card">
 					<div class="address-header">
-						<input type="hidden" id="address-id" name="address-id" value="<%=address.getId()%>">
+						<input type="hidden" id="address-id-<%=index %>" name="address-id" value="<%=address.getId()%>">
 						<strong><%=address.getReceiverName()%></strong>
 						<span>(<%=address.getAddressName()%>)</span> 
 						<span class="selected-text"></span>
@@ -67,6 +67,7 @@ Address defaultAddress = addressMapper.getDefaultAddress(user);
 					</div>
 				</div>
 				<%
+					index++;
 				}
 				%>
 			</div>

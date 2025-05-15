@@ -240,7 +240,7 @@
 				<div class="benefit-list">
 					<ul>
 						<li>기본적립 <span class="right"><%=StringUtils.commaWithNumber(rewardOfPurchase) %>원</span></li>
-						<li>카카오페이 결제적립 <span class="right"><%=StringUtils.commaWithNumber(rewardOfMethod) %>원</span></li>
+						<li>간편결제적립 <span class="right"><%=StringUtils.commaWithNumber(rewardOfMethod) %>원</span></li>
 					</ul>
 				</div>
 			</section>

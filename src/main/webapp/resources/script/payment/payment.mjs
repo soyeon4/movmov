@@ -178,8 +178,7 @@ modalSearchAddress.addEventListener('click', (e) => {
 const methodInput = document.getElementById("order-payment-method");
 const pays = document.querySelectorAll('.account');
 pays.forEach(pay => {
-	pay.addEventListener('click', (e) => {
-		e.preventDefault();
+	pay.addEventListener('click', () => {
 		const value = pay.dataset.value;
 		methodInput.value = value;
 		pays.forEach(c => {

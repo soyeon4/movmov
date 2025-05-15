@@ -19,7 +19,9 @@
 </head>
 <body>
 	<%@ include file="/pages/common/header.jsp"%>
-
+	
+	<%
+	%>
 	<div class="dashboard">
 		<div class="dashboard-left">
 			<!-- 최근 주문 내역 -->
@@ -28,10 +30,7 @@
 					최근 주문 내역 <span><a href="#">더보기</a></span>
 				</div>
 				<div class="order-item">
-					<span>상품명1</span><span>결제완료</span>
-				</div>
-				<div class="order-item">
-					<span>상품명2</span><span>배송중</span>
+					<span></span><span>배송중</span>
 				</div>
 				<div class="order-item">
 					<span>상품명1</span><span>결제완료</span>
@@ -79,24 +78,24 @@
 		<div class="dashboard-right">
 			<!-- 사용자 요약 정보 -->
 			<div class="box user-summary">
-				<img src="/movmov/resources/images/common/default-profile.png"
-					alt="프로필">
+				<img src="/movmov/resources/images/common/default-profile.png" alt="프로필">
 				<div class="user-meta">
-					<strong>홍길동</strong>
-					<p>honggildong@movmov.com</p>
-					잔여 포인트 <strong>11,527</strong>P
+					<strong><%=loginUser.getName()%></strong>
+					<p><%=loginUser.getEmail()%></p>
+					잔여 포인트 <strong><%=loginUser.getPoint()%></strong>P
 				</div>
 			</div>
 
 			<!-- 포인트 버튼 -->
 			<div class="box balance-container">
-				<a href="">
+				<a href="/movmov/pages/shop/shop-cart.jsp">
 					<button class="balance-box">
 						<h3>
 							<i class="fa-solid fa-cart-shopping"></i> 장바구니
 						</h3>
 					</button>
-				</a> <a href="">
+				</a> 
+				<a href="">
 					<button class="balance-box">
 						<h3>
 							<i class="fa-solid fa-heart-circle-plus"></i> 찜한 상품

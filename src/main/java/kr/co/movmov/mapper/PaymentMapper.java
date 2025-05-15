@@ -11,6 +11,8 @@ public interface PaymentMapper {
 	
 	Payment getPaymentById(int id);
 	
+	Payment getRecentPayment(User user);
+	
 	List<Payment> getAllPaymentOfUser(User user);
 	
 	void updatePaymentStatus(Payment payment);

@@ -20,7 +20,8 @@
 
 <body>
 	<%@ include file="/pages/common/header.jsp"%>
-
+	<%
+	%>
 	<div class="success-container">
 		<div class="success-card">
 			<div class="success-icon">
@@ -79,7 +80,7 @@
 									class="detail-info">배송지 : 서울특별시 종로구 율곡로10길 105 디아망 4층
 									(공동현관 중3805)(03033)</span>
 							</div>
-						</div>m                                                                                                                                                                                                                                                                                                      mm
+						</div>                                                                                                                                                                                                                                                                                                   mm
 					</div>
 				</section>
 
