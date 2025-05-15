@@ -19,6 +19,8 @@
 			, r.review_open_status as openStatus
 			, r.movie_no as "movie.no"
 			, r.review_like_cnt as likeCnt
+			, m.movie_poster_image_path as "movie.posterImagePath"
+			, m.movie_title as "movie.title"
 		from 
 			movmov_movie_reviews r, movmov_users u, movmov_movies m
 		where 
@@ -124,7 +126,7 @@
 	<!-- 
 		int getTotalRows(int movieNo);
 	 -->
-	<select id="getTotalRows" parameterType="map">
+	<select id="getTotalRows" parameterType="map" resultType="int">
 		select count(*)
 		from movmov_movie_reviews r
 		where 1=1
