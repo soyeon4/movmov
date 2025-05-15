@@ -6,7 +6,7 @@
 
 .cart-header, .cart-row {
 	display: grid;
-	grid-template-columns: 50px 2fr 1fr 1fr 1fr 50px;
+	grid-template-columns: 50px 2fr 1fr 1fr 1fr 70px;
 	align-items: center;
 	text-align: center;
 	gap: 12px;
@@ -32,13 +32,6 @@
 
 .cart-row img {
 	width: 80px;
-}
-
-.cart-summary {
-	text-align: center;
-	margin: 30px 0 20px;
-	font-size: 18px;
-	font-weight: bold;
 }
 
 .cart-actions {
@@ -96,4 +89,70 @@
 	color: inherit; /* 기본 글자색 유지 */
 	text-decoration: none; /* 밑줄 제거 */
 	cursor: pointer; /* 마우스를 올리면 손가락 모양으로 */
+}
+
+.cart-summary {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px 0;
+	border-top: 1px solid #ddd;
+	margin-top: 20px;
+}
+
+.price-info-left span {
+	margin: 4px 0;
+	font-size: 14px;
+	color: #555;
+}
+
+.price-info-right {
+	text-align: right;
+}
+
+.price-info-right span {
+	margin: 4px 0;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.btn-pay {
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+	background-color: #FF498D;
+	color: white;
+	border: none;
+	padding: 12px 20px;
+	font-size: 16px;
+	border-radius: 6px;
+	cursor: pointer;
+	}
+.cart-toolbar {	
+	display: flex;
+    height: 30px;
+    justify-content: flex-end;
+    align-items: start;
+    margin: 0 0 8px 0;
+    padding-right: 12px;
+}
+
+.cart-actions {
+	display: flex;
+	gap: 8px;
+}
+
+.cart-actions button {
+	padding: 6px 12px;
+	font-size: 13px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background-color: #f6f6f6;
+	color: #333;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.cart-actions button:hover {
+	background-color: #eee;
 }

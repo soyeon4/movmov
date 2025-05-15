@@ -54,17 +54,24 @@
 	<main>
 		<div class="cart-container">
 		<form id="form-cart-items" method="get" action="shop-delete.jsp">
-			<div class="cart-header">
-				<div>
-					<input type="checkbox" id="checkbox-select-all" checked />
+				<div class="cart-toolbar">
+					<div class="cart-actions">
+						<button type="button" onclick="deleteSelectedCartItems()">선택 상품 삭제</button>
+						<button type="button" onclick="clearCart()">장바구니 비우기</button>
+					</div>
 				</div>
-				<div>상품명</div>
-				<div>판매금액</div>
-				<div>수량</div>
-				<div>구매금액</div>
-				<div>삭제</div>
-			</div>
-<%
+
+				<div class="cart-header">
+					<div>
+						<input type="checkbox" id="checkbox-select-all" checked />
+					</div>
+					<div>상품명</div>
+					<div>판매금액</div>
+					<div>수량</div>
+					<div>구매금액</div>
+					<div>삭제</div>
+				</div>
+				<%
 	if (cartItems.isEmpty()) {
 %>
 			<div class="cart-empty">장바구니에 담긴 상품이 없습니다</div>
@@ -124,21 +131,19 @@
 %>
 			
 
-			<div  class="cart-summary">
-				상품 금액: <span id="total-item-price"><%=StringUtils.commaWithNumber(cartDto.getTotalItemPrice()) %></span>원
-			</div>
-			<div  class="cart-summary">
-				배송비: <span id="delivery-fee"><%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %></span>원
-			</div>
-			<div class="cart-summary">
-				총 상품 금액: <span id="total-order-price"><%=StringUtils.commaWithNumber(cartDto.getTotalOrderPrice()) %></span>원
-			</div>
+			<footer class="cart-summary">
+				<div class="price-info-left">
+					상품 금액 <span id="total-item-price"><strong><%=StringUtils.commaWithNumber(cartDto.getTotalItemPrice()) %></strong></span> 원<i
+						class="bi bi-plus"></i> 예상 배송비 <span id="delivery-fee"><strong><%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %></strong></span> 원
+				</div>
+				<div class="price-info-right">
+					총 예상 금액 <span id="total-order-price"><strong><%=StringUtils.commaWithNumber(cartDto.getTotalOrderPrice()) %></strong></span> 원
+				</div>
+				<div>
+					<button class="btn-pay" type="button" onclick="moveToPurchase()">구매하기</button>
+				</div>
+			</footer>
 
-			<div class="cart-actions">
-				<button type="button" onclick="deleteSelectedCartItems()">선택 상품 삭제</button>
-				<button type="button" onclick="clearCart()">장바구니 비우기</button>
-				<button type="button" onclick="moveToPurchase()">구매하기</button>
-			</div>
 <%
 	} 
 %>
@@ -177,10 +182,12 @@
 				let totalOrderPrice = 0;
 			$(":checkbox[name=cno]:checked")
 			.closest(".cart-row")
-			.find("div:nth-child(5) span")
+			.find(".item-order-price")
 			.each(function() {
 				let itemPrice = parseInt($(this).text().replaceAll(",", ""));
 				totalItemPrice += itemPrice;
+//				console.log(itemPrice);
+//				console.log(totalItemPrice);
 			})
 			
 			if (totalItemPrice < 30000) {
@@ -231,9 +238,9 @@
 		});
 		
 		function updateCart(itemNo, optionNo, qty) {
-			console.log(itemNo);
-			console.log(optionNo);
-			console.log(qty);
+//			console.log(itemNo);
+//			console.log(optionNo);
+//			console.log(qty);
 			let url = "shop-cart-modify.jsp?ino=" + itemNo + "&qty=" + qty + "&option=" + optionNo;
 			window.location.href = url;
 		}
