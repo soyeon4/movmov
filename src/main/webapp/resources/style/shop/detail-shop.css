@@ -1,3 +1,9 @@
+.section-inner {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 60px;
+	box-sizing: border-box;
+}
 .detail-container {
 	max-width: 1000px;
 	margin: 0 auto;
@@ -88,4 +94,31 @@
 	padding: 24px;
 	border-radius: 8px;
 	white-space: pre-line;
+}
+.option-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.option-area label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.option-area select {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%225%22%20viewBox%3D%220%200%2010%205%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l5%205%205-5z%22%20fill%3D%22%23333%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px 5px;
 }

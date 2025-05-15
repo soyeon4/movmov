@@ -5,7 +5,6 @@
  
 <mapper namespace="kr.co.movmov.mapper.ShopItemMapper">
 
-
 	<!--
 		List<ShopItemOption> getOptionsByItemNo(int itemNo);
 	-->

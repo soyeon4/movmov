@@ -14,6 +14,17 @@
 	border-bottom: 1px solid #ddd;
 }
 
+.cart-empty {
+	display: grid;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	height: 200px;
+	gap: 12px;
+	padding: 12px 0;
+	border-bottom: 1px solid #ddd;
+}
+
 .cart-header {
 	font-weight: bold;
 	background-color: #f9f9f9;
@@ -56,14 +67,14 @@
 
 .qty-box button {
 	border: none;
-    background: none;
-    font-size: 14px;
-    padding: 8px 12px;
-    margin: 0 2px;
-    border-radius: 6px;`
-    cursor: pointer;
-    background-color: #FF74A8;
-    color: white;
+	background: none;
+	font-size: 14px;
+	padding: 8px 12px;
+	margin: 0 2px;
+	border-radius: 6px; `
+	cursor: pointer;
+	background-color: #FF74A8;
+	color: white;
 }
 
 .qty-box input {
@@ -79,4 +90,10 @@
 
 .cart-remove:hover {
 	color: red;
+}
+
+.unstyled-link {
+	color: inherit; /* 기본 글자색 유지 */
+	text-decoration: none; /* 밑줄 제거 */
+	cursor: pointer; /* 마우스를 올리면 손가락 모양으로 */
 }
