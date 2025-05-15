@@ -1,5 +1,17 @@
+<%@page import="kr.co.movmov.vo.Post"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.movmov.mapper.PostMapper"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
+	Map<String, Object> conditionMoviePopular = new HashMap<>();
+	conditionMoviePopular.put("sort", "views");
+	conditionMoviePopular.put("rows", 5);
+	List<Post> popularMoviePosts = postMapper.getPosts(conditionMoviePopular);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,15 +21,11 @@
 <link rel="icon" href="resources/images/common/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-	rel="stylesheet">
 <link rel="stylesheet" href="resources/style/common/main.css">
 </head>
 <%@ include file="pages/common/header.jsp"%>
 
 <body>
-   <h1>홈</h1>
-   
    <main>
       <section class="top-section">
          <div class="article-card">
@@ -90,9 +98,15 @@
    <section class="community-section">
       <h2>💬 커뮤니티 인기글</h2>
       <ul class="community-list">
-         <li>🔥 [후기] 전공의생활 2화 개쩌네요</li>
-         <li>🤔 [질문] 기생충 엔딩 해석 부탁드립니다</li>
-         <li>🎉 [공지] 이번 주 굿즈 할인 이벤트!</li>
+<%
+	for (Post post : popularMoviePosts) {
+%>
+		<a href="pages/community/post-detail?pno=<%=post.getNo() %>">
+			<li>🔥 <span style="color:#FF498D;">[<%=post.getHeader().getName() %>]</span> <%=post.getTitle() %></li>
+		</a>
+<%
+	}
+%>
       </ul>
    </section>
    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
