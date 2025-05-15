@@ -21,7 +21,7 @@
 
 			<h2>로그인</h2>
 
-			<!-- ✅ form 태그 추가로 로그인 처리 가능 -->
+			<!-- form 태그 추가로 로그인 처리 가능 -->
 			<form id="login-form" action="/movmov/pages/mypage/login.jsp" method="post">
 				<input type="text" name="id" placeholder="아이디" id="login-id-field"
 					class="input-login" required />
