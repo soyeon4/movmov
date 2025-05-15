@@ -197,6 +197,10 @@ h4 {
 	margin-left: 12em;
 }
 
+.comment-block[data-level="5"] {
+	margin-left: 12em;
+}
+
 .btn-reply {
 	background-color: #e7e7e7;
     border: none;

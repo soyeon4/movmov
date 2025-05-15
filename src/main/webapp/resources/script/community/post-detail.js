@@ -100,7 +100,7 @@ $(".comments-section").on("submit", ".comment-form.reply", function(e) {
 		return;
 	}
 	let replyBlock = $(this).closest(".comment-block.reply");
-	let replyLevel = replyBlock.data("level");
+	let replyLevel = Math.min(replyBlock.data("level"), 4);
 	let content = replyBlock.find("textarea").val();
 	let parentCommentNo = replyBlock.prev(".comment-block").data("comment-no");
 	$.ajax({
