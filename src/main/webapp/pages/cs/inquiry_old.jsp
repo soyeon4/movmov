@@ -1,4 +1,3 @@
-<%@page import="kr.co.movmov.utils.StringUtils"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@page import="com.google.gson.Gson"%>
 <%@page import="kr.co.movmov.vo.Category"%>
@@ -130,39 +129,40 @@ boolean isLoggedIn = loginedUser != null;
 
 <div class="qna-list">
 <%
-	for (Inquiry i : inquiries) {
+	for (Inquiry inquiry : inquiries) {
 %>
-	<div class="qna-item">
-		<div class="qna-title">
-    <% if (i.getIsSecret() == 1) { %>
-        <i class="fa fa-lock lock-icon"></i>비밀글입니다.
-    <% } else { %>
-        <%= i.getTitle() != null ? i.getTitle() : "" %>
-    <% } %>
-		</div>
-	<div class="qna-meta">
-    	작성자: <%= (i.getUser().getId() != null && i.getUser().getId() != null) ? i.getUser().getId() : "알 수 없음" %> |
-    	<%= i.getCreatedDate() != null ? StringUtils.simpleDateTimeFormat(i.getCreatedDate()) : "" %>
-	</div>
-	<div class="qna-answer">
-    <% if (i.getIsSecret() == 1) { %>
-        <i>비밀글은 작성자만 확인할 수 있습니다.</i>
-    <% } else { %>
-        <%= i.getContent() != null ? i.getContent() : "" %>
-    <% } %>
-	</div>
-</div>
+        <div class="qna-item">
+            <div class="qna-header">
+                <span>답변상태: <%= inquiry.getStatus() == 1 ? "미답변" : "답변완료" %></span>
+                <span class="qna-secret">
+                    <% if (inquiry.getIsSecret() == 1) { %>
+                        (비밀글)
+                    <% } %>
+                    <h3 class="qna-title"><%= inquiry.getTitle() %></h3>
+                </span>
+            </div>
+            <hr>
+            <div class="qna-body">
+                <h3 class="qna-title"><%= inquiry.getTitle() %></h3>
+                <div class="qna-meta">
+                    <span>작성자: <%= inquiry.getUser().getId() %></span>
+                    <span>작성일: <%= inquiry.getCreatedDate() %></span>
+
+                </div>
+                <p class="qna-content"><%= inquiry.getContent() %></p>
+            </div>
+        </div>
 <%
-		if (i.getStatus() == 2) {
+		if (inquiry.getStatus() == 2) {
 %>            
-          	<div class="qna-answer-block" style="display:none;">
-          		<p><%=i.getAnswerContent() %></p>
+          	<div>
+          		<p><%=inquiry.getAnswerContent() %></p>
           	</div>
 <%
 		}
 %>    	
-<%
-}
+<% 
+    }
 %>
 </div>
 

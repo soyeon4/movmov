@@ -1,7 +1,7 @@
-$("#btn-header-login").click(function() {
+$("#btn-header-login").on("click", function() {
 	$(".modal-background").fadeIn();
 });
-$(".modal-close").click(function() {
+$(".modal-close").on("click", function() {
 	$(".modal-background").fadeOut();
 });
 

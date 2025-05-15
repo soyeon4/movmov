@@ -52,7 +52,6 @@ List<Category> faqCategorys = categoryMapper.getCategoriesByType("FAQ");		// 카
             <div class="tab active" data-tab="faq">FAQ</div>
             <div class="tab" data-tab="notice">공지사항</div>
             <div class="tab" data-tab="inquiry">Q&A</div>
-            <div class="tab" data-tab="myinquiry">내 문의</div>
         </div>
 
         <!-- FAQ 콘텐츠 -->
@@ -66,7 +65,6 @@ List<Category> faqCategorys = categoryMapper.getCategoriesByType("FAQ");		// 카
                 %>
                 	 <button type="button" class="faq-category-btn" data-cat-id="<%=faqCategory.getId()%>"><%=faqCategory.getName() %></button>
                 <% } %>
-
             </div>
 
             <div class="faq-search" style="display: flex; justify-content: space-between; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 30px;">
