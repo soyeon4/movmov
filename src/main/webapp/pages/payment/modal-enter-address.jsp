@@ -3,8 +3,7 @@
 	
 <div class="overlay" id="overlay-enter-address">
 	<div class="modal" id="modal-enter-address">
-		<form id="address-form"
-			action="/movmov/pages/payment/insert-address.jsp" method="post">
+		<form id="address-form" action="/movmov/pages/payment/insert-address.jsp" method="post">
 			<h2>입력한 정보를 확인 후 저장해주세요</h2>
 			
 			<input type="hidden" name="address-id" id="address-id" value="">

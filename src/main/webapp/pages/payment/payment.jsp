@@ -32,6 +32,7 @@
 	Address defaultAddressForMain = addressMapperForMain.getDefaultAddress(loginUser);
 	ShopCartItemMapper shopCartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
 	int pointUsage = 0;
+	int pointAmount = 1000;
 	
 	if (loginUser == null) {
 	%>
@@ -42,8 +43,9 @@
 	<%
 	}
 	%>
-
+	
 	<main class="payment-wrapper">
+		<form id="order-form" action="/movmov/pages/payment/make-order.jsp" method="post">
 		<div class="payment-left">
 			<section class="shipping-box">
 				<h3>배송 정보</h3>
@@ -53,6 +55,7 @@
 					if (defaultAddressForMain != null) {
 					%>
 					<p id="address-header">
+						<input type="hidden" name="order-address-id" id="order-address-id" value="<%=defaultAddressForMain.getId() %>">
 						<strong id="receiver-name"><%=defaultAddressForMain.getReceiverName()%></strong>
 						<span id="address-comment"><%=defaultAddressForMain.getAddressName()%></span>
 						<button class="tag" id="btn-list-address">주소지 선택</button>
@@ -106,14 +109,18 @@
 
 					<%@ include file="modal-search-address.jsp"%>
 
-					<select>
-						<option>선택 안 함</option>
-						<option>직접 입력하기</option>
-						<option>문 앞에 놓아주세요</option>
-						<option>경비실에 맡겨주세요</option>
-						<option>부재 시 연락주세요</option>
-						<option>배송 전 미리 연락주세요</option>
-					</select> 
+					<select id="select-delivery-request" name="deliveryMemo">
+						<option value="선택 안 함">선택 안 함</option>
+						<option value="custom">직접 입력하기</option>
+						<option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
+						<option value="경비실에 맡겨주세요">경비실에 맡겨주세요</option>
+						<option value="부재 시 연락주세요">부재 시 연락주세요</option>
+						<option value="배송 전 미리 연락주세요">배송 전 미리 연락주세요</option>
+					</select>
+					
+					<div id="custom-memo-box" class="point-use">
+						<input type="text" id="customer-request" name="customer-request" placeholder="배송 요청사항을 입력해주세요">
+					</div>
 				</div>
 			</section>
 			<section class="product-box">
@@ -152,14 +159,15 @@
 				<h3>포인트 사용</h3>
 				<div class="wallet-summary">
 					<p>
-						사용 가능: <strong>11,527원</strong>
+						사용 가능: <strong><%=StringUtils.commaWithNumber(pointAmount) %>원</strong>
+						<input type="hidden" name="order-point-usage" id="order-point-usage" value="<%=pointUsage%>">
 					</p>
 					<ul>
-						<li>포인트 <span>1,477원</span></li>
+						<li>포인트 사용<span id="point-usage"><%=StringUtils.commaWithNumber(pointUsage) %>원</span></li>
 					</ul>
 					<div class="point-use">
-						<input type="number" placeholder="사용 금액 입력">
-						<button class="btn-outline"> 적용 </button>
+						<input type="number" id="point-input" placeholder="사용 금액 입력">
+						<button class="btn-outline" id="btn-apply-point"> 적용 </button>
 					</div>
 				</div>
 			</section>
@@ -170,22 +178,23 @@
 				</h3>
 				<h4>Pay 결제</h4>
 				<label>
-					<button class="account">
+					<button type="button" class="account" data-value="1">
 						<img src="/movmov/resources/images/payment/logo_navergr_small.svg"
 							alt="">
 					</button>
-					<button class="account">
+					<button type="button" class="account" data-value="2">
 						<img src="/movmov/resources/images/payment/Toss_Logo_Primary.png"
 							alt="">
 					</button>
-					<button class="account">
+					<button type="button" class="account" data-value="3">
 						<img
 							src="/movmov/resources/images/payment/payment_icon_yellow_medium.png"
 							alt="">
 					</button>
-					<button class="account">
+					<button type="button" class="account" data-value="4">
 						<img src="/movmov/resources/images/payment/payco_logo.png" alt="">
 					</button>
+					<input type="hidden" name="order-payment-method" id="order-payment-method" value="">
 				</label>
 
 				<h4>계좌 간편결제</h4>
@@ -209,33 +218,38 @@
 				</h3>
 				<p>
 					주문 금액 <span class="price"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
-					포인트 사용 <span class="price">49,560원</span>
 				</p>
+				<p>
+					배송비 <span class="price"><%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %>원</span>
+				</p>
+				<p>
+					포인트 사용 <span class="price"><%=pointUsage %>원</span>
+				</p>
+				
 			</section>
-
+			<%
+			double rewardRate = 0.05;
+			int rewardOfPurchase = (int)(totalPriceOfOrder*rewardRate);
+			int rewardOfMethod = 50;
+			%>
 			<section class="point-benefit">
 				<h3>
-					포인트 혜택 <span class="highlight">최대 2,833원</span>
+					포인트 혜택 <span class="highlight">총 <%=StringUtils.commaWithNumber(rewardOfPurchase + rewardOfMethod) %>원</span>
+					<input type="hidden" name="order-point-earn" id="order-point-earn" value="<%=rewardOfPurchase + rewardOfMethod%>">
 				</h3>
 				<div class="benefit-list">
-					<p>
-						구매적립 <span class="right">총 1,283원</span>
-					</p>
 					<ul>
-						<li>기본적립 <span class="right">513원</span></li>
-						<li>카카오페이 결제적립 <span class="right">770원</span></li>
+						<li>기본적립 <span class="right"><%=StringUtils.commaWithNumber(rewardOfPurchase) %>원</span></li>
+						<li>카카오페이 결제적립 <span class="right"><%=StringUtils.commaWithNumber(rewardOfMethod) %>원</span></li>
 					</ul>
-					<p>
-						리뷰적립 <span class="right">최대 1,550원</span>
-					</p>
 				</div>
-				<button class="benefit-btn">+2,054원 구매 감사 포인트 받기</button>
 			</section>
 
 			<div class="payment-btn-container">
-				<button type="submit" class="pay-btn"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원 결제하기</button>
+				<button type="submit" class="pay-btn" ><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원 결제하기</button>
 			</div>
 		</div>
+		</form>
 	</main>
 
 	<%@ include file="/pages/common/footer.jsp"%>

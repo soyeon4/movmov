@@ -557,3 +557,12 @@ h3 {
   background-color: #ffe6f0; 
   cursor: pointer;
 }
+
+#custom-memo-box {
+	display: none; 
+	margin-top: 10px;
+}
+
+#custom-memo-box input {
+	width: 95%;
+}

@@ -15,7 +15,7 @@ modalDeliveryList.addEventListener('click', (e) => {
 	e.stopPropagation();
 });
 
-//배송지 선택 
+//배송지 선택
 const addressCards = document.querySelectorAll('.address-card');
 addressCards.forEach(card => {
 	card.addEventListener('click', (e) => {
@@ -43,6 +43,7 @@ addressCards.forEach(card => {
 
 //배송지 반영하여 결제창에 보여주기
 function changeAddress(card) {
+	const addressID = document.getElementById('address-id').value;
 	const name = card.querySelector('.address-header strong').textContent.trim() || '';
 	const comment = card.querySelector('.address-header span').textContent.trim() || '';
 	const phone = card.querySelector('.phone').textContent.trim() || '';
@@ -56,6 +57,7 @@ function changeAddress(card) {
 	document.getElementById('receiver-address').innerHTML = address;
 	document.getElementById('receiver-address-detail').innerHTML = detail;
 	document.getElementById('post-number').innerHTML = number;
+	document.getElementById('order-address-id') = addressID;
 }
 
 //새 배송지 추가 모달 창 
@@ -173,10 +175,13 @@ modalSearchAddress.addEventListener('click', (e) => {
 });
 
 //결제 방법 선택 
+const methodInput = document.getElementById("order-payment-method");
 const pays = document.querySelectorAll('.account');
 pays.forEach(pay => {
 	pay.addEventListener('click', (e) => {
 		e.preventDefault();
+		const value = pay.dataset.value;
+		methodInput.value = value;
 		pays.forEach(c => {
 			c.classList.remove('active');
 		});
@@ -192,7 +197,7 @@ btnAPI.addEventListener('click', () => {
 });
 
 
-
+//kakao map api를 활용한 주소검색
 async function searchAddress() {
 	const keyword = document.getElementById("address-input").value.trim();
 	const guide = document.getElementById("guide");
@@ -257,3 +262,44 @@ async function searchAddress() {
 		alert("주소 검색 중 오류가 발생했습니다.");
 	}
 }
+
+const btnPoint = document.getElementById("btn-apply-point");
+
+btnPoint.addEventListener('click', () => {
+	applyPoint();
+});
+
+function applyPoint() {
+	const input = document.getElementById("point-input");
+	const usageAmount = parseInt(input.value) || 0;
+
+	const availablePoint = document.getElementById(point-usage).value.trim(); // 서버에서 가져온 사용 가능 포인트
+
+	if (usageAmount <= 0) {
+		alert("1원 이상 입력해주세요.");
+		return;
+	}
+
+	if (usageAmount > availablePoint) {
+		alert("사용 가능 포인트를 초과했습니다.");
+		input.value = availablePoint;
+		return;
+	}
+
+	// 표시용 <span> 업데이트
+	const usageDisplay = document.querySelector(".wallet-summary ul li span");
+	usageDisplay.textContent = usageAmount.toLocaleString() + "원";
+}
+
+const optionRequest = document.getElementById("select-delivery-request");
+const customBox = document.getElementById("custom-memo-box");
+optionRequest.addEventListener('change', () => {
+	if(optionRequest.value == "custom") {
+		customBox.value = "";
+		customBox.style.display = "block";
+	} 
+	else {
+		customBox.style.display = "none";
+		customBox.value = optionRequest.value;
+	}
+})

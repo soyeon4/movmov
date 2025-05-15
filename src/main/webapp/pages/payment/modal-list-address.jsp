@@ -50,7 +50,7 @@ Address defaultAddress = addressMapper.getDefaultAddress(user);
 				%>
 				<div class="address-card">
 					<div class="address-header">
-						<input type="hidden" class="address-id" name="address-id" value="<%=address.getId()%>">
+						<input type="hidden" id="address-id" name="address-id" value="<%=address.getId()%>">
 						<strong><%=address.getReceiverName()%></strong>
 						<span>(<%=address.getAddressName()%>)</span> 
 						<span class="selected-text"></span>
