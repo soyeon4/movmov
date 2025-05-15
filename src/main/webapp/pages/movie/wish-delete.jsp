@@ -15,14 +15,11 @@
 	WishMovieMapper wishMovieMapper = MybatisUtils.getMapper(WishMovieMapper.class);
 	MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
 	
-	WishMovie wishMovie = new WishMovie();
-	wishMovie.setMovie(movieMapper.getMovieByNo(movieNo));
-	wishMovie.setUser(user);
-	
 	Movie movie = movieMapper.getMovieByNo(movieNo);
-	
 	// 찜 삭제
 	wishMovieMapper.deleteWishMovie(wishNo);
+	
+	System.out.println("wishCnt" + movie.getWishCnt());
 	
 	movie.setWishCnt(movie.getWishCnt() - 1);
 	

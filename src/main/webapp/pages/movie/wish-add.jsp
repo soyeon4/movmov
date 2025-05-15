@@ -20,8 +20,10 @@
 	
 	Movie movie = movieMapper.getMovieByNo(movieNo);
 	
-	// 찜 삽입
+	// 찜 생성
 	wishMovieMapper.insertWishMovie(wishMovie);
+	
+	System.out.println("wishCnt" + movie.getWishCnt());
 	
 	movie.setWishCnt(movie.getWishCnt() + 1);
 	
