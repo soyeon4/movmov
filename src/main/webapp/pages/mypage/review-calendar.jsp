@@ -104,16 +104,13 @@
          Calendar reviewData = Calendar.getInstance();
          reviewData.setTime(review.getCreatedDate());
                   
-         System.out.println("1: " + month);
-         System.out.println("reviewData.get(Calendar.MONTH): " + reviewData.get(Calendar.MONTH));
-         System.out.println("reviewData.get(Calendar.DAY_OF_MONTH): " + reviewData.get(Calendar.DAY_OF_MONTH));
-         System.out.println("i: " + i);
          
          if (reviewData.get(Calendar.DAY_OF_MONTH) == i && reviewData.get(Calendar.MONTH) == month) {
              if (review.getMovie() != null) {
-                    String reviewposterData = review.getMovie().getPosterImagePath();               
+                    String reviewposterData = review.getMovie().getPosterImagePath();
+
 %>
-      <img src="../../resources/images/movie/<%=reviewposterData %>" class="movie-poster">
+      <a href="../movie/movie-detail.jsp?movieNo=<%=review.getMovie().getNo()%>"><img src="../../resources/images/movie/<%=reviewposterData %>" class="movie-poster"></a>
 <%         
           } else {
                   // movie가 null일 경우, 디폴트 이미지나 처리할 로직을 추가할 수 있습니다.

@@ -20,7 +20,8 @@
 			, r.movie_no as "movie.no"
 			, r.review_like_cnt as likeCnt
 			, m.movie_poster_image_path as "movie.posterImagePath"
-			, m.movie_title as "movie.title"
+			, m.movie_title		as "movie.title"
+			, m.movie_no		as "movie.no"
 		from 
 			movmov_movie_reviews r, movmov_users u, movmov_movies m
 		where 
