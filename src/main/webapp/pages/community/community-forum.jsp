@@ -29,7 +29,7 @@
 	
 	// 페이지네이션 처리
 	int totalRows = postMapper.getTotalRows(condition);
-	int rows = 5;
+	int rows = 10;
 	Pagination pagination = new Pagination(pageNo, totalRows, rows);
 	int offset = pagination.getOffset();
 	condition.put("offset", offset);
@@ -176,7 +176,7 @@
 		$("#write-post").submit(function() {
 			if (!isLoggedIn) {
 				$("#btn-header-login").trigger("click");
-				$("input[name=redirectUrl]").val("post-form.jsp?boardType=<%=boardId %>");
+				$("input[name=redirectUrl]").val("post-form.jsp?bid=<%=boardId %>");
 				return false;
 			}
 			return true;
