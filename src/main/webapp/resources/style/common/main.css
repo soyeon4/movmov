@@ -4,6 +4,7 @@ body {
 	font-family: 'Noto Sans KR', sans-serif;
 	background-color: #fff;
 	color: #1d1d1d;
+	height: 100%;
 }
 
 header {
@@ -304,11 +305,14 @@ nav ul li:hover a {
 }
 
 .footer {
-	background-color: #111;
-	color: #ccc;
-	padding: 40px;
-	font-family: 'Noto Sans KR', sans-serif;
-	font-size: 8px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    background-color: #111;
+    color: #ccc;
+    padding: 40px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 8px;
 }
 
 .footer-wrapper {

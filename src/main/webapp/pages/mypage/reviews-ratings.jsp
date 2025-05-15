@@ -78,7 +78,7 @@
 %>
 			<div class="bg-white rounded-xl shadow p-4">
 				<div class="flex justify-between items-center">
-					<h3 class="text-lg font-semibold">🎬 <%= review.getMovie().getTitle() %></h3>
+					<a href="../movie/movie-detail.jsp?movieNo=<%=review.getMovie().getNo() %>" class="text-lg font-semibold">🎬 <%= review.getMovie().getTitle() %></a>
 					<span class="text-yellow-500 font-bold">★ <%= review.getStar() %></span>
 				</div>
 				<p class="text-sm text-gray-700 mt-2"><%= review.getComment() %></p>
