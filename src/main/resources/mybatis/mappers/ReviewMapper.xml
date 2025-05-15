@@ -127,7 +127,7 @@
 	<!-- 
 		int getTotalRows(int movieNo);
 	 -->
-	<select id="getTotalRows" parameterType="map">
+	<select id="getTotalRows" parameterType="map" resultType="int">
 		select count(*)
 		from movmov_movie_reviews r
 		where 1=1

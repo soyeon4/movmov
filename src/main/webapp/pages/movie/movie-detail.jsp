@@ -69,6 +69,7 @@
 	
 	// 페이지네이션 객체 만들기
 	Pagination pagination = new Pagination(pageNo, totalRows, 5);
+	System.out.println("reviewCnt : " + movie.getReviewCnt());
 
 %>
 <!DOCTYPE html>
