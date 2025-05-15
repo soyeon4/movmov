@@ -170,14 +170,16 @@ nav ul li:hover a {
 	gap: 20px;
 	padding: 40px;
 	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .article-card, .hot-title-card, .trailer-card {
+	padding: 1em;
 	position: relative;
 	background-color: #f7f7f7;
 	border-radius: 12px;
 	overflow: hidden;
-	width: 31%;
+	width: 27%;
 	min-width: 280px;
 }
 
@@ -292,16 +294,28 @@ nav ul li:hover a {
 }
 
 .community-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    list-style: none;
+    padding: 1em;
+    margin: 1em;
+}
+
+.community-list a {
+	text-decoration: none;
+	color: inherit;	
 }
 
 .community-list li {
 	padding: 10px 0;
-	border-bottom: 1px solid #ddd;
 	font-size: 15px;
 	cursor: pointer;
+	transition: background 0.3s;
+}
+
+.community-list li:hover {
+	background-color: #e0e0e0;
 }
 
 .footer {
