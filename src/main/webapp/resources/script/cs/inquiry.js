@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     // Ajax 요청
     $.ajax({
-      url: '/movmov/pages/cs/inquiry-ajax.jsp',  // 서버에 Ajax 요청을 보낼 URL
+      url: '/movmov/pages/cs/inquiry-login-ajax.jsp',  // 서버에 Ajax 요청을 보낼 URL
       method: 'GET',  // GET 방식
       data: {
         excludeSecret: excludeSecret,
@@ -39,6 +39,6 @@ $(document).ready(function () {
         console.error("AJAX error:", textStatus, errorThrown);
         $('.qna-list').html("<div>문의 내역을 불러오는 데 실패했습니다. 다시 시도해 주세요.</div>");
       }
-    });
-  }
-});
+    }); //$.ajax 
+  } // $('.qna-filters input, .qna-filters select').on('change', function ()
+}); // $(document).ready(function ()

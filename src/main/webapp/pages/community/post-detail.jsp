@@ -1,7 +1,7 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="kr.co.movmov.vo.CommentArranger"%>
 <%@page import="kr.co.movmov.utils.Pagination"%>
 <%@page import="com.google.gson.Gson"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.Map"%>
 <%@page import="kr.co.movmov.vo.Comment"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.mapper.CommentMapper"%>
@@ -33,8 +33,10 @@
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	boolean isLoggedIn = loginedUser != null;
 	String userId = "";
+	String userNickname = "";
 	if (isLoggedIn) {
 		userId = loginedUser.getId();
+		userNickname = loginedUser.getNickname();
 	}
 	
 	// 추천 목록 불러오기
@@ -44,19 +46,22 @@
 	
 	// 댓글 불러오기
 	CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
-	// 댓글 페이지네이션
-	Map<String, Object> condition = new HashMap<>();
-	condition.put("postNo", postNo);
-	condition.put("topLevel", "Y");
-	int totalRows = commentMapper.getTotalRows(condition);
-	int rows = 5;
-	Pagination pagination = new Pagination(pageNo, totalRows, rows);
-	int offset = pagination.getOffset();
-	condition.put("offset", offset);
-	condition.put("rows", rows);
+	List<Comment> allPostComments = commentMapper.getCommentsByPostNo(postNo);
+	CommentArranger commentArranger = new CommentArranger();
 	
-	List<Comment> postComments = commentMapper.getCommentsByCondition(condition);
-
+	// 댓글 페이지네이션
+	List<List<Comment>> commentPages = commentArranger.paginateComments(allPostComments, 5);
+	int totalPages = commentPages.size();
+	int pagesPerBlock = 5;
+	List<Comment> currentPageComments = new ArrayList<>();
+	if (!allPostComments.isEmpty()) {
+		currentPageComments = commentPages.get(pageNo - 1);
+	}
+	int totalCommentCount = commentArranger.getTotalCommentCount();
+	
+	// 게시글 댓글 개수 업데이트
+	postMapper.setPostCommentCount(postNo, totalCommentCount);
+	
 	// 하단 게시글 목록
 	int boardId = post.getBoardType().getId();
 	List<Post> recentPosts = postMapper.getRecentPostsByBoardId(boardId);
@@ -86,7 +91,7 @@
 			<p>해당 기능을 사용하려면 로그인해야 합니다.</p>
 			<menu>
 				<button type="button" id="btn-login-trigger">로그인</button>
-				<button type="button" id="btn-close-warning">돌아가기</button>
+				<button type="button" id="btn-close-warning" class="button-return">돌아가기</button>
 			</menu>
 		</form>
 	</dialog>
@@ -166,52 +171,38 @@
 
 		<!-- 💬 댓글 -->
 		<div class="comment-header">
-			<p>💬 댓글 [<%=post.getCommentCount() %>]</p>
+			<p>💬 댓글 [<span><%=totalCommentCount %></span>]</p>
 		</div>
 		<div class="comments-section">
 <%
-	for (Comment comment : postComments) {
+	for (Comment comment : currentPageComments) {
+		request.setAttribute("comment", comment);
+		request.setAttribute("level", 0);
 %>
-			<div class="comment-block" data-comment-no="<%=comment.getNo() %>">
-				<div class="comment-author">
-					<img class="author-img" src="../../resources/images/common/default-profile.png" alt="profile-pic"/>
-					<span class="author-name"><%=comment.getUser().getNickname() %></span>
-					<div class="meta">작성일: <%=StringUtils.simpleDateTimeFormat(comment.getCreatedDate()) %>
-					<%=(comment.getCreatedDate().compareTo(comment.getUpdatedDate()) != 0 ? 
-							"| 수정일: " + StringUtils.simpleDateTimeFormat(comment.getUpdatedDate()) : "" ) %></div>
-				</div>
-				<div class="content"><%=comment.getContent() %></div>
-				<div class="comment-options">
-<%
-		if (comment.getUser().getId().equals(userId)) {
-%>
-					<a href="#" class="edit-comment">수정</a>
-					<a href="delete-comment.jsp?cno=<%=comment.getNo() %>" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-<%
-		}
-%>
-					<a href="report-form.jsp?cno=<%=comment.getNo() %>"
-						class="report-button comment"
-						data-user-id="<%=comment.getUser().getId() %>">신고하기</a>
-				</div>
-			</div>
+			<jsp:include page="commentBlock.jsp" />
 <%
 	}
+%>
+<%
+	if (!allPostComments.isEmpty()) {
 %>
 			<div class="pagination">
 				<button type="button" id="btn-page-first">&laquo;</button>
 <%
-	int blockFirst = Math.max(Math.min(pagination.getTotalPages() - 4, pageNo - 2), 1);
-	int blockLast = Math.min(Math.max(pagination.getPages(), pageNo + 2), pagination.getTotalPages());
-	for (int i = blockFirst; i < blockLast + 1; i++) {
+		int blockFirst = Math.max(Math.min(totalPages - 4, pageNo - 2), 1);
+		int blockLast = Math.min(Math.max(pagesPerBlock, pageNo + 2), totalPages);
+		for (int i = blockFirst; i < blockLast + 1; i++) {
 %>
 				<button type="button"
 					class="btn-page-no<%=(i == pageNo ? " active" : "") %>"><%=i %></button>
 <%
-	}
+		}
 %>
 				<button type="button" id="btn-page-last">&raquo;</button>
 			</div>
+<%
+	}
+%>
 			<div class="comment-form create">
 				<h4>댓글 작성</h4>
 <%
@@ -226,6 +217,7 @@
 %>
 				<form action="create-comment.jsp" method="post" id="create-comment">
 					<input type="hidden" name="postNo" value="<%=postNo %>" />
+					<input type="hidden" name="pg" value="<%=pageNo %>" />
 					<textarea name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
 					<button type="submit" class="btn-create-comment">등록</button>
 				</form>
@@ -265,7 +257,8 @@
 		let postUserId = "<%=post.getUser().getId() %>";
 		let upvoteIdList = JSON.parse('<%=upvoteJson %>');
 		let postNo = <%=postNo %>;
-		let totalPages = <%=pagination.getTotalPages() %>;	
+		let totalPages = <%=totalPages %>;
+		let userNickname = "<%=userNickname %>";
 	</script>
 	<script src="/movmov/resources/script/community/post-detail.js"></script>
 </body>

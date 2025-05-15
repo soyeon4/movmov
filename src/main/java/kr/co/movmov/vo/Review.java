@@ -21,4 +21,5 @@ public class Review {
 	private User user;
 	private Movie movie;
 	private String openStatus;
+	private int likeCnt;
 }

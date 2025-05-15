@@ -39,6 +39,7 @@
 
 .post-form h2 {
 	font-size: 22px;
+	margin-top: 0px;
 	margin-bottom: 20px;
 	color: #FF498D;
 }
@@ -68,7 +69,13 @@ textarea::placeholder {
 	color: grey;
 }
 
-.submit-btn {
+.buttons-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.submit-btn, .return-btn {
 	background-color: #FF498D;
 	color: white;
 	font-weight: bold;
@@ -82,40 +89,14 @@ textarea::placeholder {
 	background-color: #e93d7c;
 }
 
-.related-posts {
-	margin-top: 60px;
+.button-return {
+	background-color: lightgrey;
+	color: #3f3f3f;
+	margin-right: 20px;
 }
 
-.related-posts h3 {
-	font-size: 18px;
-	margin-bottom: 12px;
-	color: #FF498D;
-}
-
-.related-posts .post-preview {
-	display: flex;
-	justify-content: space-between;
-	padding: 10px 0;
-	border-bottom: 1px solid #eee;
-	font-size: 14px;
-	cursor: pointer;
-}
-
-.related-posts .post-preview:hover {
-	background-color: #f9f9f9;
-}
-
-.related-posts .title {
-	flex: 1;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.related-posts .author {
-	width: 100px;
-	text-align: right;
-	color: #999;
+.button-return:hover {
+	background-color: #959595;
 }
 
 .header-toggle-group {

@@ -23,9 +23,9 @@
 
 			<!-- ✅ form 태그 추가로 로그인 처리 가능 -->
 			<form id="login-form" action="/movmov/pages/mypage/login.jsp" method="post">
-				<input type="text" name="id" placeholder="아이디"
+				<input type="text" name="id" placeholder="아이디" id="login-id-field"
 					class="input-login" required />
-				<input type="password" name="password" placeholder="비밀번호"
+				<input type="password" name="password" placeholder="비밀번호" id="login-pw-field"
 					class="input-login" required />
 				<input type="hidden" name="redirectUrl"
 					value="<%=redirectUrl %>">

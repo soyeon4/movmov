@@ -25,8 +25,6 @@
 		where
 			C.comment_no = #{commentNo}
 			AND C.user_id = U.user_id
-			AND C.comment_is_deleted = 'N'
-			<![CDATA[AND C.comment_report_count < 5]]>
 	</select>
 	
 	<resultMap type="Comment" id="CommentResultMap">
@@ -80,7 +78,7 @@
 		List<Comment> getCommentsByPostNo(int postNo);
 	-->
 	<select id="getCommentsByPostNo" resultMap="CommentResultMap">
-		select
+		SELECT
 			C.comment_no
 		  , C.post_no
 		  , C.comment_content
@@ -92,13 +90,11 @@
 		  , C.comment_report_count
 		  , C.user_id			as user_id
 		  , U.user_nickname		as user_nickname
-		from movmov_community_comments C, movmov_users U
-		where
+		FROM movmov_community_comments C, movmov_users U
+		WHERE
 			C.post_no = #{postNo}
 			AND C.user_id = U.user_id
-			AND C.comment_is_deleted = 'N'
-			<![CDATA[AND C.comment_report_count < 5]]>
-		order by
+		ORDER BY
 			C.comment_created_date desc
 	</select>
 	
@@ -168,7 +164,7 @@
 				AND C.comment_parent_no is null
 			</if>
 		ORDER BY
-			C.comment_created_date desc
+			C.comment_created_date asc
 		<if test="offset != null">
 			OFFSET #{offset} rows
 		</if>
@@ -177,5 +173,28 @@
 		</if>
 	</select>
 
+	<!--
+		int getCurrentCommentNo();
+	-->
+	<select id="getCurrentCommentNo">
+		SELECT COMMENT_NO_SEQ.CURRVAL
+		FROM DUAL
+	</select>
+	
+	<!--
+		void updateCommentReportCount(int commentNo);
+	-->
+	<update id="updateCommentReportCount">
+		UPDATE MOVMOV_COMMUNITY_COMMENTS
+		SET comment_report_count = (
+	   		SELECT COUNT(*)
+	   		FROM MOVMOV_COMMUNITY_REPORTS
+	   		WHERE report_content_no = #{commentNo}
+	   		)
+   	  	  , comment_is_reported = 'Y'
+		WHERE
+			comment_no = #{commentNo}
+	</update>
+	
 </mapper>
  

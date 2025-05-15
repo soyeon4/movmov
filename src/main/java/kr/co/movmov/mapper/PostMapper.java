@@ -3,6 +3,8 @@ package kr.co.movmov.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import kr.co.movmov.vo.Post;
 
 public interface PostMapper {
@@ -80,6 +82,14 @@ public interface PostMapper {
 	 * @param postNo 게시글 번호
 	 */
 	void updatePostCommentCount(int postNo);
+	
+	/**
+	 * 게시글 번호를 댓글 필터링/페이지네이션 객체를 통해 받은
+	 * 보이는 댓글 개수를 테이블에 저장시킨다.
+	 * @param commentCount
+	 */
+	void setPostCommentCount(@Param("postNo") int postNo,
+							@Param("commentCount") int commentCount);
 
 	/**
 	 * 추천 테이블에 게시글/댓글 번호와 추천한 유저 아이디를 저장시킨다.
@@ -97,4 +107,11 @@ public interface PostMapper {
 	List<Post> getRecentPostsByUserId(String userId);
 	
 	int getTotalPostRowsByUserId(String userId);
+	
+	/**
+	 * 게시글 번호를 전달받아서
+	 * 해당 게시글의 신고 개수를 업데이트한다.
+	 * @param postNo 게시글 번호
+	 */
+	void updatePostReportCount(int postNo);
 }

@@ -126,8 +126,8 @@
 		void updatePost(Post post);
 	-->
 	<insert id="updatePost" parameterType="Post">
-		update movmov_community_posts
-		set
+		UPDATE movmov_community_posts
+		SET
 			post_content = #{content}
 		  , post_header = #{header.id}
 		  , post_board_type = #{boardType.id}
@@ -136,7 +136,7 @@
 		  , post_is_deleted = #{isDeleted}
 		  , post_is_reported = #{isReported}
 		  , post_report_count = #{reportCount}
-		where
+		WHERE
 			post_no = #{no}
 	</insert>
 	
@@ -345,6 +345,16 @@
 		WHERE post_no = #{postNo}
 	</update>
 	
+	<!--
+		void setPostCommentCount(@Param("postNo") int postNo,
+							@Param("commentCount") int commentCount);
+	-->
+	<update id="setPostCommentCount">
+		UPDATE MOVMOV_COMMUNITY_POSTS P
+		SET post_comment_count = #{commentCount}
+		WHERE post_no = #{postNo}
+	</update>
+	
 	<select id="getRecentPostsByUserId" resultMap="PostResultMap">
 		SELECT 
 		    p.POST_NO               AS post_no,
@@ -376,6 +386,21 @@
     	FROM movmov_community_posts
     	WHERE user_id = #{userId}
    </select>
+   
+	<!--
+		void updatePostReportCount(int postNo);
+	-->
+   <update id="updatePostReportCount">
+	   	UPDATE MOVMOV_COMMUNITY_POSTS
+	   	SET post_report_count = (
+	   		SELECT COUNT(*)
+	   		FROM MOVMOV_COMMUNITY_REPORTS
+	   		WHERE report_content_no = #{postNo}
+	   		)
+	   	  , post_is_reported = 'Y'
+	   	WHERE
+	   		post_no = #{postNo}
+   </update>
 	
 </mapper>
  

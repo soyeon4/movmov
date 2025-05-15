@@ -6,7 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	PostMapper postMapper =MybatisUtils.getMapper(PostMapper.class);
+	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	Map<String, Object> conditionMoviePopular = new HashMap<>();
 	conditionMoviePopular.put("sort", "views");
 	conditionMoviePopular.put("rows", 5);
@@ -30,8 +30,6 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="../../resources/style/common/main.css">
 <link rel="stylesheet" href="../../resources/style/community/community-main.css">
 </head>

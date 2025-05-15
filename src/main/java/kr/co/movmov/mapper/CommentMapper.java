@@ -47,4 +47,17 @@ public interface CommentMapper {
 	 */
 	List<Comment> getCommentsByCondition(Map<String, Object> condition);
 	
+	/**
+	 * comment_no_seq.currval을 반환한다.
+	 * @return 작성된 댓글 번호
+	 */
+	int getCurrentCommentNo();
+	
+	/**
+	 * 댓글 번호를 전달받아서
+	 * 해당 댓글의 신고 개수를 업데이트한다.
+	 * @param commentNo 댓글 번호
+	 */
+	void updateCommentReportCount(int commentNo);
+	
 }

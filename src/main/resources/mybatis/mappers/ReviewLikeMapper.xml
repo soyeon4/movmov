@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.movmov.mapper.ReviewLikeMapper">
+	<!-- 
+		void insertReviewLike(ReviewLike reviewLike);
+	 -->
+	<insert id="insertReviewLike" parameterType="ReviewLike">
+		insert into movmov_movie_review_likes
+		(like_no, review_no, user_id, like_created_date)
+		values
+		(review_like_no_seq.nextval, #{review.no}, #{user.id}, sysdate)
+	</insert>
+	<!-- 
+		void deleteReviewLike(int reviewLikeNo);
+	 -->
+	<delete id="deleteReviewLike">
+		delete movmov_movie_review_likes
+		where like_no = #{reviewLikeNo}
+	</delete>
+	<!-- 
+		ReviewLike getReviewLikeByUserIdAndReviewNo(String userId, int reviewNo);
+	 -->
+	<select id="getReviewLikeByUserIdAndReviewNo" resultType="ReviewLike">
+		select 
+			like_no as no
+			, review_no as "review.no"
+			, user_id as "user.id"
+			, like_created_date as createdDate
+		from movmov_movie_review_likes
+		where
+			user_id = #{userId}
+			and review_no = #{reviewNo}
+	</select>
+</mapper>

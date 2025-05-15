@@ -9,17 +9,14 @@
 <%
 	/*
 		요청 정보
-			요청 URL
-				/shop-cart.jsp
-			요청 파라미터
-				name	value
-				-----------------------
-				user	유저아이디
-				item	상품아이디
-			
+			- 요청 URL
+				pages/shop/shop-cart.jsp
+			- 요청 파라미터
+				없음
+		요청처리 절차
+			1. 세션에서 사용자 아이디를 획득한다.
+			2. 사용자 아이디를 전달해서 장바구니 목록을 조회한다.
 	*/
-	
-	
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -29,6 +26,7 @@
 <title>장바구니</title>
 <link rel="stylesheet" href="/movmov/resources/style/common/main.css" />
 <link rel="stylesheet" href="/movmov/resources/style/shop/cart.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 <link rel="icon" href="resources/images/common/favicon.ico">
@@ -36,14 +34,22 @@
 <body>
 	<%@ include file="/pages/common/header.jsp" %>
 <%
-	if (loginUser == null) {
-			response.sendRedirect("../mypage/modal-login.jsp");
-			return;
+	User loginedUser = (User) session.getAttribute("LOGIN_USER");
+	if (loginedUser == null) {
+%>
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", function() {
+			document.querySelector("#btn-header-login")?.click();
+		});
+	</script>
+<%
+		return;
 	}
 	String userId = loginUser.getId();
 	ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
 	List<ShopCartItem> cartItems = cartItemMapper.getCartItemsByUserId(userId);
 	CartDto cartDto = new CartDto(cartItems);
+	
 %>
 	<main>
 		<div class="cart-container">
@@ -59,47 +65,62 @@
 				<div>삭제</div>
 			</div>
 <%
-	for (ShopCartItem cartItem : cartItems) {
+	if (cartItems.isEmpty()) {
+%>
+			<div class="cart-empty">장바구니에 담긴 상품이 없습니다</div>
+<%
+	} else {
+%>
+<%
+		for (ShopCartItem cartItem : cartItems) {
+		
 %>
 			<div class="cart-row">
-			
+				<input type="hidden" class="item-no" value="<%=cartItem.getItem().getNo() %>" />
 				<div>
 					<input type="checkbox" 
 					name="cno" 
 					value="<%=cartItem.getNo() %>" checked />
 				</div>
-				<div style="display: flex; align-items: center; gap: 10px;">
-					<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" alt="<%=cartItem.getItem().getImagePath() %>"> 
-					<span><%=cartItem.getItem().getName() %></span>
-					
+				<div style="display: flex; align-items: center; gap: 30px;">
+				<a href="shop-detail.jsp?ino=<%=cartItem.getItem().getNo() %>" class="unstyled-link">
+					<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" 
+						alt="<%=cartItem.getItem().getImagePath() %>"> 
+				</a>
+				<a href="shop-detail.jsp?ino=<%=cartItem.getItem().getNo() %>" class="unstyled-link">
+					<span><%=cartItem.getItem().getName() %>
 <%
-	if (cartItem.getOption() != null) {
+			if (cartItem.getOption() != null) {
 %>
-					<span> / 옵션 : <%=cartItem.getOption().getOptionName() %></span>
+					<br>/ 옵션 : <%=cartItem.getOption().getOptionName() %>
+					<input type="hidden" class="option-no" value="<%=cartItem.getOption().getOptionNo() %>" />
 <%	
-	}
+			}
 %>
-					
+					</span>
+				</a>
 				</div>
-				<div><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %>원</div>
+				<div>
+					<span class="unit-price"><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></span>원
+				</div>
 				<div class="qty-box">
-					<button type="button" onclick="updateQty(this, -1)">-</button>
-					<input type="text" value="1" readonly />
-					<button type="button" onclick="updateQty(this, 1)">+</button>
+					<button type="button" class="btn-decrease">-</button>
+					<input type="text" class="qty" value="<%=cartItem.getQuantity() %>" readonly />
+					<button type="button" class="btn-increase">+</button>
+					<input type="hidden" name="qty" class="qty-hidden" value="<%=cartItem.getQuantity() %>" />
 				</div>
 				<div>
-				<span><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></span>원
+					<span class="item-order-price"><%=StringUtils.commaWithNumber(cartItem.getOrderPrice()) %></span>원
 				</div>
 				<div>
-					<a href="shop-cart-delete.jsp?cno=<%=cartItem.getNo() %>">
-						<i class="fa-solid fa-xmark cart-remove"></i>
+					<a href="shop-cart-delete.jsp?cno=<%=cartItem.getNo() %>" class="unstyled-link">
+						<i class="bi bi-cart-x"></i>
 					</a>
-					
 				</div>
 				
 			</div>
 <%
-	}
+		}
 %>
 			
 
@@ -118,6 +139,9 @@
 				<button type="button" onclick="clearCart()">장바구니 비우기</button>
 				<button type="button" onclick="moveToPurchase()">구매하기</button>
 			</div>
+<%
+	} 
+%>
 			</form>
 		</div>
 	</main>
@@ -126,37 +150,27 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
 
 	<script type="text/javascript">
+		// 선택 삭제 / 전체 삭제
 		function deleteSelectedCartItems() {
 			$("#form-cart-items").trigger("submit");
 		}
-	
 		function clearCart() {
-			window.location.href = 'shop-cart-clear.jsp'
+			window.location.href = 'shop-cart-clear.jsp';
 		}
-
 		// 전체 선택/해제 체크박스의 체크가 변경될 때 실행되는 이벤트 핸들러 등록
 		$("#checkbox-select-all").change(function() {
 			let checkStatus = $(this).prop("checked");
 			$(":checkbox[name=cno]").prop("checked", checkStatus);
-			newCalculation()
+			newCalculation();
 		})
-		
 		// 장바구니 상품 체크가 변경됨에 따라 전체 선택/해제 체크박스 변경 이벤트 핸들러 등록
 		$(":checkbox[name=cno]").change(function(){
-
-			console.log($(":checkbox[name=cno]:checked"));
 			let checkboxLength = $(":checkbox[name=cno]").length;
 			let checkedCheckboxLength = $(":checkbox[name=cno]:checked").length;
 			$("#checkbox-select-all").prop("checked", checkboxLength == checkedCheckboxLength);
 			newCalculation();
 		});
-	
-		/*$(":checkbox[name=cno]:checked").closest(".cart-row")
-			.find("div:nth-child(5) span")
-			.each(function() {
-				console.log(this.textContent); // ✅ 이제 출력됨!
-			});*/
-			
+		// 가격 계산
 		function newCalculation() {
 				let deliveryFee = 0;
 				let totalItemPrice = 0;
@@ -174,19 +188,56 @@
 			}
 			
 			totalOrderPrice = totalItemPrice + deliveryFee;
-			$("#total-item-price").text(totalItemPrice);
-			$("#delivery-fee").text(deliveryFee);
-			$("#total-order-price").text(totalOrderPrice);
-			console.log(totalItemPrice);
+			$("#total-item-price").text(totalItemPrice.toLocaleString());
+			$("#delivery-fee").text(deliveryFee.toLocaleString());
+			$("#total-order-price").text(totalOrderPrice.toLocaleString());
 		}
-
-		function updateQty(btn, delta) {
-			const input = btn.parentElement.querySelector('input');
-			let qty = parseInt(input.value);
-			qty = Math.max(1, qty + delta);
-			input.value = qty;
-			// 실제로는 구매금액 / 총합 갱신 로직이 들어가야 함
+		$(document).ready(function() {
+		    // 수량 증가
+		    $(".btn-increase").click(function() {
+		        const row = $(this).closest(".cart-row");
+		        let itemNo = parseInt(row.find(".item-no").val());
+		        let optionNo = row.find(".option-no").val();
+		        optionNo = optionNo ? parseInt(optionNo) : 0;
+		        let unitPrice = parseInt(row.find(".unit-price").text().replaceAll(",", ""));
+		        let qty = parseInt(row.find(".qty").val());
+		        qty++;
+		        let itemOrderPrice = unitPrice * qty;
+		        row.find(".qty").val(qty);
+		        row.find(".qty-hidden").val(qty);
+		        row.find(".item-order-price").text(itemOrderPrice.toLocaleString());
+		        updateCart(itemNo, optionNo, qty);
+		        newCalculation();
+		    });
+		
+		    // 수량 감소
+		    $(".btn-decrease").click(function() {
+		        const row = $(this).closest(".cart-row");
+		        let itemNo = parseInt(row.find(".item-no").val());
+		        let optionNo = row.find(".option-no").val();
+		        optionNo = optionNo ? parseInt(optionNo) : 0;
+		        let unitPrice = parseInt(row.find(".unit-price").text().replaceAll(",", ""));
+		        let qty = parseInt(row.find(".qty").val());
+		        if (qty > 1) {
+		            qty--;
+		            let itemOrderPrice = unitPrice * qty;
+		            row.find(".qty").val(qty);
+		            row.find(".qty-hidden").val(qty);
+		            row.find(".item-order-price").text(itemOrderPrice.toLocaleString());
+		            updateCart(itemNo, optionNo, qty);
+		            newCalculation();
+		        }
+		    });
+		});
+		
+		function updateCart(itemNo, optionNo, qty) {
+			console.log(itemNo);
+			console.log(optionNo);
+			console.log(qty);
+			let url = "shop-cart-modify.jsp?ino=" + itemNo + "&qty=" + qty + "&option=" + optionNo;
+			window.location.href = url;
 		}
+		
 		function moveToPurchase() {
 			if (confirm('결제 페이지로 이동하시겠습니까?')) {
 				window.location.href = '../payment/payment.jsp'; // 결제 페이지
