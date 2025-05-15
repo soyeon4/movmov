@@ -21,35 +21,39 @@
    <main>
       <section class="top-section">
          <div class="article-card">
+            <a href="pages/movie/movie-detail.jsp?movieNo=88">
             <img
-               src="https://ojsfile.ohmynews.com/down/images/1/patrick21_227969_1[316186].jpg"
-               alt="쉬리 이미지">
-            <div class="label">인기 아티클</div>
+               src="resources/images/movie/88.webp"
+               alt="역샤 이미지">
+	         </a>
+            <div class="label">고전 명작 재개봉</div>
             <div class="content">
-               <h3>한국 영화는 &lt;쉬리&gt; 전과 후로 나뉜다</h3>
-               <p>한국 영화사의 터닝 포인트가 된 강제규 감독의 명작 🌍</p>
+               <h3>일본 애니메이션 고전 명작 &lt;기동 전사 건담 역습의 샤아&gt; 한국 개봉</h3>
             </div>
          </div>
 
          <div class="hot-title-card">
-            <div class="label black">지금 가장 핫한 작품</div>
+            <div class="label">지금 가장 핫한 작품</div>
+            <a href="pages/movie/movie-detail.jsp?movieNo=82">
             <img
-               src="https://web-cf-image.cjenm.com/crop/520x748/public/share/metamng/programs/contentsdetailposterresidentplaybook01.jpg?v=1744902346"
-               alt="전공의생활 포스터">
-            <h4>언젠가는 슬기로운 전공의생활</h4>
-            <p>평균⭐2.1 · tvN · 드라마</p>
+               src="resources/images/movie/82.webp"
+               alt="콘클라베 포스터">
+            </a>
+            <h3>콘클라베</h3>
+            <p>실제로 진행된 콘클라베로 인해 재조명!</p>
          </div>
 
          <div class="trailer-card">
+         	<a href="pages/movie/movie-detail.jsp?movieNo=81">
             <img
-               src="https://cdn.mania.kr/dvdprime/file/2502/movie_3582861_20250227082114_ec5650d8b8718dd2.jpg"
-               alt="해법 예고편">
+               src="resources/images/movie/81.webp"
+               alt="야당">
+            </a>
             <div class="trailer-info">
-               <div class="label">톰하디 x 레이드 감독</div>
-               <h4>공식 예고편</h4>
-               <p>해법 | 액션 · 미국</p>
+               <div class="label">박스오피스 1위 영화</div>
+               <h4>야당</h4>
+            	<p>범죄 드라마 | 한국</p>
             </div>
-            <button>상세보기</button>
          </div>
       </section>
 
