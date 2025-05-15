@@ -33,6 +33,7 @@
 	}
 	
 	Map<String, Object> condition = new HashMap<>();
+	Map<String, Object> movieCondition = new HashMap<>();
 	
 	condition.put("movieNo", movieNo);
 	condition.put("sort", sort);
@@ -42,6 +43,10 @@
 	condition.put("offset", (pageNo - 1) * 5);
 	condition.put("rows", 5);
 	
+	movieCondition.put("movieNo", movieNo);
+	movieCondition.put("offset", 0);
+	movieCondition.put("rows", 1);
+	
 	// 매퍼 불러오기
 	MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
 	MovieGenreMapMapper movieGenreMapMapper = MybatisUtils.getMapper(MovieGenreMapMapper.class);
@@ -50,7 +55,8 @@
 	ReviewLikeMapper reviewLikeMapper = MybatisUtils.getMapper(ReviewLikeMapper.class);
 	
 	// 영화정보 받아오기
-	Movie movie = movieMapper.getMovieByNo(movieNo);
+	List<Movie> movies = movieMapper.getMovies(movieCondition);
+	Movie movie = movies.get(0);
 
 	// 영화장르 받아오기
 	List<Genre> genres = movieGenreMapMapper.getGenresByMovieNo(movieNo);
@@ -64,16 +70,6 @@
 	// 페이지네이션 객체 만들기
 	Pagination pagination = new Pagination(pageNo, totalRows, 5);
 
-	// 평균별점 구하기
-	int starSum = 0;
-	double starAvg = 0;
-	
-	if (reviews.size() >= 1) {
-		for (Review review : reviews) {
-			starSum += review.getStar();
-		}
-		starAvg = starSum/reviews.size();
-	}
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -136,7 +132,7 @@
 <% 
 	if (reviews.size() >= 1) {
 %>
-          <p>평균 별점: <%=String.format("%.1f", starAvg) %>점(<%= reviews.size()%>명)</p>
+          <p>평균 별점: <%=String.format("%.1f", movie.getAvgStar()) %>점(<%= reviews.size()%>명)</p>
 <%
 	}
 %>
@@ -189,7 +185,7 @@
 <% 
 	if (reviews.size() >= 1) {
 %>
-          <p>평균 별점: <%=String.format("%.1f", starAvg) %>점(<%= reviews.size()%>명)</p>
+          <p>평균 별점: <%=String.format("%.1f", movie.getAvgStar()) %>점(<%= reviews.size()%>명)</p>
 <%
 	}
 %>

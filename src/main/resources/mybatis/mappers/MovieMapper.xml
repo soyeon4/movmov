@@ -67,6 +67,9 @@
 		<if test="year != null">
 			and m.movie_release_year = #{year}
 		</if>
+		<if test="movieNo != null">
+			and m.movie_no = #{movieNo}
+		</if>
 		group by
 			m.movie_no, m.movie_title, m.movie_director, m.movie_actor, m.movie_country,
 		    m.movie_length, m.movie_rating, m.movie_poster_image_path,
@@ -122,6 +125,8 @@
 			, movie_poster_image_path as posterImagePath
 			, movie_plot as plot
 			, movie_release_year as releaseYear
+			, movie_review_cnt as reviewCnt
+			, movie_wish_cnt as wishCnt
 		from
 			movmov_movies 
 		where
