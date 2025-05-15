@@ -23,13 +23,11 @@
 	condition.put("userId", userId);
 	condition.put("offset", pagination.getOffset());
 	condition.put("limit", pagination.getRows());
-	
-	System.out.println("userId : " + userId);
-	System.out.println("pagination.getOffset() : " + pagination.getOffset());
-	System.out.println("pagination.getRows() : " + pagination.getRows());
-	
+		
 	List<WishMovie> wishMovies = wishMovieMapper.getWishMoviesbyUserIdPaging(condition);
-	System.out.println("wishMovies : " + wishMovies);
+
+	int beginPage = Math.max(1, pagination.getBeginPage());
+	int endPage = Math.max(beginPage, pagination.getEndPage());
 %>
 
 <!DOCTYPE html>
@@ -54,6 +52,11 @@
 
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <%
+		if (wishMovies == null || wishMovies.isEmpty()) {	
+%>
+			<p class="text-center text-gray-500">찜한 영화가 없습니다.</p>
+<% 		} else {
+
 		for (WishMovie wish : wishMovies) {
 			Movie movie = movieMapper.getMovieByNo(wish.getMovie().getNo());
 %>
@@ -65,44 +68,43 @@
 				<p class="text-sm text-gray-700">👥 <%=movie.getActor()%></p>
 			</div>
 		</div>
-<% 
+<% 		}
 	} 
 %>
 	</div>
 
-	<!-- 페이지네이션 -->
-	<div class="pagination mt-10 text-center">
-<% if (!pagination.isFirst()) 
-	{ 
+			<!-- 페이지네이션 -->
+			<div class="pagination mt-10 text-center">
+<% 		if (!pagination.isFirst()) 
+			{ 
 %>
-		<a href="#" class="page-link px-3 py-1" data-page-no="<%=pagination.getPrevPage()%>">이전</a>
+			<a href="#" class="page-link px-3 py-1" data-page-no="<%=pagination.getPrevPage()%>">이전</a>
 <% 
-	} 
-	 for (int i = pagination.getBeginPage(); i <= pagination.getEndPage(); i++) 
-	{ 
- 		if (i == pagination.getCurrentPage()) 
-		{ 
+			} 
+        for (int i = beginPage; i <= endPage; i++) 	{ 
+ 			if (i == pagination.getCurrentPage()) 
+			{ 
 %>
-			<span class="page-link px-3 py-1 bg-pink-500 text-white font-bold"><%=i%></span>
-<% } else { 
+				<span class="page-link px-3 py-1 bg-pink-500 text-white font-bold"><%=i%></span>
+<% 			} else { 
 
 %>
-			<a href="#" class="page-link px-3 py-1" data-page-no="<%=i%>"><%=i%></a>
+					<a href="#" class="page-link px-3 py-1" data-page-no="<%=i%>"><%=i%></a>
 <% 
-		}  
-	} 
-	 if (!pagination.isLast()) 
-	{ 
+				   }  
+		} 
+	    if (!pagination.isLast()) 
+			{ 
 %>
-			<a href="#" class="page-link px-3 py-1" data-page-no="<%=pagination.getNextPage()%>">다음</a>
+		    	<a href="#" class="page-link px-3 py-1" data-page-no="<%=pagination.getNextPage()%>">다음</a>
 <% 
-	} 
+			} 
 %>
-	</div>
+		  </div>
 
-	<div class="mt-10 text-center">
-		<a href="page.jsp" class="text-blue-600 hover:underline text-sm">← 마이페이지 홈으로</a>
-	</div>
+		<div class="mt-10 text-center">
+			<a href="page.jsp" class="text-blue-600 hover:underline text-sm">← 마이페이지 홈으로</a>
+		</div>
 </main>
 
 <%@ include file="../common/footer.jsp" %>

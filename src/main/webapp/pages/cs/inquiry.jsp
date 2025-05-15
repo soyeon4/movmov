@@ -1,3 +1,5 @@
+<%@page import="kr.co.movmov.mapper.PostMapper"%>
+<%@page import="kr.co.movmov.vo.Post"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="kr.co.movmov.vo.Inquiry"%>
@@ -16,23 +18,16 @@
 
 <%
 	CsInquiryMapper csInquiryMapper =MybatisUtils.getMapper(CsInquiryMapper.class);
+	PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 	Map<String, Object> conditionAllMemberInfoPosts = new HashMap<>();
 	conditionAllMemberInfoPosts.put("boardId", 10);	// '문의유형: 회원정보'인 문의글을 모두 조회
 	conditionAllMemberInfoPosts.put("rows", 5);
 	Map<String, Object> conditionAllFreePosts = new HashMap<>();
 	conditionAllFreePosts.put("boardId", 301);
-	conditionAllFreePosts.put("rows", 5);
-	Map<String, Object> conditionMoviePopular = new HashMap<>();
-	conditionMoviePopular.put("sort", "views");
-	conditionMoviePopular.put("rows", 5);
-	Map<String, Object> conditionFreePopular = new HashMap<>();
-	conditionFreePopular.put("boardId", 301);
-	conditionFreePopular.put("sort", "views");
-	conditionFreePopular.put("rows", 5);
+	Map<String, Object> conditionAllMoviePosts = new HashMap<>();
+	conditionAllFreePosts.put("boardId", 300);
 	List<Post> moviePosts = postMapper.getPosts(conditionAllMoviePosts);
 	List<Post> freePosts = postMapper.getPosts(conditionAllFreePosts);
-	List<Post> popularMoviePosts = postMapper.getPosts(conditionMoviePopular);
-	List<Post> popularFreePosts = postMapper.getPosts(conditionFreePopular);
 	
 %>
 
