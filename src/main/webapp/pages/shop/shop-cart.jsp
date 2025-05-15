@@ -26,6 +26,7 @@
 <title>장바구니</title>
 <link rel="stylesheet" href="/movmov/resources/style/common/main.css" />
 <link rel="stylesheet" href="/movmov/resources/style/shop/cart.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 <link rel="icon" href="resources/images/common/favicon.ico">
@@ -34,9 +35,15 @@
 	<%@ include file="/pages/common/header.jsp" %>
 <%
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
-	if (loginUser == null) {
-			response.sendRedirect("../mypage/modal-login.jsp");
-			return;
+	if (loginedUser == null) {
+%>
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", function() {
+			document.querySelector("#btn-header-login")?.click();
+		});
+	</script>
+<%
+		return;
 	}
 	String userId = loginUser.getId();
 	ShopCartItemMapper cartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
@@ -58,7 +65,14 @@
 				<div>삭제</div>
 			</div>
 <%
-	for (ShopCartItem cartItem : cartItems) {
+	if (cartItems.isEmpty()) {
+%>
+			<div class="cart-empty">장바구니에 담긴 상품이 없습니다</div>
+<%
+	} else {
+%>
+<%
+		for (ShopCartItem cartItem : cartItems) {
 		
 %>
 			<div class="cart-row">
@@ -69,18 +83,22 @@
 					value="<%=cartItem.getNo() %>" checked />
 				</div>
 				<div style="display: flex; align-items: center; gap: 30px;">
+				<a href="shop-detail.jsp?ino=<%=cartItem.getItem().getNo() %>" class="unstyled-link">
 					<img src="/movmov/resources/images/shop/<%=cartItem.getItem().getImagePath() %>" 
 						alt="<%=cartItem.getItem().getImagePath() %>"> 
+				</a>
+				<a href="shop-detail.jsp?ino=<%=cartItem.getItem().getNo() %>" class="unstyled-link">
 					<span><%=cartItem.getItem().getName() %>
 <%
-	if (cartItem.getOption() != null) {
+			if (cartItem.getOption() != null) {
 %>
 					<br>/ 옵션 : <%=cartItem.getOption().getOptionName() %>
 					<input type="hidden" class="option-no" value="<%=cartItem.getOption().getOptionNo() %>" />
 <%	
-	}
+			}
 %>
 					</span>
+				</a>
 				</div>
 				<div>
 					<span class="unit-price"><%=StringUtils.commaWithNumber(cartItem.getItem().getPrice()) %></span>원
@@ -95,15 +113,14 @@
 					<span class="item-order-price"><%=StringUtils.commaWithNumber(cartItem.getOrderPrice()) %></span>원
 				</div>
 				<div>
-					<a href="shop-cart-delete.jsp?cno=<%=cartItem.getNo() %>">
-						<i class="fa-solid fa-xmark cart-remove"></i>
+					<a href="shop-cart-delete.jsp?cno=<%=cartItem.getNo() %>" class="unstyled-link">
+						<i class="bi bi-cart-x"></i>
 					</a>
-					
 				</div>
 				
 			</div>
 <%
-	}
+		}
 %>
 			
 
@@ -122,6 +139,9 @@
 				<button type="button" onclick="clearCart()">장바구니 비우기</button>
 				<button type="button" onclick="moveToPurchase()">구매하기</button>
 			</div>
+<%
+	} 
+%>
 			</form>
 		</div>
 	</main>

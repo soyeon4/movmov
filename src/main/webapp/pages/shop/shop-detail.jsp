@@ -41,7 +41,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
 	.swiper {
-	      width: 100%;
+	      width: 550px;
 	      height: 400px;
 	}
 	
@@ -67,19 +67,23 @@
 	<%@ include file="/pages/common/header.jsp" %>
 	<main>
 		<!-- ✅ 상단 메뉴 추가 -->
+		
+		<div class="section-inner" style="margin-top: 40px;">
 		<%@ include file="shop-nav.jsp" %>
+		</div>
 		
 		<div class="detail-container">
 			<div class="swiper mySwiper">
+			<%
+			String baseImageName = item.getImagePath();
+			String prefix = baseImageName.substring(0, baseImageName.lastIndexOf("."));
+			String ext = baseImageName.substring(baseImageName.lastIndexOf("."));
+			%>
 			    <div class="swiper-wrapper">
 			    <div class="swiper-slide">
 			    	<img src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" />
 			    </div>
 <%
-	String baseImageName = item.getImagePath();
-	String prefix = baseImageName.substring(0, baseImageName.lastIndexOf("."));
-	String ext = baseImageName.substring(baseImageName.lastIndexOf("."));
-
 	for (int i = 2; i <= item.getImageCount(); i++) {
 		String imageFileName = prefix + i + ext;
 %>
@@ -98,18 +102,21 @@
 				
 				<h1><%=item.getName() %></h1>
 				<div class="price"><span id="itemPrice"><%=StringUtils.commaWithNumber(item.getPrice()) %></span>원</div>
-				<div class="meta">상품구성: <%=item.getComponent() %></div>
-				<div class="meta">유효기간: 구매일로부터 24개월 이내</div>
+				<div class="meta">상품구성 : <%=item.getComponent() %></div>
+				<div class="meta">유효기간 : 구매일로부터 24개월 이내</div>
+				<div class="meta">
+					상품교환 : <a href="#">사용가능 <%=item.getSeller().getName() %> 보기</a>
+				</div>
 				
 				<form id="itemForm" method="post">
     			<input type="hidden" name="ino" value="<%=item.getNo()%>" />
     			
-				<div class="meta">
+				<div class="meta option-area">
 				
 <%
 	if (options != null && !options.isEmpty()) {
 %>
-					<label for="option">옵션 선택</label> 
+					<label for="option">옵션 선택 : </label> 
 					<select id="option" name="option">
 <%
 		for (ShopItemOption option : options) {
@@ -117,17 +124,15 @@
 						<option value="<%=option.getOptionNo()%>"><%=option.getOptionName()%></option>
 <%
 		}
-	}
 %>
 					</select>
-
-				</div>
-				
-				<div class="meta">
-					상품교환: <a href="#">사용가능 <%=item.getSeller().getName() %> 보기</a>
+<%
+	}
+%>
 				</div>
 				
 				<div class="quantity-control">
+				<label for="qty">수량 : </label> 
 					<button type="button" onclick="decreaseQty()">-</button>
 					<input type="text" id="qty" value="1" readonly />
 					<button type="button" onclick="increaseQty()">+</button>
@@ -149,7 +154,6 @@
 			</div>
 		</div>
 		
-
 		<div class="detail-description">
 			<strong>[이용안내]</strong><br /> <%=item.getDescription() %>
 		</div>

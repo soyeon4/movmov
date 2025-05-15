@@ -29,8 +29,15 @@ ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 	<%@ include file="/pages/common/header.jsp"%>
 
 	<main>
-		<!-- ✅ 상단 메뉴 추가 -->
-		<%@ include file="shop-nav.jsp"%>
+		<div class="section-inner">
+			<section class="shop-title-section">
+				<div class="inner">
+					<h1 class="shop-title">Mov Commerce</h1>
+				</div>
+			</section>
+			<!-- ✅ 상단 메뉴 추가 -->
+			<%@ include file="shop-nav.jsp"%>
+		</div>
 
 		<!-- 상품 카테고리 영역 -->
 		<%
@@ -43,15 +50,15 @@ ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 					<%
 					if (i == 1) {
 					%>
-					<h2>🎟️ 관람권</h2>
+					<h2><a href="shop-list.jsp?cno=<%=i%>" class="unstyled-link">🎟️ 관람권</a></h2>
 					<%
 					} else if (i == 2) {
 					%>
-					<h2>🍿 푸드</h2>
+					<h2><a href="shop-list.jsp?cno=<%=i%>" class="unstyled-link">🍿 푸드</a></h2>
 					<%
 					} else if (i == 3) {
 					%>
-					<h2>🎁 굿즈</h2>
+					<h2><a href="shop-list.jsp?cno=<%=i%>" class="unstyled-link">🎁 굿즈</a></h2>
 					<%
 					}
 					%>

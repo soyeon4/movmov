@@ -45,7 +45,9 @@ List<ShopItem> items = itemMapper.getShopItemByCategoryNo(catNo);
 
 	<main>
 		<!-- ✅ 상단 메뉴 추가 -->
-		<%@ include file="shop-nav.jsp"%>
+		<div class="section-inner">
+			<%@ include file="shop-nav.jsp"%>
+		</div>
 
 		<section class="goods-section">
 			<div class="section-inner">
