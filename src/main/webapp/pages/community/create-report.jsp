@@ -46,15 +46,11 @@
 	if ("post".equals(reportType)) {
 		PostMapper postMapper = MybatisUtils.getMapper(PostMapper.class);
 		Post post = postMapper.getPostByNo(contentNo);
-		post.setIsReported("Y");
-		post.setReportCount(post.getReportCount() + 1);
-		postMapper.updatePost(post);
+		postMapper.updatePostReportCount(contentNo);
 	} else {
 		CommentMapper commentMapper = MybatisUtils.getMapper(CommentMapper.class);
 		Comment comment = commentMapper.getCommentByNo(contentNo);
-		comment.setIsReported("Y");
-		comment.setReportCount(comment.getReportCount() + 1);
-		commentMapper.updateComment(comment);
+		commentMapper.updateCommentReportCount(contentNo);
 	}
 	
 	response.sendRedirect("report-success.jsp");

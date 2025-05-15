@@ -16,7 +16,6 @@
 			movmov_content_categories
 		where
 			cat_id = #{catId}
-		order by cat_id asc
 	</select>
 	
 	<!--
@@ -31,7 +30,6 @@
 			movmov_content_categories
 		where
 			cat_type = #{catType}
-		order by cat_id asc
 	</select>
 	
 	<!--
