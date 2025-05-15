@@ -59,7 +59,7 @@
 	Pagination pagination = new Pagination(pageNo, totalRows, 10);
 	
 	List<Movie> movies = movieMapper.getMovies(condition);
-	System.out.println("wishCnt" + movies.getFirst().getWishCnt());
+	System.out.println("reviewCnt" + movies.getFirst().getReviewCnt());
 
 %>
 <!DOCTYPE html>
