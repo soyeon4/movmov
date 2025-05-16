@@ -84,9 +84,6 @@
 						<span id="address-comment"></span>
 						<button class="tag" id="btn-list-address">주소지 선택</button>
 					</p>
-					<p id="receiver-phone">
-						<button class="tag">안심번호 사용</button>
-					</p>
 					<p>
 						<span id="receiver-address"></span>
 						<span id="receiver-address-detail"></span><br>
@@ -177,7 +174,7 @@
 				<h3>포인트 사용</h3>
 				<div class="wallet-summary">
 					<p>
-						사용 가능: <strong><%=StringUtils.commaWithNumber(pointAmount) %>원</strong>
+						사용 가능: <strong id="point-amount"><%=StringUtils.commaWithNumber(pointAmount) %>원</strong>
 					</p>
 					<ul>
 						<li>포인트 사용<span id="point-usage"><%=StringUtils.commaWithNumber(pointUsage) %>원</span></li>
@@ -191,7 +188,7 @@
 
 			<section class="pay-method">
 				<h3>
-					결제수단 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원</span>
+					결제수단 <span class="price-main" id="paymethod-price"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원</span>
 				</h3>
 				<h4>Pay 결제</h4>
 				<label>
@@ -231,7 +228,7 @@
 		<div class="payment-right">
 			<section class="summary-box">
 				<h3>
-					결제상세 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원</span>
+					결제상세 <span class="price-main" id="price"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원</span>
 				</h3>
 				<p>
 					주문 금액 <span class="price"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
@@ -240,7 +237,7 @@
 					배송비 <span class="price"><%=StringUtils.commaWithNumber(cartDto.getDeliveryFee()) %>원</span>
 				</p>
 				<p>
-					포인트 사용 <span class="price"><%=pointUsage %>원</span>
+					포인트 사용 <span class="price" id="point-usage-amount"><%=pointUsage %>원</span>
 				</p>
 				
 			</section>
@@ -264,7 +261,7 @@
 
 			<div class="payment-btn-container">
 				<form id="order-form" action="/movmov/pages/payment/make-order.jsp" method="post">
-					<input type="hidden" name="order-point-usage" id="order-point-usage" value="<%=pointUsage%>">
+					<input type="hidden" name="order-point-usage" id="order-point-usage" value="0">
 					<input type="hidden" name="order-point-earn" id="order-point-earn" value="<%=rewardOfPurchase + rewardOfMethod%>">
 					<input type="hidden" name="order-address-id" id="order-address-id" value="<%=defaultAddressForMain.getId() %>">
 					<input type="hidden" name="order-payment-method" id="order-payment-method" value="">
@@ -277,7 +274,7 @@
 					<%
 					} 
 					%>
-					<button type="submit" class="pay-btn" ><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원 결제하기</button>
+					<button type="submit" class="pay-btn" id="btn-make-order"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원 결제하기</button>
 				</form>
 			</div>
 		</div>
