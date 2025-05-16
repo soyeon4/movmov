@@ -5,9 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import kr.co.movmov.vo.ShopCartItem;
-import kr.co.movmov.vo.ShopItemOption;
 
 public interface ShopCartItemMapper {
+
+	/**
+	 * 선택된 장바구니 상품의 번호로 상품 정보 조회
+	 * @param cartNo 장바구니 번호
+	 * @return 장바구니 상품 정보
+	 */
+	ShopCartItem getCartItemsByCartNos(@Param("cartNo") int cartNo);
+	
 	
 	/**
 	 * 장바구니 상품 옵션 정보 등록
