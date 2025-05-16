@@ -107,4 +107,11 @@ public interface PostMapper {
 	List<Post> getRecentPostsByUserId(String userId);
 	
 	int getTotalPostRowsByUserId(String userId);
+	
+	/**
+	 * 게시글 번호를 전달받아서
+	 * 해당 게시글의 신고 개수를 업데이트한다.
+	 * @param postNo 게시글 번호
+	 */
+	void updatePostReportCount(int postNo);
 }

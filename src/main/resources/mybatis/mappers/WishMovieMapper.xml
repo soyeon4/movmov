@@ -10,7 +10,9 @@
     values
     (wish_movie_no_seq.nextval, sysdate, #{movie.no}, #{user.id})
   </insert>
-
+	<!-- 
+		void deleteWishMovie(int wishNo);
+	 -->
   <delete id="deleteWishMovie">
     delete from movmov_wish_movies
     where wish_movie_no = #{wishNo}
@@ -18,12 +20,16 @@
 
   <select id="getWishMovieByUserIdAndMovieNo" resultType="WishMovie">
     select
-      wish_movie_no as no,
-      wish_movie_created_date as createdDate,
-      movie_no as "movie.no",
-      user_id as "user.id"
-    from movmov_wish_movies
-    where user_id = #{userId} and movie_no = #{movieNo}
+      wm.wish_movie_no as no,
+      wm.wish_movie_created_date as createdDate,
+      wm.movie_no as "movie.no",
+      wm.user_id as "user.id"
+    from movmov_wish_movies wm, movmov_movies m, movmov_users u
+    where 
+    	wm.movie_no = m.movie_no
+    	and wm.user_id = u.user_id
+    	and wm.user_id = #{userId} 
+    	and wm.movie_no = #{movieNo}
   </select>
 
   <select id="getWishMoviesbyUserId" resultType="WishMovie">
