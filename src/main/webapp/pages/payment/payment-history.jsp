@@ -54,7 +54,7 @@
 					LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				%>
 				<div class="order-item">
-					<span><%=item.getName()%></span><span><%=item.getPrice() * payment.getItemQuantity()%>원
+					<span><%=item.getName()%></span><span><%=StringUtils.commaWithNumber(item.getPrice() * payment.getItemQuantity())%>원
 						| <%=localDate%></span>
 				</div>
 				<%
