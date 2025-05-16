@@ -28,6 +28,9 @@
 
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
+		<mapper resource="mybatis/mappers/AddressMapper.xml" />
+		<mapper resource="mybatis/mappers/PaymentMapper.xml" />
+		<mapper resource="mybatis/mappers/PointMapper.xml" />
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
 		<mapper resource="mybatis/mappers/CommentMapper.xml" />
 		<mapper resource="mybatis/mappers/ReportMapper.xml" />
@@ -44,6 +47,5 @@
 		<mapper resource="mybatis/mappers/CsInquiryMapper.xml" />
 		<mapper resource="mybatis/mappers/CsPostMapper.xml" />
 		<mapper resource="mybatis/mappers/FaqMapper.xml" />
-
 	</mappers>
 </configuration>
