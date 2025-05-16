@@ -66,13 +66,15 @@
       </section>
 
 		<section class="menu-section">
-			<button type="button">🎬 영화</button>
-			<button type="button">⚡ 매거진</button>
-			<button type="button">🎁 Mov Commerce</button>
+			<a href="pages/movie/movie-list.jsp">
+				<button type="button">🎬 영화</button>
+			</a>
+			<a href="pages/shop/shop-main.jsp">
+				<button type="button">🎁 Mov Commerce</button>
+			</a>
 			<a href="pages/community/community-main.jsp">
 				<button type="button">📊 커뮤니티</button>
 			</a>
-			<button type="button">🔮 추천</button>
 		</section>
 	</main>
 
@@ -101,7 +103,7 @@
 <%
 	for (Post post : popularMoviePosts) {
 %>
-		<a href="pages/community/post-detail?pno=<%=post.getNo() %>">
+		<a href="pages/community/post-detail.jsp?pno=<%=post.getNo() %>">
 			<li>🔥 <span style="color:#FF498D;">[<%=post.getHeader().getName() %>]</span> <%=post.getTitle() %></li>
 		</a>
 <%
