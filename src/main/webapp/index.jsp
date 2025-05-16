@@ -93,7 +93,7 @@
 					%>
 					<div class="goods-card">
 						<div class="image-wrapper">
-							<a href="shop-detail.jsp?ino=<%=item.getNo() %>"><img
+							<a href="pages/shop/shop-detail.jsp?ino=<%=item.getNo() %>"><img
 								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
 						</div>
 						<h4><%=item.getName()%></h4>

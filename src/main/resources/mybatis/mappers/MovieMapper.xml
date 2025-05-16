@@ -67,35 +67,41 @@
 		<if test="year != null">
 			and m.movie_release_year = #{year}
 		</if>
+		<if test="movieNo != null">
+			and m.movie_no = #{movieNo}
+		</if>
 		group by
 			m.movie_no, m.movie_title, m.movie_director, m.movie_actor, m.movie_country,
 		    m.movie_length, m.movie_rating, m.movie_poster_image_path,
 		    m.movie_plot, m.movie_release_year, m.movie_review_cnt,
 		    m.movie_wish_cnt
 		<if test="star != null">
-			having avgStar >= #{star}
+			having avg(r.review_star) >= #{star}
 		</if>
 		<choose>
 	 		<when test="sort == 'length-asc'">
-	 			order by movie_length asc
+	 			order by m.movie_length asc
 	 		</when>
 	 		<when test="sort == 'length-desc'">
-	 			order by movie_length desc
+	 			order by m.movie_length desc
 	 		</when>
 	 		<when test="sort == 'star-asc'">
-	 			order by avgStar asc
+	 			order by avgStar asc nulls last
 	 		</when>
 	 		<when test="sort == 'star-desc'">
-	 			order by avgStar desc
+	 			order by avgStar desc nulls last
 	 		</when>
 	 		<when test="sort == 'reviews'">
-	 			order by movie_review_cnt desc	 		
+	 			order by m.movie_review_cnt desc nulls last
+	 		</when>
+	 		<when test="sort == 'wishes'">
+	 			order by m.movie_wish_cnt desc nulls last
 	 		</when>
 	 		<when test="sort == 'year-asc'">
-	 			order by movie_release_year asc
+	 			order by m.movie_release_year asc
 	 		</when>
 	 		<when test="sort == 'year-desc'">
-	 			order by movie_release_year desc
+	 			order by m.movie_release_year desc
 	 		</when>
 	 		<otherwise>
 	 			order by m.movie_no asc
@@ -119,9 +125,22 @@
 			, movie_poster_image_path as posterImagePath
 			, movie_plot as plot
 			, movie_release_year as releaseYear
+			, movie_review_cnt as reviewCnt
+			, movie_wish_cnt as wishCnt
 		from
 			movmov_movies 
 		where
 			movie_no = #{no}
 	</select>
+	<!-- 
+		void updateMovie(Movie movie);
+	 -->
+	<update id="updateMovieReviewCntOrWishCnt" parameterType="Movie">
+		update movmov_movies
+		set
+			movie_review_cnt = #{reviewCnt}
+			, movie_wish_cnt = #{wishCnt}
+		where
+			movie_no = #{no}
+	</update>
 </mapper>

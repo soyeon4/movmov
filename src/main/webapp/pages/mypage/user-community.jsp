@@ -14,6 +14,7 @@
     int pageNo = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
     int rows = 5;
     int totalRows = postMapper.getTotalPostRowsByUserId(userId);
+    System.out.println("총 게시글 수 = " + totalRows);
 
     Pagination pagination = new Pagination(pageNo, totalRows, rows);
 
@@ -48,11 +49,9 @@
 <% 		if (postData == null || postData.isEmpty()) 
 		{ 
 %>
-        <div class="bg-white p-6 text-center text-gray-500 rounded shadow">
-            작성한 게시글이 없습니다.
-        </div>
+        	<p class="text-center text-gray-500">작성한 리뷰가 없습니다.</p>
 <% 		} else 
-		{ 
+		 { 
 %>
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <table class="min-w-full divide-y divide-gray-200">
@@ -85,7 +84,7 @@
             </table>
         </div>
 <% 
-	} 
+		 } 
 %>
 
 	<!-- 페이지네이션 -->
@@ -97,12 +96,12 @@
 <% 		}
        for (int i = beginPage; i <= endPage; i++) {
            if (i == pagination.getCurrentPage()) { %>
-               <span class="page-link px-3 py-1 border rounded bg-pink-500 text-white font-bold"><%= i %></span>
-<% } else 
-		{ 
+               <span class="page-link px-3 py-1 border rounded bg-pink-500 text-white font-bold"><%=i%></span>
+<% 			} else 
+		  		{ 
 %>
-            <a href="#" class="page-link px-3 py-1 border rounded hover:bg-gray-200" data-page-no="<%= i %>"><%= i %></a>
-<% 		}
+           		 <a href="#" class="page-link px-3 py-1 border rounded hover:bg-gray-200" data-page-no="<%=i%>"><%=i%></a>
+<% 		  		}
        }
        if (!pagination.isLast()) { %>
         <a href="#" class="page-link px-3 py-1 border rounded hover:bg-gray-200" data-page-no="<%= pagination.getNextPage() %>">다음</a>

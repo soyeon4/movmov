@@ -27,4 +27,5 @@ public class Movie {
    private List<Genre> genres;
    private int reviewCnt;
    private int wishCnt;
+   private double avgStar;
 }

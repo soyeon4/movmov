@@ -19,7 +19,7 @@
 	MovieMapper movieMapper = MybatisUtils.getMapper(MovieMapper.class);
 
 	int pageNo = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-	int rows = 2;
+	int rows = 10;
 	int totalRows = reviewMapper.getTotalReviewRowsByUserId(userId);
 
 	Pagination pagination = new Pagination(pageNo, totalRows, rows);
