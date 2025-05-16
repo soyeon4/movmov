@@ -84,7 +84,7 @@ btnsEdit.forEach(btn => {
 
 //수정 함수
 function openEditAddressInfo(card) {
-	const id = card.querySelector('.address-id').value.trim() || '';
+	const id = card.querySelector('input[name="address-id"]').value.trim() || '';
 	const name = card.querySelector('.address-header strong').textContent.trim() || '';
 	const comment = card.querySelector('.address-header span').textContent.trim() || '';
 	const phone = card.querySelector('.phone').textContent.trim() || '';

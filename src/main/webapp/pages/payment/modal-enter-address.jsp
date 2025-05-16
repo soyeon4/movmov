@@ -74,3 +74,6 @@
 		</form>
 	</div>
 </div>
+
+<script type="text/javascript"
+		src="/movmov/resources/script/payment/payment.mjs"></script>

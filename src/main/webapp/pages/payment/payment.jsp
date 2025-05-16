@@ -61,6 +61,7 @@
 					if (defaultAddressForMain != null) {
 					%>
 					<p id="address-header">
+						<input type="hidden" name="address-id" id="default-address-id" value="0">
 						<strong id="receiver-name"><%=defaultAddressForMain.getReceiverName()%></strong>
 						<span id="address-comment"><%=defaultAddressForMain.getAddressName()%></span>
 						<button class="tag" id="btn-list-address">주소지 선택</button>
