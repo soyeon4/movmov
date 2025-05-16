@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.movmov.mapper.PaymentMapper">
+	<!-- C:CREATE void insertPayment(Payment payment); -->
+	<insert id="insertPayment" parameterType="Payment">
+	
+		insert into 
+			movmov_payment_histories
+			
+		(
+			pay_id
+			, pay_status_id
+			, user_id
+			, item_no
+			, option_no
+			, pay_amount
+			, pay_date
+			, pt_use_amount
+			, pt_earn_amount
+			, addr_id
+			, pay_method_id
+			, request
+			, item_quantity
+		)
+		
+		values
+		(
+			seq_pay_id.NEXTVAL
+			, #{payStatusId}
+			, #{user.id}
+			, #{item.no}
+			, #{option.optionNo}
+			, #{payAmount}
+			, SYSDATE
+			, #{ptUseAmount}
+			, #{ptEarnAmount}
+			, #{address.id}
+			, #{payMethodId}
+			, #{request}
+			, #{itemQuantity}
+		)
+	
+	</insert>
+	
+	<!-- R:RETRIEVE Payment getPaymentById(int id); -->
+	<select id="getPaymentById" parameterType="int">
+		select
+			pay_id 				as payId
+			, pay_status_id		as payStatusId
+			, user_id			as "user.id"
+			, item_no			as "item.no"
+			, option_no			as "option.optionNo"
+			, pay_amount		as payAmount
+			, pay_date			as payDate
+			, pt_use_amount		as ptUseAmount
+			, pt_earn_amount 	as ptEarnAmount
+			, addr_id			as "address.id"
+			, pay_method_id		as payMethodId
+			, request			as request
+			, item_quantity		as itemQuantity
+			
+		from 
+			movmov_payment_histories
+			
+		where
+			pay_id = #{id}
+			
+	</select>
+	
+	<!-- R:RETRIEVE Payment getRecentPayment(User user); -->
+	<select id="getRecentPayment" parameterType="User" resultType="Payment">
+		select
+			pay_id 				as payId
+			, pay_status_id		as payStatusId
+			, user_id			as "user.id"
+			, item_no			as "item.no"
+			, option_no			as "option.optionNo"
+			, pay_amount		as payAmount
+			, pay_date			as payDate
+			, pt_use_amount		as ptUseAmount
+			, pt_earn_amount 	as ptEarnAmount
+			, addr_id			as "address.id"
+			, pay_method_id		as payMethodId
+			, request			as request
+			, item_quantity		as itemQuantity
+			
+		from 
+			movmov_payment_histories
+		
+		where
+			user_id = #{id}
+		
+		order by 
+			pay_id desc
+		
+		fetch first 1 rows only
+		
+	</select>
+	
+	<!-- R:RETRIEVE List<Payment> getRecentFivePayment(User user); -->
+	<select id="getRecentFivePayment" parameterType="User" resultType="Payment">
+		select
+			pay_id 				as payId
+			, pay_status_id		as payStatusId
+			, user_id			as "user.id"
+			, item_no			as "item.no"
+			, option_no			as "option.optionNo"
+			, pay_amount		as payAmount
+			, pay_date			as payDate
+			, pt_use_amount		as ptUseAmount
+			, pt_earn_amount 	as ptEarnAmount
+			, addr_id			as "address.id"
+			, pay_method_id		as payMethodId
+			, request			as request
+			, item_quantity		as itemQuantity
+			
+		from 
+			movmov_payment_histories
+		
+		where
+			user_id = #{id}
+		
+		order by 
+			pay_date desc
+		
+		fetch first 5 rows only
+		
+	</select>
+	
+	<!-- R:RETRIEVE List<Payment> getAllPaymentOfUser(User user); -->
+	<select id="getAllPaymentOfUser" parameterType="User">
+		select 
+			pay_id 				as payId
+			, pay_status_id		as payStatusId
+			, user_id			as "user.id"
+			, item_no			as "item.no"
+			, option_no			as "option.optionNo"
+			, pay_amount		as payAmount
+			, pay_date			as payDate
+			, pt_use_amount		as ptUseAmount
+			, pt_earn_amount 	as ptEarnAmount
+			, addr_id			as "address.id"
+			, pay_method_id		as payMethodId
+			, request			as request
+			, item_quantity		as itemQuantity
+			
+		from 
+			movmov_payment_histories
+		
+		where
+			user_id = #{user.id}
+		
+		order by
+			pay_date desc
+			
+	</select>
+	
+	<!-- U:UPDATE void updatePaymentStatus(Payment payment); -->
+	<update id="updatePaymentStatus" parameterType="Payment">
+		update
+			movmov_payment_histories
+		set
+			, pay_status_id = #{payStatusId}
+			, user_id = #{user.id}
+			, item_no = #{item.no}
+			, option_no = #{option.optionNo}
+			, pay_amount = #{payAmount}
+			, pay_date = #{payDate}
+			, pt_use_amount = #{ptUseAmount}
+			, pt_earn_amount = #{ptEarnAmount}
+			, addr_id = #{address.id}
+			, pay_method_id = #{payMethodId}
+			, request = #{request}
+			, item_quantity = #{itemQuantity}
+		
+		where
+			pay_id = #{payId}
+	</update>
+</mapper>

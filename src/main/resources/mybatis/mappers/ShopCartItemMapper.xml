@@ -5,6 +5,7 @@
  
 <mapper namespace="kr.co.movmov.mapper.ShopCartItemMapper">
 
+
 	<!--
 		void updateCartItemQuantityByCartNo(@Param("cartNo") int cartNo, 
 							@Param("quantity") int quantity);

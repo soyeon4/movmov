@@ -34,9 +34,6 @@ public class CommentArranger {
             } else {
                 Comment parentComment = commentMap.get(comment.getParentCommentNo());
                 if (parentComment != null) {
-                	if (comment.getReportCount() > 4) {
-                		comment.setContent("신고되어 삭제처리된 댓글입니다.");
-                	}
                 	parentComment.getReplies().add(comment);
                 }
             }
@@ -60,12 +57,12 @@ public class CommentArranger {
             	topComment.setContent("삭제된 댓글입니다.");
             }
             // 신고된 댓글 처리
-            if (topComment.getReportCount() > 4) {
+            if (topComment.getReportCount() > 5) {
             	if (!hasReplies) continue;
         		topComment.setContent("신고되어 삭제처리된 댓글입니다.");
             }
             
-            if (currentPageCommentCount + nestedCount > pageLimit && !currentPage.isEmpty() && currentPageCommentCount > 3) {
+            if (currentPageCommentCount + nestedCount > pageLimit && !currentPage.isEmpty()) {
             	commentPages.add(new ArrayList<>(currentPage));
                 currentPage.clear();
                 currentPageCommentCount = 0;

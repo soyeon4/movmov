@@ -8,6 +8,7 @@
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL" />
 		<setting name="logImpl" value="STDOUT_LOGGING"/>
+
 	</settings>
 
 	<typeAliases>
@@ -18,7 +19,7 @@
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
-				<property name="driver" value="${driver}" />
+	            <property name="driver" value="${driver}" />
 	            <property name="url" value="${url}" />
 	            <property name="username" value="${username}" />
 	            <property name="password" value="${password}" />
@@ -28,6 +29,10 @@
 
 	<!-- Mapper XML 파일 등록 -->
 	<mappers>
+		<mapper resource="mybatis/mappers/AddressMapper.xml" />
+		<mapper resource="mybatis/mappers/PaymentMapper.xml" />
+		<mapper resource="mybatis/mappers/PointMapper.xml" />
+		
 		<mapper resource="mybatis/mappers/PostMapper.xml" />
 		<mapper resource="mybatis/mappers/CommentMapper.xml" />
 		<mapper resource="mybatis/mappers/ReportMapper.xml" />
@@ -39,7 +44,6 @@
 		<mapper resource="mybatis/mappers/GenreMapper.xml" />
 		<mapper resource="mybatis/mappers/MovieGenreMapMapper.xml" />
 		<mapper resource="mybatis/mappers/ReviewMapper.xml" />
-		<mapper resource="mybatis/mappers/ReviewLikeMapper.xml" />
 		<mapper resource="mybatis/mappers/WishMovieMapper.xml" />
 		<mapper resource="mybatis/mappers/CsInquiryMapper.xml" />
 		<mapper resource="mybatis/mappers/CsPostMapper.xml" />

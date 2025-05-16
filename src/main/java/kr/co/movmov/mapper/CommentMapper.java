@@ -53,11 +53,8 @@ public interface CommentMapper {
 	 */
 	int getCurrentCommentNo();
 	
-	/**
-	 * 댓글 번호를 전달받아서
-	 * 해당 댓글의 신고 개수를 업데이트한다.
-	 * @param commentNo 댓글 번호
-	 */
-	void updateCommentReportCount(int commentNo);
+	List<Comment> getTopLevelCommentsByPostNo(int PostNo);
+	
+	List<Comment> getReplyCommentsByPostNo(int PostNo);
 	
 }

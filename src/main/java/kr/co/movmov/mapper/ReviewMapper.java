@@ -17,20 +17,11 @@ public interface ReviewMapper {
 	
 	Review getReviewByUserIdAndMovieNo(@Param("userId") String userId, @Param("movieNo") int movieNo);
 	
-	Review getReviewByReviewNo(int reviewNo);
-	
 	void insertReview(Review review);
 	
 	void updateReview(Review review);
 	
-	void updateReviewLikeCnt(Review review);
-	
-	void deleteReview(int reviewNo);
-	
-	int getTotalRows(Map<String, Object> condition);
-	
-	List<Review> getReviews(Map<String, Object> condition);
-
 	int getTotalReviewRowsByUserId(String userId);
 	
+
 }

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.movmov.mapper.PointMapper">
+	<!-- void insertPoint(Point point); -->
+	<insert id="insertPoint" parameterType="Point">
+		
+		insert into 
+			movmov_point_histories
+		(
+			point_id
+			, point_change_amount
+			, type_id
+			, pay_id
+			, point_current_total
+			, user_id
+			, created_at
+		)
+		
+		values
+		(
+			seq_point_id.NEXTVAL
+			, #{pointChangeAmount}
+			, #{typeId}
+			, #{payment.payId}
+			, #{totalPoint}
+			, #{user.id}
+			, SYSDATE
+		)
+		
+	</insert>
+	
+	<!-- List<Point> getAllPointHistoryOfUser(User user); -->
+	<select id="getAllPointHistoryOfUser" parameterType="User">
+	
+		select
+			point_id				as id
+			, point_change_amount	as pointChangeAmount
+			, type_id				as typeId
+			, pay_id				as "payment.id"
+			, point_current_total	as totalPoint
+			, user_id				as "user.id"
+			, created_at			as createdAt
+			
+		from
+			movmov_point_histories
+			
+		where
+			user_id = #{id}
+					
+	</select>
+	
+	<!-- List<Point> getRecentFivePoint(User user); -->
+	<select id="getRecentFivePoint" parameterType="User">
+	
+		select
+			point_id				as id
+			, point_change_amount	as pointChangeAmount
+			, type_id				as typeId
+			, pay_id				as "payment.id"
+			, point_current_total	as totalPoint
+			, user_id				as "user.id"
+			, created_at			as createdAt
+			
+		from
+			movmov_point_histories
+			
+		where
+			user_id = #{id}
+		
+		order by
+			created_at desc
+		
+		fetch first 5 rows only
+					
+	</select>
+	
+	<!-- int getUserPoint(User user); -->
+	<select id="getUserPoint" parameterType="User">
+		select
+			user_point
+		
+		from 
+			movmov_users
+		
+		where
+			user_id = #{id}
+			
+	</select>
+	
+	<!-- void updateUserPoint(@Param("user") User user, @Param("pointAmount") int pointAmount); -->
+	<update id="updateUserPoint">
+		update 
+			movmov_users
+			
+		set 
+			user_point = #{pointAmount}
+			
+		where 
+			user_id = #{user.id}
+			
+	</update>
+	
+</mapper>

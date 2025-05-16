@@ -25,6 +25,8 @@
 		where
 			C.comment_no = #{commentNo}
 			AND C.user_id = U.user_id
+			AND C.comment_is_deleted = 'N'
+			<![CDATA[AND C.comment_report_count < 5]]>
 	</select>
 	
 	<resultMap type="Comment" id="CommentResultMap">
@@ -95,7 +97,7 @@
 			C.post_no = #{postNo}
 			AND C.user_id = U.user_id
 		ORDER BY
-			C.comment_created_date desc
+			C.comment_created_date asc
 	</select>
 	
 	<!--
@@ -180,21 +182,5 @@
 		SELECT COMMENT_NO_SEQ.CURRVAL
 		FROM DUAL
 	</select>
-	
-	<!--
-		void updateCommentReportCount(int commentNo);
-	-->
-	<update id="updateCommentReportCount">
-		UPDATE MOVMOV_COMMUNITY_COMMENTS
-		SET comment_report_count = (
-	   		SELECT COUNT(*)
-	   		FROM MOVMOV_COMMUNITY_REPORTS
-	   		WHERE report_content_no = #{commentNo}
-	   		)
-   	  	  , comment_is_reported = 'Y'
-		WHERE
-			comment_no = #{commentNo}
-	</update>
-	
 </mapper>
  

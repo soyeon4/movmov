@@ -13,6 +13,4 @@ public interface MovieMapper {
 	
 	Movie getMovieByNo(int no); 
 	
-	void updateMovieReviewCntOrWishCnt(Movie movie);
-
 }

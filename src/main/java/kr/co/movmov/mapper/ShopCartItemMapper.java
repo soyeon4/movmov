@@ -25,6 +25,8 @@ public interface ShopCartItemMapper {
 	void updateCartItemQuantityByCartNo(@Param("cartNo") int cartNo, 
 							@Param("quantity") int quantity);
 	
+	
+	
 	/**
 	 * 사용자 아이디와 상품 아이디를 전달받아 장바구니에 추가
 	 * @param userId 사용자 아이디
@@ -37,6 +39,8 @@ public interface ShopCartItemMapper {
 					@Param("optionNo") int optionNo, 
 					@Param("quantity") int quantity);
 	
+	
+	
 	/**
 	 * 장바구니 번호로 장바구니에서 상품 삭제
 	 * @param cartNo 장바구니 번호
@@ -48,6 +52,8 @@ public interface ShopCartItemMapper {
 	 * @param userId 사용자 아이디
 	 */
 	void deleteCartItemByUserId(String userId);
+	
+	
 	
 	/**
 	 * 사용자 아이디로 장바구니 상품리스트 조회

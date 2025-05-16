@@ -126,8 +126,8 @@
 		void updatePost(Post post);
 	-->
 	<insert id="updatePost" parameterType="Post">
-		UPDATE movmov_community_posts
-		SET
+		update movmov_community_posts
+		set
 			post_content = #{content}
 		  , post_header = #{header.id}
 		  , post_board_type = #{boardType.id}
@@ -136,7 +136,7 @@
 		  , post_is_deleted = #{isDeleted}
 		  , post_is_reported = #{isReported}
 		  , post_report_count = #{reportCount}
-		WHERE
+		where
 			post_no = #{no}
 	</insert>
 	
@@ -386,21 +386,6 @@
     	FROM movmov_community_posts
     	WHERE user_id = #{userId}
    </select>
-   
-	<!--
-		void updatePostReportCount(int postNo);
-	-->
-   <update id="updatePostReportCount">
-	   	UPDATE MOVMOV_COMMUNITY_POSTS
-	   	SET post_report_count = (
-	   		SELECT COUNT(*)
-	   		FROM MOVMOV_COMMUNITY_REPORTS
-	   		WHERE report_content_no = #{postNo}
-	   		)
-	   	  , post_is_reported = 'Y'
-	   	WHERE
-	   		post_no = #{postNo}
-   </update>
 	
 </mapper>
  

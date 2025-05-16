@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.movmov.mapper.AddressMapper">
+	<!-- C:CREATE void insertAddress(Address address); -->
+	<insert id="insertAddress" parameterType="Address">
+		insert into
+		movmov_user_addresses
+		(
+			addr_id
+			, addr_name
+			, addr_road
+			, addr_detail
+			, user_id
+			, receiver_number
+			, receiver_name
+			, zipcode
+		)
+		values
+		(seq_addr_id.NEXTVAL, #{addressName}, #{road}, #{detail}, #{user.id}, #{receiverPhone}, #{receiverName}, #{zipcode})
+	</insert>
+
+	<!-- R:RETRIEVE Address getDefaultAddress(User user); -->
+	<select id="getDefaultAddress" resultType="Address" parameterType="User">
+		select
+			a.addr_id 				as id
+			, a.addr_name 			as addressName
+			, a.addr_road 			as road
+			, a.addr_detail 		as detail
+			, u.user_id 			as "user.id"
+			, a.receiver_number 	as receiverPhone
+			, a.receiver_name 		as receiverName
+			, a.zipcode				as zipcode
+
+		from
+			movmov_users u
+			
+		join
+			movmov_user_addresses a
+		
+		on
+			u.addr_id = a.addr_id
+		
+		where
+			u.user_id = #{id}
+			
+	</select>
+	
+	<!-- R:RETRIEVE Address getAddressById(int id); -->
+	<select id="getAddressById" parameterType="int">
+	
+		select
+			addr_id				as id
+			, addr_name			as addressName
+			, addr_road			as road
+			, addr_detail		as detail
+			, user_id			as "user.id"
+			, receiver_number	as receiverPhone
+			, receiver_name		as receiverName
+			, zipcode			as zipcode
+			
+		from
+			movmov_user_addresses
+		
+		where
+			addr_id = #{id}
+	</select>
+
+	<!-- R:RETRIEVE List<Address> getAllAddressOfUser(User user); -->
+	<select id="getAllAddressOfUser" parameterType="User" resultType="Address">
+		select
+			addr_id				as id
+			, addr_name			as addressName
+			, addr_road			as road
+			, addr_detail		as detail
+			, user_id			as "user.id"
+			, receiver_number	as receiverPhone
+			, receiver_name		as receiverName
+			, zipcode			as zipcode
+			
+		from
+			movmov_user_addresses
+		
+		where
+			user_id = #{id}
+	</select>
+	
+	<!-- U:UPDATE void updateAddress(Address address); -->
+	<update id="updateAddress" parameterType="Address">
+		update
+			movmov_user_addresses
+			
+		set
+			addr_name = #{addressName},
+    		addr_road = #{road},
+    		addr_detail = #{detail},
+    		user_id = #{user.id},
+    		receiver_number = #{receiverPhone},
+    		receiver_name = #{receiverName},
+    		zipcode = #{zipcode}
+    		
+    	where
+    		addr_id = #{id}
+	</update>
+	
+	<!-- U:UPDATE void updateDefaultAddress(@Param("addrID") int addrID, @Param("user") User user); -->
+	<update id="updateDefaultAddress" parameterType="map">
+        update 
+        	movmov_users
+        	
+        set 
+        	addr_id = #{addrID}
+        	
+        where 
+        	user_id = #{user.id}
+    </update>
+
+	<!-- D:DELETE void deleteAddressById(@Param("addrId") int addrId, @Param("userId") String userId); -->
+	<delete id="deleteAddressById" parameterType="map">
+		delete from 
+			movmov_user_addresses
+		where 
+			addr_id = #{addrId} AND user_id = #{userId}
+	</delete>
+</mapper>
