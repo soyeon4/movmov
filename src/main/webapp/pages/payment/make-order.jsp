@@ -47,7 +47,7 @@
 	if(idStrings != null) {
 		for(String idStr : idStrings) {
 			int id = Integer.parseInt(idStr);
-			ShopCartItem item = shopCartItemMapper.getCartItemByCartNos();
+			ShopCartItem item = shopCartItemMapper.getCartItemByCartNo();
 		}
 	}
 	
