@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.mapper.ShopItemMapper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="kr.co.movmov.vo.Point"%>
 <%@page import="kr.co.movmov.mapper.PointMapper"%>
@@ -14,16 +15,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	String paymentMethodStr = request.getParameter("order-payment-method");
-
-	if (paymentMethodStr == null || paymentMethodStr.trim().isEmpty()) {
-%>
-    <script>
-        alert("결제 수단을 선택하여 주십시오.");
-        history.back(); // 이전 페이지로 되돌아감
-    </script>
-<%
-    return; // JSP 실행 중단
-	}
 	
 	//request parameters
 	int payStatusID = 1; // payment complete(1)
@@ -40,6 +31,7 @@
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
 	PaymentMapper paymentMapper = MybatisUtils.getMapper(PaymentMapper.class);
 	PointMapper pointMapper = MybatisUtils.getMapper(PointMapper.class);
+	ShopItemMapper shopItemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 	
 	//get cart info	
 	List<ShopCartItem> cartItems = new ArrayList<>();
@@ -47,7 +39,10 @@
 	if(idStrings != null) {
 		for(String idStr : idStrings) {
 			int id = Integer.parseInt(idStr);
-			ShopCartItem item = shopCartItemMapper.getCartItemByCartNo();
+			ShopCartItem item = shopCartItemMapper.getCartItemsByCartNo(id);
+			if(item != null)
+	        	cartItems.add(item);
+			item.setItem(shopItemMapper.getShopItemByItemNo(item.getItem().getNo()));
 		}
 	}
 	
@@ -88,6 +83,8 @@
 		
 		pointMapper.insertPoint(point);
 		pointMapper.updateUserPoint(user, userPoint);
+		
+		shopCartItemMapper.deleteCartItemByCartNo(cartItem.getNo());
 	}
 	
 	//set point Object for point usage
@@ -104,7 +101,7 @@
 		pointMapper.updateUserPoint(user, userPoint);
 	}
 	
-	shopCartItemMapper.deleteCartItemByUserId(user.getId());
+	
 	
 	response.sendRedirect("payment-success.jsp");
 	return;

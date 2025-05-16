@@ -1,3 +1,5 @@
+<%@page import="kr.co.movmov.mapper.PointMapper"%>
+<%@page import="kr.co.movmov.mapper.ShopItemMapper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="kr.co.movmov.utils.StringUtils"%>
 <%@page import="kr.co.movmov.dto.CartDto"%>
@@ -32,8 +34,11 @@
 	AddressMapper addressMapperForMain = MybatisUtils.getMapper(AddressMapper.class);
 	Address defaultAddressForMain = addressMapperForMain.getDefaultAddress(loginUser);
 	ShopCartItemMapper shopCartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
+	ShopItemMapper shopItemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
+	PointMapper pointMapper = MybatisUtils.getMapper(PointMapper.class);
+	
 	int pointUsage = 0;
-	int pointAmount = 1000;
+	int pointAmount = pointMapper.getUserPoint(loginUser);
 	
 	if (loginUser == null) {
 	%>
@@ -131,9 +136,11 @@
 			if (cnos != null) {
 			    for (String cno : cnos) {
 			        int cartItemId = Integer.parseInt(cno);
-			        ShopCartItem item = shopCartItemMapper.getCartItemByCartNo();
+			        ShopCartItem item = shopCartItemMapper.getCartItemsByCartNo(cartItemId);
 			        if(item != null)
 			        	cartItems.add(item);
+			        
+			        item.setItem(shopItemMapper.getShopItemByItemNo(item.getItem().getNo()));
 			    }
 			}
 			
@@ -184,7 +191,7 @@
 
 			<section class="pay-method">
 				<h3>
-					결제수단 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage) %>원</span>
+					결제수단 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원</span>
 				</h3>
 				<h4>Pay 결제</h4>
 				<label>
@@ -224,7 +231,7 @@
 		<div class="payment-right">
 			<section class="summary-box">
 				<h3>
-					결제상세 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder-pointUsage) %>원</span>
+					결제상세 <span class="price-main"><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원</span>
 				</h3>
 				<p>
 					주문 금액 <span class="price"><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원</span>
@@ -270,7 +277,7 @@
 					<%
 					} 
 					%>
-					<button type="submit" class="pay-btn" ><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원 결제하기</button>
+					<button type="submit" class="pay-btn" ><%=StringUtils.commaWithNumber(totalPriceOfOrder - pointUsage + cartDto.getDeliveryFee()) %>원 결제하기</button>
 				</form>
 			</div>
 		</div>

@@ -54,7 +54,7 @@
 					LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				%>
 				<div class="order-item">
-					<span><%=item.getName()%></span><span><%=item.getPrice()%>원
+					<span><%=item.getName()%></span><span><%=item.getPrice() * payment.getItemQuantity()%>원
 						| <%=localDate%></span>
 				</div>
 				<%
@@ -100,7 +100,7 @@
 				<div class="user-meta">
 					<strong><%=loginUser.getName()%></strong>
 					<p><%=loginUser.getEmail()%></p>
-					잔여 포인트 <strong><%=loginUser.getPoint()%></strong>P
+					잔여 포인트 <strong><%=pointMapper.getUserPoint(loginUser)%></strong>P
 				</div>
 			</div>
 
