@@ -73,7 +73,7 @@
 					String strPointChanges = "";
 					int pointChanges = point.getPointChangeAmount();
 					if (point.getTypeId() == 100) {
-						strPointChanges = "-" + StringUtils.commaWithNumber(pointChanges) + "P";
+						strPointChanges = StringUtils.commaWithNumber(pointChanges) + "P";
 					} else {
 						strPointChanges = "+" + StringUtils.commaWithNumber(pointChanges) + "P";
 					}
