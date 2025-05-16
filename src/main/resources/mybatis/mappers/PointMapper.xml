@@ -34,6 +34,47 @@
 	
 	<!-- List<Point> getAllPointHistoryOfUser(User user); -->
 	<select id="getAllPointHistoryOfUser" parameterType="User">
+	
+		select
+			point_id				as id
+			, point_change_amount	as pointChangeAmount
+			, type_id				as typeId
+			, pay_id				as "payment.id"
+			, point_current_total	as totalPoint
+			, user_id				as "user.id"
+			, created_at			as createdAt
+			
+		from
+			movmov_point_histories
+			
+		where
+			user_id = #{id}
+					
+	</select>
+	
+	<!-- List<Point> getRecentFivePoint(User user); -->
+	<select id="getRecentFivePoint" parameterType="User">
+	
+		select
+			point_id				as id
+			, point_change_amount	as pointChangeAmount
+			, type_id				as typeId
+			, pay_id				as "payment.id"
+			, point_current_total	as totalPoint
+			, user_id				as "user.id"
+			, created_at			as createdAt
+			
+		from
+			movmov_point_histories
+			
+		where
+			user_id = #{id}
+		
+		order by
+			created_at desc
+		
+		fetch first 5 rows only
+					
 	</select>
 	
 	<!-- int getUserPoint(User user); -->
@@ -45,11 +86,11 @@
 			movmov_users
 		
 		where
-			user_id = #{user.id}
+			user_id = #{id}
 			
 	</select>
 	
-	<!-- void updateUserPoint(User user, int pointAmount); -->
+	<!-- void updateUserPoint(@Param("user") User user, @Param("pointAmount") int pointAmount); -->
 	<update id="updateUserPoint">
 		update 
 			movmov_users

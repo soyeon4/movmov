@@ -13,6 +13,8 @@ public interface PaymentMapper {
 	
 	Payment getRecentPayment(User user);
 	
+	List<Payment> getRecentFivePayment(User user);
+	
 	List<Payment> getAllPaymentOfUser(User user);
 	
 	void updatePaymentStatus(Payment payment);

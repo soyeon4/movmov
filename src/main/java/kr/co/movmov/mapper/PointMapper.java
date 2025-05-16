@@ -13,7 +13,9 @@ public interface PointMapper {
 	
 	List<Point> getAllPointHistoryOfUser(User user);
 	
+	List<Point> getRecentFivePoint(User user);
+	
 	int getUserPoint(User user);
 	
-	void updateUserPoint(@Param("user") User user, @Param("point") int pointAmount);
+	void updateUserPoint(@Param("user") User user, @Param("pointAmount") int pointAmount);
 }

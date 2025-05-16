@@ -12,9 +12,6 @@
 <%@page import="kr.co.movmov.vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-System.out.println("🔥 make-order.jsp 실행됨");
-%>
-<%
 	//request parameters
 	int payStatusID = 1; // payment complete(1)
 	User user = (User) session.getAttribute("LOGIN_USER");

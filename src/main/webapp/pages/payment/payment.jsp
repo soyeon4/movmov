@@ -45,7 +45,7 @@
 	%>
 	
 	<main class="payment-wrapper">
-		<form id="order-form" action="/movmov/pages/payment/make-order.jsp" method="post">
+		
 		<div class="payment-left">
 			<section class="shipping-box">
 				<h3>배송 정보</h3>
@@ -55,7 +55,6 @@
 					if (defaultAddressForMain != null) {
 					%>
 					<p id="address-header">
-						<input type="hidden" name="order-address-id" id="order-address-id" value="<%=defaultAddressForMain.getId() %>">
 						<strong id="receiver-name"><%=defaultAddressForMain.getReceiverName()%></strong>
 						<span id="address-comment"><%=defaultAddressForMain.getAddressName()%></span>
 						<button class="tag" id="btn-list-address">주소지 선택</button>
@@ -119,7 +118,7 @@
 					</select>
 					
 					<div id="custom-memo-box" class="point-use">
-						<input type="text" id="customer-request" name="customer-request" placeholder="배송 요청사항을 입력해주세요">
+						<input type="text" id="customer-request"  placeholder="배송 요청사항을 입력해주세요">
 					</div>
 				</div>
 			</section>
@@ -160,7 +159,6 @@
 				<div class="wallet-summary">
 					<p>
 						사용 가능: <strong><%=StringUtils.commaWithNumber(pointAmount) %>원</strong>
-						<input type="hidden" name="order-point-usage" id="order-point-usage" value="<%=pointUsage%>">
 					</p>
 					<ul>
 						<li>포인트 사용<span id="point-usage"><%=StringUtils.commaWithNumber(pointUsage) %>원</span></li>
@@ -194,7 +192,7 @@
 					<button type="button" class="account" data-value="4">
 						<img src="/movmov/resources/images/payment/payco_logo.png" alt="">
 					</button>
-					<input type="hidden" name="order-payment-method" id="order-payment-method" value="">
+					
 				</label>
 
 				<h4>계좌 간편결제</h4>
@@ -235,7 +233,7 @@
 			<section class="point-benefit">
 				<h3>
 					포인트 혜택 <span class="highlight">총 <%=StringUtils.commaWithNumber(rewardOfPurchase + rewardOfMethod) %>원</span>
-					<input type="hidden" name="order-point-earn" id="order-point-earn" value="<%=rewardOfPurchase + rewardOfMethod%>">
+					
 				</h3>
 				<div class="benefit-list">
 					<ul>
@@ -246,10 +244,17 @@
 			</section>
 
 			<div class="payment-btn-container">
-				<button type="submit" class="pay-btn" ><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원 결제하기</button>
+				<form id="order-form" action="/movmov/pages/payment/make-order.jsp" method="post">
+					<input type="hidden" name="order-point-usage" id="order-point-usage" value="<%=pointUsage%>">
+					<input type="hidden" name="order-point-earn" id="order-point-earn" value="<%=rewardOfPurchase + rewardOfMethod%>">
+					<input type="hidden" name="order-address-id" id="order-address-id" value="<%=defaultAddressForMain.getId() %>">
+					<input type="hidden" name="order-payment-method" id="order-payment-method" value="">
+					<input type="hidden" name="customer-request" id="order-request" value="선택 안 함">
+					<button type="submit" class="pay-btn" ><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원 결제하기</button>
+				</form>
 			</div>
 		</div>
-		</form>
+		
 	</main>
 
 	<%@ include file="/pages/common/footer.jsp"%>

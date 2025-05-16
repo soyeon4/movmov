@@ -292,13 +292,22 @@ function applyPoint() {
 
 const optionRequest = document.getElementById("select-delivery-request");
 const customBox = document.getElementById("custom-memo-box");
+const formRequest = document.getElementById('order-request');
+const inputRequest = document.getElementById('customer-request');
+
+//배송 요청 사항
 optionRequest.addEventListener('change', () => {
 	if(optionRequest.value == "custom") {
-		customBox.value = "";
+		inputRequest.value = "";
 		customBox.style.display = "block";
 	} 
 	else {
 		customBox.style.display = "none";
-		customBox.value = optionRequest.value;
+		formRequest.value = optionRequest.value;
 	}
-})
+});
+
+//배송요청사항 입력이 종료되면 폼에 입력
+inputRequest.addEventListener('blur', () => {
+	formRequest.value = inputRequest.value;
+});

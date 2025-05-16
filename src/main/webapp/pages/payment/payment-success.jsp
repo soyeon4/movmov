@@ -35,80 +35,9 @@
 				<a href="/movmov/index.jsp" class="btn-home">홈으로 가기</a> <a
 					href="/movmov/pages/payment/payment-history.jsp" class="btn-orders">주문 내역 보기</a>
 			</div>
-			
-			<hr>
-			<div class ="purchase-list-container">
-				<section class="product-box">
-					<h3>주문상품</h3>
-					<div class="product-detail">
-
-						<div class="product-summary">
-							<img src="" alt="상품 이미지">
-							<div class="summary-text">
-								<p>
-									<strong>MovMov 상품권 50,000원 권</strong>
-								</p>
-								<p class="option">무료 배송 / 수량 : 1개</p>
-								<p class="price">
-									<del>50,000원</del>
-									<strong>49,560원</strong>
-								</p>
-								<span class="detail-info">판매자 : CGV</span><br> <span
-									class="detail-info">배송지 : 서울특별시 종로구 율곡로10길 105 디아망 4층
-									(공동현관 중3805)(03033)</span>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="product-box">
-					<h3>주문상품</h3>
-					<div class="product-detail">
-
-						<div class="product-summary">
-							<img src="" alt="상품 이미지">
-							<div class="summary-text">
-								<p>
-									<strong>MovMov 상품권 50,000원 권</strong>
-								</p>
-								<p class="option">무료 배송 / 수량 : 1개</p>
-								<p class="price">
-									<del>50,000원</del>
-									<strong>49,560원</strong>
-								</p>
-								<span class="detail-info">판매자 : CGV</span><br> <span
-									class="detail-info">배송지 : 서울특별시 종로구 율곡로10길 105 디아망 4층
-									(공동현관 중3805)(03033)</span>
-							</div>
-						</div>                                                                                                                                                                                                                                                                                                   mm
-					</div>
-				</section>
-
-				<section class="product-box">
-					<h3>주문상품</h3>
-					<div class="product-detail">
-
-						<div class="product-summary">
-							<img src="" alt="상품 이미지">
-							<div class="summary-text">
-								<p>
-									<strong>MovMov 상품권 50,000원 권</strong>
-								</p>
-								<p class="option">무료 배송 / 수량 : 1개</p>
-								<p class="price">
-									<del>50,000원</del>
-									<strong>49,560원</strong>
-								</p>
-								<span class="detail-info">판매자 : CGV</span><br> <span
-									class="detail-info">배송지 : 서울특별시 종로구 율곡로10길 105 디아망 4층
-									(공동현관 중3805)(03033)</span>
-							</div>
-						</div>
-					</div>
-				</section>
-			</div>
 		</div>
 	</div>
+	
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
