@@ -115,7 +115,30 @@ $(document).ready(function () {
     const page = $(this).data('page');
     loadFaqs(currentCatId, page);
   });
+  
+  //Qna 탭 누를 경우 /movmov/pages/cs/inquiry.jsp로 전환
+  window.loadQnaTab = function () {
+      $("#inquiry").html('<div>로딩 중...</div>');
+      $.ajax({
+          url: '/movmov/pages/cs/inquiry.jsp', // Q&A 내용 JSP 경로
+          method: 'GET',
+          success: function (data) {
+              $("#inquiry").html(data); // Q&A 콘텐츠 삽입
+          },
+          error: function () {
+              $("#inquiry").html('<div>Q&A를 불러오는 데 실패했습니다.</div>');
+          }
+      });
+  }
 
+  window.goToTab = function (tabId) {
+      $('.tab').removeClass('active');
+      $('.tab-content').removeClass('active');
+
+      $('.tab[data-tab="' + tabId + '"]').addClass('active');
+      $('#' + tabId).addClass('active');
+  }
+  
   // 초기 FAQ 로딩
   loadFaqs("", 1);
 });

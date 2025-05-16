@@ -62,7 +62,8 @@ boolean isLoggedIn = loginedUser != null;
 						%>
 					</select>
 				</div>
-	
+				
+				<%-- Q&A 문의 입력 폼  (한 화면에 띄우기 위해 별도의 inquiry-form.jsp를 만들지 않았음--%>
 				<%-- 제목 입력 부분 --%>
 				<div class="form-group">
 					<label for="title">제목</label> <input type="text" id="title"
@@ -111,7 +112,7 @@ boolean isLoggedIn = loginedUser != null;
                 <% for (Category category : inquiryCategorys) { 
                 	System.out.println(category.getName());
                 %>
-                    <option value="<%= category.getName() %>"><%= category.getName() %></option>
+                    <option value="<%= category.getId() %>"><%= category.getName() %></option>
                 <% } %>
             </select>
         </label>
@@ -127,43 +128,64 @@ boolean isLoggedIn = loginedUser != null;
 
         <button type="button" onclick="applyFilters()">적용</button>
     </div>
+    
+    <div class="qna-header">
+    <div class="qna-col status">답변상태</div>
+    <div class="qna-col title">제목</div>
+    <div class="qna-col author">작성자</div>
+    <div class="qna-col date">작성일</div>
+</div>
 
 <div class="qna-list">
 <%
-	for (Inquiry i : inquiries) {
+for (Inquiry i : inquiries) {
 %>
-	<div class="qna-item">
-		<div class="qna-title">
-    <% if (i.getIsSecret() == 1) { %>
-        <i class="fa fa-lock lock-icon"></i>비밀글입니다.
-    <% } else { %>
+<div class="qna-item">
+  <div class="qna-row" style="display: flex; padding: 10px; border-bottom: 1px solid #e0e0e0;">
+    <div class="qna-col status">
+      <%= i.getStatus() == 1 ? "미답변" : "답변완료" %>
+    </div>
+    <div class="qna-col title clickable">
+      <% if (i.getIsSecret() == 1) { %>
+        <i class="fa fa-lock lock-icon"></i> 비밀글입니다.
+      <% } else { %>
         <%= i.getTitle() != null ? i.getTitle() : "" %>
-    <% } %>
-		</div>
-	<div class="qna-meta">
-    	작성자: <%= (i.getUser().getId() != null && i.getUser().getId() != null) ? i.getUser().getId() : "알 수 없음" %> |
-    	<%= i.getCreatedDate() != null ? StringUtils.simpleDateTimeFormat(i.getCreatedDate()) : "" %>
-	</div>
-	<div class="qna-answer">
-    <% if (i.getIsSecret() == 1) { %>
-        <i>비밀글은 작성자만 확인할 수 있습니다.</i>
-    <% } else { %>
-        <%= i.getContent() != null ? i.getContent() : "" %>
-    <% } %>
-	</div>
+      <% } %>
+    </div>
+    <div class="qna-col author">
+      <%= (i.getUser() != null && i.getUser().getId() != null) ? i.getUser().getId() : "알 수 없음" %>
+    </div>
+    <div class="qna-col date">
+      <%= i.getCreatedDate() != null ? StringUtils.simpleDateTimeFormat(i.getCreatedDate()) : "" %>
+    </div>
+  </div>
+
+<%-- 답변 내용 --%>
+<div class="qna-answer-block" style="display: none; padding: 10px; background-color: #f9f9f9;">
+  <% if (i.getIsSecret() == 1) { %>
+    <i>비밀글은 작성자만 확인할 수 있습니다.</i>
+  <% } else { %>
+    <p><%= i.getContent() %></p>
+    <hr>
+    <%
+      String answerContent = i.getAnswerContent();
+      if (answerContent != null && !answerContent.trim().equals("")) {
+    %>
+        <p><strong>답변:</strong> <%= answerContent %></p>
+    <%
+      } else {
+    %>
+        <p><strong>답변:</strong> 등록된 답변이 없습니다.</p>
+    <%
+      }
+    %>
+  <% } %>
 </div>
-<%
-		if (i.getStatus() == 2) {
-%>            
-          	<div class="qna-answer-block" style="display:none;">
-          		<p><%=i.getAnswerContent() %></p>
-          	</div>
-<%
-		}
-%>    	
+</div>
 <%
 }
 %>
+
 </div>
 
     <div class="pagination">

@@ -1,3 +1,4 @@
+<%@page import="kr.co.movmov.utils.StringUtils"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.*, kr.co.movmov.vo.Inquiry" %>
@@ -6,49 +7,35 @@
 
 <%
     // 필터 파라미터 받기
-    String categoryParam = request.getParameter("category");
+    String categoryParam = request.getParameter("categoryId");
     String statusParam = request.getParameter("answerStatus");
     String excludeSecretParam = request.getParameter("excludeSecret");
     String myQnaOnlyParam = request.getParameter("myQnaOnly");
 
-    // 필터 파라미터 처리
-    Integer categoryId = (categoryParam != null && !categoryParam.trim().isEmpty())
-                         ? Integer.parseInt(categoryParam) : null;
-    Integer status = "answered".equals(statusParam) ? 2 : ("unanswered".equals(statusParam) ? 1 : null);
-    boolean excludeSecret = "true".equals(excludeSecretParam);
-    boolean myQnaOnly = "true".equals(myQnaOnlyParam);
-
-    // 로그인 여부 처리;
 	User loginedUser = (User) session.getAttribute("LOGIN_USER");
 	boolean isLoggedIn = loginedUser != null;
 	String userId = "";
 	if (isLoggedIn) {
 		userId = loginedUser.getId();
 	}
-	// 나중에 로그인/비로그인 확인 처리
-	int placeholder;
-    if (myQnaOnly) {
-        Object userObj = session.getAttribute("loginUserId");
-        if (userObj != null) {
-            try {
-            	placeholder = Integer.parseInt(userObj.toString());
-            } catch (Exception e) {
-                out.print("<div style='color:red;'>로그인 정보 오류: " + e.getMessage() + "</div>");
-                return;
-            }
-        } else {
-            out.print("<div style='color:red;'>로그인이 필요합니다.</div>");
-            return;
-        }
-    }
+    // 필터 파라미터 처리
+	int categoryId = StringUtils.strToInt(categoryParam, 0);
+    int status = StringUtils.strToInt(statusParam, 0);
+    String excludeSecret = ("true".equals(excludeSecretParam) ? "exclude" : "");
+    String myQnaOnly = ("true".equals(myQnaOnlyParam) ? userId : "");
 
+    Map<String, Object> condition = new HashMap<>();
+    condition.put("categoryId", categoryParam);
+    condition.put("status", statusParam);
+    condition.put("excludeSecret", excludeSecret);
+    condition.put("myQnaOnly", myQnaOnly);
+    System.out.println(condition);
+    
     // MyBatis 매퍼 호출
     CsInquiryMapper mapper = MybatisUtils.getMapper(CsInquiryMapper.class);
 
     // 필터링된 문의 내역 조회
-    List<Inquiry> inquiries = myQnaOnly
-        ? mapper.getInquiryByUserID(userId)
-        : mapper.getAllInquiries();
+    List<Inquiry> inquiries = mapper.getFilteredInquiries(condition);
 
     // 결과 출력
     if (inquiries == null || inquiries.isEmpty()) {
@@ -57,7 +44,7 @@
 <%
     } else {
         for (Inquiry i : inquiries) {
-            if (i == null) continue;  // null인 경우는 건너뛰기
+        	if (i == null) continue;
 %>
     <div class="qna-item">
         <div class="qna-title">

@@ -93,3 +93,41 @@
   color: #999;
   margin-right: 4px;
 }
+
+.qna-header {
+    display: flex;
+    padding: 10px 15px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+}
+
+.qna-col {
+    padding: 0 10px;
+}
+
+.qna-col.status {
+    width: 100px;
+}
+
+.qna-col.title {
+    flex: 1;
+}
+
+.qna-col.author {
+    width: 150px;
+    text-align: center;
+}
+
+.qna-col.date {
+    width: 180px;
+    text-align: center;
+}
+
+.qna-col.title.clickable {
+  cursor: pointer;
+  color: #007bff;
+}
+.qna-col.title.clickable:hover {
+  text-decoration: underline;
+}
