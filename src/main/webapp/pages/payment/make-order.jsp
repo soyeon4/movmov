@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="kr.co.movmov.vo.Point"%>
 <%@page import="kr.co.movmov.mapper.PointMapper"%>
 <%@page import="kr.co.movmov.mapper.PaymentMapper"%>
@@ -32,6 +33,7 @@
 	int addressID = Integer.parseInt(request.getParameter("order-address-id"));
 	int paymentMethodID = Integer.parseInt(request.getParameter("order-payment-method"));
 	String customerRequest = request.getParameter("customer-request");
+	String[] idStrings = request.getParameterValues("cartItemIds");
 	
 	//mapper
 	ShopCartItemMapper shopCartItemMapper = MybatisUtils.getMapper(ShopCartItemMapper.class);
@@ -39,8 +41,16 @@
 	PaymentMapper paymentMapper = MybatisUtils.getMapper(PaymentMapper.class);
 	PointMapper pointMapper = MybatisUtils.getMapper(PointMapper.class);
 	
-	//get cart info
-	List<ShopCartItem> cartItems = shopCartItemMapper.getCartItemsByUserId(user.getId());
+	//get cart info	
+	List<ShopCartItem> cartItems = new ArrayList<>();
+	
+	if(idStrings != null) {
+		for(String idStr : idStrings) {
+			int id = Integer.parseInt(idStr);
+			ShopCartItem item = shopCartItemMapper.getCartItemByCartNos();
+		}
+	}
+	
 	CartDto cartDto = new CartDto(cartItems);
 	Address address = addressMapper.getAddressById(addressID);
 	Payment payment = new Payment();

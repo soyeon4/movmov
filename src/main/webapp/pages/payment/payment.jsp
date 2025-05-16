@@ -127,6 +127,7 @@
 			<%
 			List<ShopCartItem> cartItems = shopCartItemMapper.getCartItemsByUserId(loginUser.getId());
 			CartDto cartDto = new CartDto(cartItems);
+			
 			int totalPriceOfOrder = 0;
 			for (ShopCartItem cartItem : cartItems) {
 				int totalPriceOfItem = cartItem.getItem().getPrice()*cartItem.getQuantity();
@@ -250,6 +251,14 @@
 					<input type="hidden" name="order-address-id" id="order-address-id" value="<%=defaultAddressForMain.getId() %>">
 					<input type="hidden" name="order-payment-method" id="order-payment-method" value="">
 					<input type="hidden" name="customer-request" id="order-request" value="선택 안 함">
+					<%
+					for (ShopCartItem cartItem : cartItems) {
+					
+					%>
+					<input type="hidden" name="cartItemIds" value="<%=cartItem.getNo()%>">
+					<%
+					} 
+					%>
 					<button type="submit" class="pay-btn" ><%=StringUtils.commaWithNumber(totalPriceOfOrder) %>원 결제하기</button>
 				</form>
 			</div>
