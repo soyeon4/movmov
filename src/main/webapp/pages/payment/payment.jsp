@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="kr.co.movmov.utils.StringUtils"%>
 <%@page import="kr.co.movmov.dto.CartDto"%>
 <%@page import="kr.co.movmov.vo.ShopCartItem"%>
@@ -125,7 +126,17 @@
 			<section class="product-box">
 				<h3>주문상품</h3>
 			<%
-			List<ShopCartItem> cartItems = shopCartItemMapper.getCartItemsByUserId(loginUser.getId());
+			List<ShopCartItem> cartItems = new ArrayList<>();
+			String[] cnos = request.getParameterValues("cno");
+			if (cnos != null) {
+			    for (String cno : cnos) {
+			        int cartItemId = Integer.parseInt(cno);
+			        ShopCartItem item = shopCartItemMapper.getCartItemByCartNo();
+			        if(item != null)
+			        	cartItems.add(item);
+			    }
+			}
+			
 			CartDto cartDto = new CartDto(cartItems);
 			
 			int totalPriceOfOrder = 0;
