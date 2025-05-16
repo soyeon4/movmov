@@ -62,7 +62,7 @@
 					<strong><%=loginUser.getNickname() %></strong>님
 					<p><%=loginUser.getEmail() %></p>
 					<div class="actions">
-						<a href="/movmov/pages/mypage/page.jsp">My Page</a> | <a href="#">이용약관</a>
+						<a href="/movmov/pages/mypage/page.jsp">My Page</a> | <a href="/movmov/pages/cs/faq.jsp">고객센터</a>
 					</div>
 					<div class="balance">
 						잔여 포인트 <strong><%=loginUser.getPoint() %></strong>P
