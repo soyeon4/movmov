@@ -72,7 +72,7 @@
 				for (Point point : recentPoint) {
 					String strPointChanges = "";
 					int pointChanges = point.getPointChangeAmount();
-					if (pointChanges < 0) {
+					if (point.getTypeId() == 100) {
 						strPointChanges = "-" + StringUtils.commaWithNumber(pointChanges) + "P";
 					} else {
 						strPointChanges = "+" + StringUtils.commaWithNumber(pointChanges) + "P";

@@ -13,6 +13,20 @@
 <%@page import="kr.co.movmov.mapper.ShopCartItemMapper"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%
+  String paymentMethodParam = request.getParameter("order-payment-method");
+
+  if (paymentMethodParam == null || paymentMethodParam.trim().isEmpty()) {
+%>
+    <script>
+      alert("결제 방식을 선택해주세요.");
+      history.back();
+    </script>
+    <%
+      return; // 더 이상 JSP 실행하지 않음
+  }
+%>
 <%
 	String paymentMethodStr = request.getParameter("order-payment-method");
 	
@@ -72,7 +86,7 @@
 		
 		Payment lastPayment = paymentMapper.getRecentPayment(user);
 		
-		pointEarn = (int)(payment.getItem().getPrice() * 0.05);
+		pointEarn = (int)(payment.getItem().getPrice() * payment.getItemQuantity() * 0.05);
 		//set point Object for purchase reward point
 		point.setPointChangeAmount(pointEarn);
 		point.setTypeId(101);
@@ -91,7 +105,7 @@
 	Payment lastPayment = paymentMapper.getRecentPayment(user);
 	if(pointUsage != 0) {
 		point.setPointChangeAmount(-pointUsage);
-		point.setTypeId(100);
+		point.setTypeId(100);//포인트 사용
 		point.setPayment(lastPayment);
 		int userPoint = pointMapper.getUserPoint(user) - pointUsage;
 		point.setTotalPoint(userPoint);
