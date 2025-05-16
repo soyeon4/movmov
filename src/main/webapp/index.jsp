@@ -1,3 +1,6 @@
+<%@page import="kr.co.movmov.utils.StringUtils"%>
+<%@page import="kr.co.movmov.vo.ShopItem"%>
+<%@page import="kr.co.movmov.mapper.ShopItemMapper"%>
 <%@page import="kr.co.movmov.vo.Post"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.mapper.PostMapper"%>
@@ -82,16 +85,24 @@
    <section class="goods-section">
       <h2>🎁 인기 영화 굿즈</h2>
       <div class="goods-list">
-         <div class="goods-card">
-            <img src="https://via.placeholder.com/200x200" alt="굿즈 이미지">
-            <h4>쉬리 포스터</h4>
-            <p>₩10,000</p>
-         </div>
-         <div class="goods-card">
-            <img src="https://via.placeholder.com/200x200" alt="굿즈 이미지">
-            <h4>기생충 피규어</h4>
-            <p>₩25,000</p>
-         </div>
+         <%
+         ShopItemMapper itemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
+         List<ShopItem> items = itemMapper.getShopItemByCategoryNo(3);
+					for (int j = 0; j < items.size() && j < 6; j++) {
+						ShopItem item = items.get(j);
+					%>
+					<div class="goods-card">
+						<div class="image-wrapper">
+							<a href="shop-detail.jsp?ino=<%=item.getNo() %>"><img
+								src="/movmov/resources/images/shop/<%=item.getImagePath() %>" alt="<%=item.getImagePath() %>" /></a>
+						</div>
+						<h4><%=item.getName()%></h4>
+						<p>
+							₩<%=StringUtils.commaWithNumber(item.getPrice())%></p>
+					</div>
+					<%
+					}
+					%>
          <!-- 추가 굿즈 항목들 -->
       </div>
    </section>
