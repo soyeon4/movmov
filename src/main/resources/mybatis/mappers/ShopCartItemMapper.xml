@@ -6,6 +6,25 @@
 <mapper namespace="kr.co.movmov.mapper.ShopCartItemMapper">
 
 	<!--
+		ShopCartItem getCartItemsByCartNo(@Param("cartNo") int cartNo);
+	-->
+	<select id="getCartItemsByCartNo" resultMap="ShopCartItemResultMap">
+		select
+			c.cart_item_no, 
+			c.item_quantity, 
+			u.user_id, 
+			i.item_no, 
+			o.option_no
+		from 
+			movmov_shop_cart_items c
+			join movmov_users u on c.user_id = u.user_id
+			join movmov_shop_items i on c.item_no = i.item_no
+			left join movmov_shop_item_options o on c.option_no = o.option_no
+		where 
+			c.cart_no = #{cartNo}
+	</select>
+
+	<!--
 		void updateCartItemQuantityByCartNo(@Param("cartNo") int cartNo, 
 							@Param("quantity") int quantity);
 	-->
