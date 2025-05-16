@@ -247,7 +247,18 @@
 		
 		function moveToPurchase() {
 			if (confirm('결제 페이지로 이동하시겠습니까?')) {
-				window.location.href = '../payment/payment.jsp'; // 결제 페이지
+				let selectedCnos = $(":checkbox[name=cno]:checked").map(function() {
+					return $(this).val();
+				}).get();
+
+				if (selectedCnos.length === 0) {
+					alert("선택된 상품이 없습니다.");
+					return;
+				}
+
+				let queryString = selectedCnos.map(cno => "cno=" + cno).join("&");
+
+				window.location.href = "../payment/payment.jsp?" + queryString;
 			}
 		}
 	</script>
