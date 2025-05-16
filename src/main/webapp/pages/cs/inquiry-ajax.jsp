@@ -28,7 +28,7 @@
     condition.put("categoryId", categoryParam);
     condition.put("status", statusParam);
     condition.put("excludeSecret", excludeSecret);
-    condition.put("myQnaOnly", myQnaOnly);
+    condition.put("userId", myQnaOnly);
     System.out.println(condition);
     
     // MyBatis 매퍼 호출
@@ -56,7 +56,7 @@
         </div>
         <div class="qna-meta">
             작성자: <%= (i.getUser().getId() != null && i.getUser().getId() != null) ? i.getUser().getId() : "알 수 없음" %> |
-            <%= i.getCreatedDate() != null ? i.getCreatedDate().toString() : "" %>
+            <%= i.getCreatedDate() != null ? StringUtils.simpleDateTimeFormat(i.getCreatedDate()) : "" %>
         </div>
         <div class="qna-answer">
             <% if (i.getIsSecret() == 1) { %>

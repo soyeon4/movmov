@@ -165,7 +165,7 @@
         <if test="excludeSecret == exclude">
             AND i.INQUIRY_IS_SECRET = 0
         </if>
-        <if test="userId != null and userId != ''">
+        <if test="userId != null">
             AND i.INQUIRY_USER_ID = #{userId}
         </if>
         
