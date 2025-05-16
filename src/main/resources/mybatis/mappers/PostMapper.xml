@@ -385,6 +385,8 @@
     	SELECT COUNT(*)
     	FROM movmov_community_posts
     	WHERE user_id = #{userId}
+		AND post_is_deleted = 'N'
+		<![CDATA[AND post_report_count < 5]]>
    </select>
    
 	<!--
