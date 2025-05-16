@@ -12,11 +12,23 @@
 <%@page import="kr.co.movmov.vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+	String paymentMethodStr = request.getParameter("order-payment-method");
+
+	if (paymentMethodStr == null || paymentMethodStr.trim().isEmpty()) {
+%>
+    <script>
+        alert("결제 수단을 선택하여 주십시오.");
+        history.back(); // 이전 페이지로 되돌아감
+    </script>
+<%
+    return; // JSP 실행 중단
+	}
+	
 	//request parameters
 	int payStatusID = 1; // payment complete(1)
 	User user = (User) session.getAttribute("LOGIN_USER");
 	int pointUsage = Integer.parseInt(request.getParameter("order-point-usage"));
-	int pointEarn = Integer.parseInt(request.getParameter("order-point-earn"));
+	int pointEarn = 0;
 	int addressID = Integer.parseInt(request.getParameter("order-address-id"));
 	int paymentMethodID = Integer.parseInt(request.getParameter("order-payment-method"));
 	String customerRequest = request.getParameter("customer-request");
@@ -55,6 +67,7 @@
 		
 		Payment lastPayment = paymentMapper.getRecentPayment(user);
 		
+		pointEarn = (int)(payment.getItem().getPrice() * 0.05);
 		//set point Object for purchase reward point
 		point.setPointChangeAmount(pointEarn);
 		point.setTypeId(101);
@@ -69,15 +82,19 @@
 	
 	//set point Object for point usage
 	Payment lastPayment = paymentMapper.getRecentPayment(user);
-	point.setPointChangeAmount(-pointUsage);
-	point.setTypeId(100);
-	point.setPayment(lastPayment);
-	int userPoint = pointMapper.getUserPoint(user) - pointUsage;
-	point.setTotalPoint(userPoint);
-	point.setUser(user);
+	if(pointUsage != 0) {
+		point.setPointChangeAmount(-pointUsage);
+		point.setTypeId(100);
+		point.setPayment(lastPayment);
+		int userPoint = pointMapper.getUserPoint(user) - pointUsage;
+		point.setTotalPoint(userPoint);
+		point.setUser(user);
+		
+		pointMapper.insertPoint(point);
+		pointMapper.updateUserPoint(user, userPoint);
+	}
 	
-	pointMapper.insertPoint(point);
-	pointMapper.updateUserPoint(user, userPoint);
+	shopCartItemMapper.deleteCartItemByUserId(user.getId());
 	
 	response.sendRedirect("payment-success.jsp");
 	return;
