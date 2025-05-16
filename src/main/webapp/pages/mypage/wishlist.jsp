@@ -63,7 +63,7 @@
 		<div class="bg-white rounded-xl shadow p-4 flex gap-4">
 			<img src="/movmov/resources/images/movie/<%=movie.getPosterImagePath()%>" alt="<%=movie.getTitle()%>" class="w-24 h-36 object-cover rounded">
 			<div class="flex flex-col justify-between">
-				<h4 class="font-bold text-lg mb-1"><%=movie.getTitle()%></h4>
+				   <a href="../movie/movie-detail.jsp?movieNo=<%=wish.getMovie().getNo() %>" class="font-bold text-lg mb-1"><%=movie.getTitle()%></a>
 				<p class="text-sm text-gray-700">🎬 <%=movie.getDirector()%></p>
 				<p class="text-sm text-gray-700">👥 <%=movie.getActor()%></p>
 			</div>
