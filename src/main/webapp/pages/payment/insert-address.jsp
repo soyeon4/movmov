@@ -1,4 +1,4 @@
-<%@page import="java.util.Map"%>
+<%-- <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.movmov.vo.User"%>
@@ -92,4 +92,4 @@
 	
 	response.sendRedirect("payment.jsp");
 	return;
-%>
+%> --%>
