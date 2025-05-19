@@ -1,4 +1,4 @@
-<%@page import="java.util.ArrayList"%>
+<%-- <%@page import="java.util.ArrayList"%>
 <%@page import="kr.co.movmov.vo.Point"%>
 <%@page import="kr.co.movmov.mapper.PointMapper"%>
 <%@page import="kr.co.movmov.mapper.PaymentMapper"%>
@@ -47,7 +47,7 @@
 	if(idStrings != null) {
 		for(String idStr : idStrings) {
 			int id = Integer.parseInt(idStr);
-			ShopCartItem item = shopCartItemMapper.getCartItemByCartNo();
+			ShopCartItem item = shopCartItemMapper.getCartItemsByCartNos();
 		}
 	}
 	
@@ -108,4 +108,4 @@
 	
 	response.sendRedirect("payment-success.jsp");
 	return;
-%>
+%> --%>
