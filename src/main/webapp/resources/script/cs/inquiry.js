@@ -4,8 +4,9 @@ $(document).ready(function () {
 
   // 페이지 로딩 시 초기 데이터 로드
 //  loadInquiries();
+console.log("isLoggedIn =", isLoggedIn);
 
-  $("#myQnaOnly").on("click", function(e) {  // 수정된 부분
+  $("#myQnaOnly").on("click", function(e) {  
     if (!isLoggedIn) { 
       e.preventDefault();
       $(".modal-background").fadeIn();
@@ -56,7 +57,8 @@ $(document).ready(function () {
     const myQnaOnly = $('#myQnaOnly').is(':checked');
     const category = $('#categoryFilter').val();
     const answerStatus = $('#statusFilter').val();
-
+	console.log(excludeSecret, myQnaOnly, category, answerStatus);
+	
     // Ajax 요청
     $.ajax({
       url: '/movmov/pages/cs/inquiry-ajax.jsp',  // Ajax URL (inquiry-ajax.jsp)
@@ -64,7 +66,7 @@ $(document).ready(function () {
       data: {
         excludeSecret: excludeSecret,
         myQnaOnly: myQnaOnly,
-        category: category,
+        categoryId: category,
         answerStatus: answerStatus
       },
       success: function (html) {
@@ -79,4 +81,18 @@ $(document).ready(function () {
     }); // $.ajax
   } // loadInquiries()
   
+  // 아코디언 다른 항목을 누르면 기존 열린 항목 닫기
+  
+  $(document).ready(function () {
+    $('.qna-col.title').on('click', function () {
+      const $clickedItem = $(this).closest('.qna-item');
+      const $answerBlock = $clickedItem.find('.qna-answer-block');
+
+      // 다른 답변은 닫기
+      $('.qna-answer-block').not($answerBlock).slideUp(200);
+
+      // 현재 클릭한 답변은 toggle
+      $answerBlock.slideToggle(200);
+    });
+  });
 });

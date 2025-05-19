@@ -76,7 +76,7 @@
 		    m.movie_plot, m.movie_release_year, m.movie_review_cnt,
 		    m.movie_wish_cnt
 		<if test="star != null">
-			having avgStar >= #{star}
+			having avg(r.review_star) >= #{star}
 		</if>
 		<choose>
 	 		<when test="sort == 'length-asc'">

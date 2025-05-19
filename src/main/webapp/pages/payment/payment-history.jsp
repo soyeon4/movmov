@@ -54,7 +54,7 @@
 					LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				%>
 				<div class="order-item">
-					<span><%=item.getName()%></span><span><%=item.getPrice()%>원
+					<span><%=item.getName()%></span><span><%=StringUtils.commaWithNumber(item.getPrice() * payment.getItemQuantity())%>원
 						| <%=localDate%></span>
 				</div>
 				<%
@@ -72,8 +72,8 @@
 				for (Point point : recentPoint) {
 					String strPointChanges = "";
 					int pointChanges = point.getPointChangeAmount();
-					if (pointChanges < 0) {
-						strPointChanges = "-" + StringUtils.commaWithNumber(pointChanges) + "P";
+					if (point.getTypeId() == 100) {
+						strPointChanges = StringUtils.commaWithNumber(pointChanges) + "P";
 					} else {
 						strPointChanges = "+" + StringUtils.commaWithNumber(pointChanges) + "P";
 					}
@@ -100,7 +100,7 @@
 				<div class="user-meta">
 					<strong><%=loginUser.getName()%></strong>
 					<p><%=loginUser.getEmail()%></p>
-					잔여 포인트 <strong><%=loginUser.getPoint()%></strong>P
+					잔여 포인트 <strong><%=pointMapper.getUserPoint(loginUser)%></strong>P
 				</div>
 			</div>
 

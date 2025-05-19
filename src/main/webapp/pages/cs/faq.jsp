@@ -49,9 +49,9 @@ List<Category> faqCategorys = categoryMapper.getCategoriesByType("FAQ");		// 카
         <h1>고객센터</h1>
 
         <div class="tabs">
+            <div class="tab" data-tab="notice" onclick="goToTab('notice');">공지사항</div>
             <div class="tab active" data-tab="faq">FAQ</div>
-            <div class="tab" data-tab="notice">공지사항</div>
-            <div class="tab" data-tab="inquiry">Q&A</div>
+            <div class="tab" data-tab="inquiry" onclick="goToTab('inquiry'); loadQnaTab();">Q&A</div>
         </div>
 
         <!-- FAQ 콘텐츠 -->
@@ -113,7 +113,6 @@ List<Category> faqCategorys = categoryMapper.getCategoriesByType("FAQ");		// 카
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/movmov/resources/script/cs/faq.js"></script>
-<script src="/movmov/resources/script/cs/qna.js"></script> <%-- Q&A용 스크립트 --%>
 
 </body>
 </html>

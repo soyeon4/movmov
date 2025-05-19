@@ -120,24 +120,57 @@
 
 
 	<!-- 필터링된 문의목록 조회 -->
-	<!-- getFilteredInquiries(String category, String status, String excludeSecret, String myQnaOnly) -->
+	<!--
+		getFilteredInquiries(int categoryId, int status, String excludeSecret, String userId)
+			categoryId: 카테고리번호 (0이면 모든 카테고리)
+			status: 0: 전체 1 : 미답변, 2: 답변완료
+			excludeSecret: "exclude" : 비밀글 제외
+			userId: 나의 Q&A만 
+			
+		getFilteredInquiries(Map<String, Object> condition)
+			categoryId: 카테고리번호 (0이면 모든 카테고리)
+			status: 0: 전체 1 : 미답변, 2: 답변완료
+			excludeSecret: "exclude" : 비밀글 제외
+			userId: 나의 Q&A만 
+	
+	-->
 
-    <select id="getFilteredInquiries" resultType="Inquiry">
-        SELECT * FROM INQUIRIES
-        WHERE 1 = 1
-        <if test="categoryId != null">
-            AND CATEGORY_ID = #{categoryId}
+    <select id="getFilteredInquiries" parameterType="map" resultMap="inquiryResultMap">
+        SELECT
+        i.inquiry_id,
+		i.inquiry_user_id,
+		u.user_name,
+		i.inquiry_cat_id,
+		c.cat_id,
+		c.cat_name,
+		i.inquiry_title,
+		i.inquiry_content,
+		i.inquiry_created_date,
+		i.inquiry_answer_date,
+		i.inquiry_status,
+		i.inquiry_is_secret
+        FROM
+        	MOVMOV_CS_USER_INQUIRIES i
+        	, MOVMOV_CONTENT_CATEGORIES c
+        	, MOVMOV_USERS U
+        WHERE
+        	i.INQUIRY_CAT_ID = c.CAT_ID
+        	AND I.INQUIRY_USER_ID = U.USER_ID
+        <if test="categoryId != 0 and categoryId != null">
+            AND i.INQUIRY_CAT_ID = #{categoryId}
         </if>
-        <if test="status != null">
-            AND STATUS = #{status}
+        <if test="status != 0 and status != null">
+            AND i.INQUIRY_STATUS = #{status} 
         </if>
-        <if test="excludeSecret == true">
-            AND IS_SECRET = 0
+        <if test="excludeSecret == exclude">
+            AND i.INQUIRY_IS_SECRET = 0
         </if>
-        <if test="myQnaOnly != null and myQnaOnly != ''">
-            AND USER_ID = #{userId}
+        <if test="userId != null">
+            AND i.INQUIRY_USER_ID = #{userId}
         </if>
-        ORDER BY CREATED_DATE DESC
+        
+        ORDER BY i.inquiry_CREATED_DATE DESC
+        
     </select>
 
 	<!-- void insertInquiry(Inquiry inquiry) -->

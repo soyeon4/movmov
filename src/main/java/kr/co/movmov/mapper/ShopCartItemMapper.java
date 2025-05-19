@@ -13,7 +13,7 @@ public interface ShopCartItemMapper {
 	 * @param cartNo 장바구니 번호
 	 * @return 장바구니 상품 정보
 	 */
-	ShopCartItem getCartItemsByCartNos(@Param("cartNo") int cartNo);
+	ShopCartItem getCartItemsByCartNo(@Param("cartNo") int cartNo);
 	
 	
 	/**

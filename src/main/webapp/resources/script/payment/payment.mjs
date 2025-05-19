@@ -84,7 +84,7 @@ btnsEdit.forEach(btn => {
 
 //수정 함수
 function openEditAddressInfo(card) {
-	const id = card.querySelector('.address-id').value.trim() || '';
+	const id = card.querySelector('input[name="address-id"]').value.trim() || '';
 	const name = card.querySelector('.address-header strong').textContent.trim() || '';
 	const comment = card.querySelector('.address-header span').textContent.trim() || '';
 	const phone = card.querySelector('.phone').textContent.trim() || '';
@@ -270,9 +270,17 @@ btnPoint.addEventListener('click', () => {
 
 function applyPoint() {
 	const input = document.getElementById("point-input");
-	const usageAmount = parseInt(input.value) || 0;
-
-	const availablePoint = document.getElementById(point-usage).value.trim(); // 서버에서 가져온 사용 가능 포인트
+	const formPointUse = document.getElementById('order-point-usage');
+	const spanPrice = document.getElementById('price');
+	const payMethodWithPrice = document.getElementById('paymethod-price');
+	const price = spanPrice.textContent.replace(/[^\d]/g, '');
+	const usageAmount = parseInt(input.value.trim(), 10) || 0;
+	const realPay = price - usageAmount;
+	const pointUsage = document.getElementById('point-usage-amount');
+	const btnMakeOrder = document.getElementById("btn-make-order");
+	const usageDisplay = document.getElementById("point-usage");
+	const availableText = document.getElementById("point-amount").textContent.replace(/[^\d]/g, '');
+	const availablePoint = parseInt(availableText, 10) || 0;
 
 	if (usageAmount <= 0) {
 		alert("1원 이상 입력해주세요.");
@@ -282,12 +290,24 @@ function applyPoint() {
 	if (usageAmount > availablePoint) {
 		alert("사용 가능 포인트를 초과했습니다.");
 		input.value = availablePoint;
+		formPointUse.value = realPay;
+		return;
+	}
+	
+	if (usageAmount > price) {
+		alert("사용 가능 포인트를 초과했습니다.");
+		input.value = price;
+		formPointUse.value = realPay;
 		return;
 	}
 
-	// 표시용 <span> 업데이트
-	const usageDisplay = document.querySelector(".wallet-summary ul li span");
+	// span에 값 업데이트
 	usageDisplay.textContent = usageAmount.toLocaleString() + "원";
+	formPointUse.value = usageAmount;
+	spanPrice.innerHTML = realPay.toLocaleString() + "원";
+	payMethodWithPrice.innerHTML = realPay.toLocaleString() + "원";
+	btnMakeOrder.innerText = realPay.toLocaleString() + "원 결제하기";
+	pointUsage.innerHTML = usageAmount.toLocaleString() + "원";
 }
 
 const optionRequest = document.getElementById("select-delivery-request");

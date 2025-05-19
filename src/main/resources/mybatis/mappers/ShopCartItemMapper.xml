@@ -21,7 +21,7 @@
 			join movmov_shop_items i on c.item_no = i.item_no
 			left join movmov_shop_item_options o on c.option_no = o.option_no
 		where 
-			c.cart_no = #{cartNo}
+			c.cart_item_no = #{cartNo}
 	</select>
 
 	<!--

@@ -1,4 +1,5 @@
-<%-- <%@page import="java.util.ArrayList"%>
+<%@page import="kr.co.movmov.mapper.ShopItemMapper"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="kr.co.movmov.vo.Point"%>
 <%@page import="kr.co.movmov.mapper.PointMapper"%>
 <%@page import="kr.co.movmov.mapper.PaymentMapper"%>
@@ -12,18 +13,22 @@
 <%@page import="kr.co.movmov.mapper.ShopCartItemMapper"%>
 <%@page import="kr.co.movmov.vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-	String paymentMethodStr = request.getParameter("order-payment-method");
 
-	if (paymentMethodStr == null || paymentMethodStr.trim().isEmpty()) {
+<%
+  String paymentMethodParam = request.getParameter("order-payment-method");
+
+  if (paymentMethodParam == null || paymentMethodParam.trim().isEmpty()) {
 %>
     <script>
-        alert("결제 수단을 선택하여 주십시오.");
-        history.back(); // 이전 페이지로 되돌아감
+      alert("결제 방식을 선택해주세요.");
+      history.back();
     </script>
+    <%
+      return; // 더 이상 JSP 실행하지 않음
+  }
+%>
 <%
-    return; // JSP 실행 중단
-	}
+	String paymentMethodStr = request.getParameter("order-payment-method");
 	
 	//request parameters
 	int payStatusID = 1; // payment complete(1)
@@ -40,6 +45,7 @@
 	AddressMapper addressMapper = MybatisUtils.getMapper(AddressMapper.class);
 	PaymentMapper paymentMapper = MybatisUtils.getMapper(PaymentMapper.class);
 	PointMapper pointMapper = MybatisUtils.getMapper(PointMapper.class);
+	ShopItemMapper shopItemMapper = MybatisUtils.getMapper(ShopItemMapper.class);
 	
 	//get cart info	
 	List<ShopCartItem> cartItems = new ArrayList<>();
@@ -47,7 +53,10 @@
 	if(idStrings != null) {
 		for(String idStr : idStrings) {
 			int id = Integer.parseInt(idStr);
-			ShopCartItem item = shopCartItemMapper.getCartItemsByCartNos();
+			ShopCartItem item = shopCartItemMapper.getCartItemsByCartNo(id);
+			if(item != null)
+	        	cartItems.add(item);
+			item.setItem(shopItemMapper.getShopItemByItemNo(item.getItem().getNo()));
 		}
 	}
 	
@@ -77,7 +86,7 @@
 		
 		Payment lastPayment = paymentMapper.getRecentPayment(user);
 		
-		pointEarn = (int)(payment.getItem().getPrice() * 0.05);
+		pointEarn = (int)(payment.getItem().getPrice() * payment.getItemQuantity() * 0.05);
 		//set point Object for purchase reward point
 		point.setPointChangeAmount(pointEarn);
 		point.setTypeId(101);
@@ -88,13 +97,15 @@
 		
 		pointMapper.insertPoint(point);
 		pointMapper.updateUserPoint(user, userPoint);
+		
+		shopCartItemMapper.deleteCartItemByCartNo(cartItem.getNo());
 	}
 	
 	//set point Object for point usage
 	Payment lastPayment = paymentMapper.getRecentPayment(user);
 	if(pointUsage != 0) {
 		point.setPointChangeAmount(-pointUsage);
-		point.setTypeId(100);
+		point.setTypeId(100);//포인트 사용
 		point.setPayment(lastPayment);
 		int userPoint = pointMapper.getUserPoint(user) - pointUsage;
 		point.setTotalPoint(userPoint);
@@ -104,7 +115,7 @@
 		pointMapper.updateUserPoint(user, userPoint);
 	}
 	
-	shopCartItemMapper.deleteCartItemByUserId(user.getId());
+	
 	
 	response.sendRedirect("payment-success.jsp");
 	return;
